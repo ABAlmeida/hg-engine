@@ -1,5 +1,6 @@
 # generated
 *.nds
+*.srl
 *.ini
 *.mch
 build/*
@@ -24,6 +25,11 @@ dumpitem.py
 # pycache files
 *.pyc
 *.sav
+*.dsv
+*.duc
+*.dss
+*.state
+*.state[0-9]
 .venv
 
 
@@ -73,6 +79,11 @@ dumpitem.py
 /tools/msgenc.exe
 /tools/ndstool
 /tools/ndstool.exe
+/tools/btx.exe
+/tools/movedatagen.exe
+/tools/pokedexdatagen.exe
+/tools/speciesdatagen.exe
+/tools/trainerdatagen.exe
 /tools/csv2bin
 /tools/o2narc*
 /tools/adpcm-xq*

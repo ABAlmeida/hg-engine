@@ -32,8 +32,9 @@ endif
 MAC = $(shell uname -s | grep -i -q 'darwin'; echo $$?)
 
 ifneq ($(MAC), 0)
-# see if on msys2, but only if not on mac because /proc/version doesn't exist there
-MSYS2 = $(shell grep -i -q 'msys' /proc/version; echo $$?)
+# Current MSYS2 identifies itself as MINGW*_NT in uname; older releases used
+# MSYS_NT. Check uname instead of /proc/version so both forms are supported.
+MSYS2 = $(shell uname -s | grep -E -i -q 'msys|mingw|cygwin'; echo $$?)
 else
 MSYS2 = 1
 endif
@@ -42,7 +43,10 @@ endif
 # get rid of devkitpro:  if devkitpro is installed, can still use it.  otherwise, default to arm-none-eabi tools
 ifeq ($(shell echo $$DEVKITARM),)
 ifeq ($(MSYS2), 0)
-PREFIX = /mingw64/bin/arm-none-eabi-
+# Current MSYS2 installs the ARM embedded toolchain into the active MinGW
+# environment (normally /ucrt64). Fall back to /mingw64 for legacy shells.
+MSYS2_MINGW_PREFIX = $(if $(MINGW_PREFIX),$(MINGW_PREFIX),/mingw64)
+PREFIX = $(MSYS2_MINGW_PREFIX)/bin/arm-none-eabi-
 AS = $(PREFIX)as
 CC = $(PREFIX)gcc
 LD = $(PREFIX)ld
@@ -102,21 +106,27 @@ endif
 endif
 
 ####################### Tools #######################
-ADPCMXQ := tools/adpcm-xq
-ARMIPS := tools/armips
-BLZ := tools/blz
-BTX := tools/btx
-ENCODEPWIMG := tools/ENCODE_IMG
-GFX := tools/nitrogfx
-MSGENC := tools/msgenc
-MOVEDATAGEN := tools/movedatagen
-POKEDEXDATAGEN := tools/pokedexdatagen
-SPECIESDATAGEN := tools/speciesdatagen
-TRAINERDATAGEN := tools/trainerdatagen
+ifeq ($(MSYS2), 0)
+HOST_EXE := .exe
+else
+HOST_EXE :=
+endif
+
+ADPCMXQ := tools/adpcm-xq$(HOST_EXE)
+ARMIPS := tools/armips$(HOST_EXE)
+BLZ := tools/blz$(HOST_EXE)
+BTX := tools/btx$(HOST_EXE)
+ENCODEPWIMG := tools/ENCODE_IMG$(HOST_EXE)
+GFX := tools/nitrogfx$(HOST_EXE)
+MSGENC := tools/msgenc$(HOST_EXE)
+MOVEDATAGEN := tools/movedatagen$(HOST_EXE)
+POKEDEXDATAGEN := tools/pokedexdatagen$(HOST_EXE)
+SPECIESDATAGEN := tools/speciesdatagen$(HOST_EXE)
+TRAINERDATAGEN := tools/trainerdatagen$(HOST_EXE)
 NARCHIVE := $(PYTHON) tools/narcpy.py
-NDSTOOL := tools/ndstool
+NDSTOOL := tools/ndstool$(HOST_EXE)
 NTRWAVTOOL := $(PYTHON) tools/ntrWavTool.py
-O2NARC := tools/o2narc
+O2NARC := tools/o2narc$(HOST_EXE)
 SDATTOOL := $(PYTHON) tools/SDATTool.py
 
 # Compiler/Assembler/Linker settings
@@ -167,9 +177,9 @@ include dump.mk
 
 ####################### Build Tools #######################
 MSGENC_SOURCES := $(wildcard tools/source/msgenc/*.cpp) $(wildcard tools/source/msgenc/*.h)
-$(MSGENC): tools/source/msgenc/*
+$(MSGENC): $(MSGENC_SOURCES)
 	cd tools/source/msgenc ; $(MAKE)
-	mv tools/source/msgenc/msgenc tools/msgenc
+	mv tools/source/msgenc/msgenc $(MSGENC)
 
 TOOLS += $(MSGENC)
 
@@ -182,7 +192,7 @@ ifeq (,$(wildcard $(NDSTOOL)))
 	cd tools/source/ndstool ; chmod +x *.sh
 	cd tools/source/ndstool ; ./autogen.sh
 	cd tools/source/ndstool ; ./configure && $(MAKE)
-	mv tools/source/ndstool/ndstool tools/ndstool
+	mv tools/source/ndstool/ndstool $(NDSTOOL)
 	rm -r -f tools/source/ndstool
 endif
 
@@ -194,8 +204,12 @@ ifeq (,$(wildcard $(ARMIPS)))
 	cd tools/source ; git clone --recursive https://github.com/BluRosie/armips.git
 	mkdir -p tools/source/armips/build
 	cd tools/source/armips/build; cmake .. -DCMAKE_BUILD_TYPE=Release ..
-	cd tools/source/armips/build; $(MAKE)
-	mv tools/source/armips/build/armips tools/armips
+	cmake --build tools/source/armips/build --config Release --target armips-bin --parallel
+ifeq ($(MSYS2), 0)
+	mv tools/source/armips/build/armips.exe $(ARMIPS)
+else
+	mv tools/source/armips/build/armips $(ARMIPS)
+endif
 	rm -r -f tools/source/armips
 endif
 

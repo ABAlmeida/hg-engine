@@ -12,18 +12,20 @@ void MessagesEncoder::CharmapRegisterCharacter(string &code, uint16_t value)
 
 void MessagesEncoder::ReadMessagesFromText(string& fname) {
     string text = ReadTextFile(fname);
-    size_t pos = 0;
-    do {
-        text = text.substr(pos);
-        if (text.empty())
+    size_t start = 0;
+    while (start < text.size()) {
+        size_t end = text.find_first_of("\r\n", start);
+        if (end == string::npos) {
+            vec_decoded.push_back(text.substr(start));
             break;
-        pos = text.find_first_of("\r\n");
-        vec_decoded.push_back(text.substr(0, pos));
-        pos = text.find_last_of("\r\n", pos + 1, 2);
-        if (pos == string::npos)
-            break;
-        pos++;
-    } while (pos != string::npos);
+        }
+
+        vec_decoded.push_back(text.substr(start, end - start));
+        if (text[end] == '\r' && end + 1 < text.size() && text[end + 1] == '\n') {
+            end++;
+        }
+        start = end + 1;
+    }
     header.count = vec_decoded.size();
     debug_printf("%d lines\n", header.count);
 }

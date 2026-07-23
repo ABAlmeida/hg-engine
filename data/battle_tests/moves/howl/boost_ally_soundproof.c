@@ -109,7 +109,7 @@ BEGIN_TEST
         { .expectationType = EXPECTATION_TYPE_MESSAGE, .expectationValue.message = "The opposing Teddiursa's Attack rose!" },
         { .expectationType = EXPECTATION_TYPE_MESSAGE, .expectationValue.message = "Growlithe used Howl!" },
         { .expectationType = EXPECTATION_TYPE_MESSAGE, .expectationValue.message = "Voltorb's Soundproof" },
-        { .expectationType = EXPECTATION_TYPE_MESSAGE, .expectationValue.message = "It doesn’t affect Voltorb..." },
+        { .expectationType = EXPECTATION_TYPE_MESSAGE, .expectationValue.message = "It doesn't affect Voltorb..." },
         { .expectationType = EXPECTATION_TYPE_MESSAGE, .expectationValue.message = "Growlithe's Attack rose!" },
     },
 }

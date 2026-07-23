@@ -96,18 +96,22 @@ If you are looking to contribute to hg-engine, please see the [CONTRIBUTING.md](
 
 ## Setup Instructions (Windows on MSYS2)
 1. Install MSYS2 from [the website](https://www.msys2.org/#installation).
-2. Open up the base MSYS2 with the light purple background.
+2. Open the **MSYS2 UCRT64** shell. The plain `MSYS` shell does not add the
+   UCRT64 toolchain directory to `PATH`.
 3. Execute the commands:
     * ```pacman -Syu```
-    * ```pacman -S gcc base-devel cmake python git automake autoconf mingw-w64-x86_64-arm-none-eabi-gcc p7zip zlib-devel```
-    * ```export PATH=$PATH:/mingw64/bin```
-    * ```echo export PATH='$'PATH:/mingw64/bin >> ~/.bashrc```
+      * If MSYS2 asks you to close the terminal, reopen the UCRT64 shell, run
+        `pacman -Syu` again, and continue only after the full upgrade succeeds.
+    * ```pacman -S --needed base-devel python git automake autoconf p7zip mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-pkgconf mingw-w64-ucrt-x86_64-libpng mingw-w64-ucrt-x86_64-arm-none-eabi-toolchain```
     * ```python3 -m ensurepip --upgrade```
-4. Download [libpng](https://sourceforge.net/projects/libpng/files/latest/download) and install it.  Decompress it to a folder, and then open MSYS2 in that source folder and run:
-    * ```./configure --prefix=/usr```
-    * ```make check```
-    * ```make install```
-5. Once that process has finished, continue to [Further Setup Instructions](#further-setup-instructions-all-platforms-continued-from-individual-sections)
+4. Verify that the UCRT64 and ARM compilers are available:
+    * ```test "$MSYSTEM" = UCRT64```
+    * ```gcc --version```
+    * ```which cmake```
+    * ```arm-none-eabi-gcc --version```
+    * ```pkg-config --modversion libpng```
+      * `which cmake` must report `/ucrt64/bin/cmake`, not `/usr/bin/cmake`.
+5. Continue to [Further Setup Instructions](#further-setup-instructions-all-platforms-continued-from-individual-sections).
 
 
 ## Further Setup Instructions (All Platforms) (Continued from Individual Sections)
