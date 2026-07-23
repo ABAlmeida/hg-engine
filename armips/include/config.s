@@ -22,8 +22,8 @@ SNOW_WARNING_GENERATION equ GEN_LATEST
 // Champions: 2-3 turns
 SLEEP_TURNS_GENERATION equ GEN_LATEST
 
-// ALLOW_SAVE_CHANGES tells the assembler that it can build the code that pertains to expanding the save data for extra fields for our usage.
-// this is required for dex expansion and will break PKHeX compatibility!  comment this line out to prevent save changes from being made.
+// Heartless Gold requires expanded save fields. Keep this label defined; the
+// resulting saves are not expected to remain compatible with vanilla HeartGold or PKHeX.
 .definelabel ALLOW_SAVE_CHANGES, 0
 
 // CRY_PSEUDOBANK_START defines the first pseudobank to be used as cries in the sdat.  cries are loaded differently to save on RAM space

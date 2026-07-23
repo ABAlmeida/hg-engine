@@ -134,12 +134,11 @@ smoke test. Battle-engine changes should add scenarios under
   contribution references.
 - `include/config.h` and `armips/include/config.s` are separate configuration
   surfaces; keep equivalent settings consistent where both exist.
-- Expanded save support is currently enabled through `ALLOW_SAVE_CHANGES`;
+- Expanded save support must remain enabled through `ALLOW_SAVE_CHANGES`;
   expanded PC boxes are enabled with `EXPAND_PC_BOXES`. Ordinary HeartGold
   saves and PKHeX compatibility are not project requirements.
-- Capture experience is currently enabled by
-  `IMPLEMENT_CAPTURE_EXPERIENCE`; disabling it belongs in the first gameplay
-  implementation change, not baseline setup.
+- Capture experience is disabled. Keep `IMPLEMENT_CAPTURE_EXPERIENCE`
+  undefined while the project implements its no-battle-EXP progression model.
 - hg-engine has a script-variable level-cap option, but Heartless Gold requires
   a central story/badge-aware cap function and additional non-battle leveling
   integration.

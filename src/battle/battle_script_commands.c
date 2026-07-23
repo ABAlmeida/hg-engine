@@ -1797,6 +1797,13 @@ BOOL Task_DistributeExp_capture_experience(void *arg0, void *work, u32 get_clien
 
     return ret;
 
+#else
+
+    (void)arg0;
+    (void)work;
+    (void)get_client_no;
+    return FALSE;
+
 #endif // IMPLEMENT_CAPTURE_EXPERIENCE
 }
 

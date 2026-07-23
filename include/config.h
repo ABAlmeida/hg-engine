@@ -22,8 +22,8 @@
 // Type chart changes prior to Gen 4 (e.g. Gen 1) are not included.
 #define TYPE_EFFECTIVENESS_GEN GEN_LATEST
 
-// ALLOW_SAVE_CHANGES will allow save file field expansions for full feature implementation, but will break compatibility with PKHeX
-// commenting out this define will disable kyurem's forme change method and keep saves compatible with pkhex
+// Heartless Gold requires expanded save fields. Keep this enabled; the resulting
+// saves are not expected to remain compatible with vanilla HeartGold or PKHeX.
 #define ALLOW_SAVE_CHANGES
 
 // CRY_PSEUDOBANK_START defines the first pseudobank to be used as cries in the sdat.  cries are loaded differently to save on RAM space
@@ -67,7 +67,7 @@
 
 // IMPLEMENT_CAPTURE_EXPERIENCE defines whether or not capturing wild pokemon will net experience
 // commenting this line out disables capture experience
-#define IMPLEMENT_CAPTURE_EXPERIENCE
+// #define IMPLEMENT_CAPTURE_EXPERIENCE
 
 // IMPLEMENT_CRITICAL_CAPTURE defines whether or not throwing a poké ball has a certain percent chance of a guaranteed capture called a critical throw
 // commenting this line out disables critical captures
