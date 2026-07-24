@@ -117,6 +117,8 @@ struct SAVE_MISC_DATA
     // expanded fields - offset 0x2E0 and up
     struct PartyPokemon storedMons[NUM_OF_STORED_MONS];
     u8 isMonStored[NUM_OF_STORED_MONS];
+    u8 levelCap;
+    u8 levelCapPadding[3];
 
 #endif
 

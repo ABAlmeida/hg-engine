@@ -81,7 +81,7 @@ PYTHON = $(PYTHON_NO_VENV)
 VENV_ACTIVATE =
 endif
 
-.PHONY: clean all dumprom move_narc
+.PHONY: clean all dumprom move_narc refresh_base_code
 
 move_narc clean restore: NOSCAN = 1
 
@@ -327,7 +327,16 @@ $(BASE)/arm9.bin: $(ROMNAME) $(NDSTOOL) $(VENV_ACTIVATE)
 	$(NDSTOOL) -x $(ROMNAME) -9 $(BASE)/arm9.bin -7 $(BASE)/arm7.bin -y9 $(BASE)/overarm9.bin -y7 $(BASE)/overarm7.bin -d $(FILESYS) -y $(BASE)/overlay -t $(BASE)/banner.bin -h $(BASE)/header.bin
 	$(NARCHIVE) extract $(FILESYS)/a/0/2/8 -o $(BUILD)/a028/ -nf
 
-all: $(OUTPUT) $(OVERLAY_OUTPUTS) $(TOOLS) $(BASE)/arm9.bin
+# Binary patches are conditional and are not all reversible. In particular, an
+# AUTO_TEST build leaves debug hooks behind if a later normal build patches the
+# same extracted files in place. Restore the executable inputs from rom.nds
+# before every patch pass while preserving the generated NitroFS in base/root.
+refresh_base_code: $(BASE)/arm9.bin $(NDSTOOL)
+	rm -rf $(BASE)/overlay
+	@mkdir -p $(BASE)/overlay
+	$(NDSTOOL) -x $(ROMNAME) -9 $(BASE)/arm9.bin -y9 $(BASE)/overarm9.bin -y $(BASE)/overlay
+
+all: $(OUTPUT) $(OVERLAY_OUTPUTS) $(TOOLS) refresh_base_code
 	@# find and delete macOS and windows files
 	find . \( -name "*.DS_Store" -o -name "*:Zone.Identifier" \) -delete
 	$(PYTHON) scripts/make.py $(CFLAGS)

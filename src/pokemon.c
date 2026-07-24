@@ -14,6 +14,7 @@
 #include "../include/constants/species.h"
 #include "../include/constants/weather_numbers.h"
 #include "../include/debug.h"
+#include "../include/level_cap.h"
 #include "../include/overlay.h"
 #include "../include/rtc.h"
 #include "../include/save.h"
@@ -1867,29 +1868,23 @@ u32 CheckCanUseBallOnDoublesFromBag(struct BattleStruct *sp)
 }
 
 /**
- *  @brief get level cap from the script variable defined by LEVEL_CAP_VARIABLE
+ *  @brief get the current Heartless Gold level cap
  *
- *  @return level cap from LEVEL_CAP_VARIABLE script variable or 100 if it's not set at all
+ *  @return saved level cap, or 100 when level caps should not affect the caller
  */
 u32 LONG_CALL GetLevelCap(void)
 {
 #ifdef DEBUG_BATTLE_SCENARIOS
     return 0;
+#elif defined(IMPLEMENT_LEVEL_CAP)
+    return Sav2_Misc_get(SaveBlock2_get())->levelCap;
 #else
-#ifdef IMPLEMENT_LEVEL_CAP
-    u32 levelCap = GetScriptVar(LEVEL_CAP_VARIABLE);
-    if (levelCap > 100 || levelCap == 0) {
-        levelCap = 100;
-    }
-    return levelCap;
-#else
-    return 100;
-#endif // IMPLEMENT_LEVEL_CAP
-#endif // DEBUG_BATTLE_SCENARIOS
+    return LEVEL_CAP_MAX;
+#endif
 }
 
 /**
- *  @brief check if the level is at or above the level cap defined in LEVEL_CAP_VARIABLE
+ *  @brief check if the level is at or above the saved level cap
  *
  *  @param level level to check
  *  @return TRUE if level >= level cap; FALSE otherwise

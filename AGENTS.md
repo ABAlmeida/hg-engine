@@ -139,9 +139,9 @@ smoke test. Battle-engine changes should add scenarios under
   saves and PKHeX compatibility are not project requirements.
 - Capture experience is disabled. Keep `IMPLEMENT_CAPTURE_EXPERIENCE`
   undefined while the project implements its no-battle-EXP progression model.
-- hg-engine has a script-variable level-cap option, but Heartless Gold requires
-  a central story/badge-aware cap function and additional non-battle leveling
-  integration.
+- Heartless Gold stores its monotonic level cap in the expanded save data and
+  raises it from a central story-trainer victory table. Keep all cap consumers
+  routed through `GetLevelCap()`.
 - The upstream documentation describes the expanded Pokédex through Generation
   6 as almost complete, but every Generation 5 species, asset, evolution,
   learnset, form, cry, save, and Pokédex path still requires an explicit audit.

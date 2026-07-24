@@ -1,6 +1,7 @@
 #include "../include/types.h"
 #include "../include/config.h"
 #include "../include/debug.h"
+#include "../include/level_cap.h"
 #include "../include/message.h"
 #include "../include/pokemon.h"
 #include "../include/pokemon_storage_system.h"
@@ -34,6 +35,9 @@ void LONG_CALL InitStoredMons(struct SAVE_MISC_DATA *saveMiscData)
 void LONG_CALL Sav2_Misc_init_new_fields(struct SAVE_MISC_DATA *saveMiscData)
 {
     InitStoredMons(saveMiscData);
+#ifdef IMPLEMENT_LEVEL_CAP
+    saveMiscData->levelCap = LEVEL_CAP_INITIAL;
+#endif
 }
 
 

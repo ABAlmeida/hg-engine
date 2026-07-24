@@ -57,6 +57,19 @@ did not prevent the verified boot.
 
 No gameplay features were implemented during baseline setup.
 
+## Incremental build isolation
+
+The patch stage is conditional but not fully reversible. An `AUTO_TEST=Y`
+build previously left debug hooks and automatic-continue patches in the
+extracted `base/` executable files; a later normal build omitted those patches
+without restoring the original bytes, producing a white screen before the
+intro.
+
+Normal builds now run `refresh_base_code` before patching. It restores ARM9,
+the ARM9 overlay table, and all ARM9 overlays directly from `rom.nds` while
+preserving the generated NitroFS under `base/root`. This keeps normal and
+automated-test builds isolated without requiring a full `make clean`.
+
 ## Reproduction
 
 From an MSYS2 UCRT64 shell in repository root:

@@ -1751,14 +1751,14 @@ bool8 LONG_CALL RevertFormChange(struct PartyPokemon *pp, u16 species, u8 form_n
 void LONG_CALL ClearMonMoves(struct PartyPokemon *pokemon);
 
 /**
- *  @brief get level cap from the script variable defined by LEVEL_CAP_VARIABLE
+ *  @brief get the current Heartless Gold level cap
  *
- *  @return level cap from LEVEL_CAP_VARIABLE script variable
+ *  @return saved level cap, or 100 when level caps should not affect the caller
  */
 u32 LONG_CALL GetLevelCap(void);
 
 /**
- *  @brief check if the level is at or above the level cap defined in LEVEL_CAP_VARIABLE
+ *  @brief check if the level is at or above the saved level cap
  *
  *  @param level level to check
  *  @return TRUE if level >= level cap; FALSE otherwise

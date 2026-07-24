@@ -1,6 +1,13 @@
 #include "include/config.h"
 #include "include/debug.h"
 
+#ifdef IMPLEMENT_LEVEL_CAP
+
+# common encounter-result handler, before BattleSetup is freed
+arm9 EncounterFinishLevelCapHook 020506F4
+
+#endif
+
 #overlay 1 is loaded in at 021E5900
 #overlay 2 is loaded in at 02245B80
 #overlay 12 is loaded in at 022378C0
