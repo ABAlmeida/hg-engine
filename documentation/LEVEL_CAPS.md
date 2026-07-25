@@ -8,6 +8,24 @@ caps.
 The cap is awarded by the common trainer-battle completion hook. Individual
 event scripts do not set or calculate it.
 
+## Level to Cap
+
+An eligible Pokémon below the saved cap has a `LEVEL TO CAP` action directly
+after `SUMMARY` in its normal party menu. Eggs and Pokémon already at or above
+the cap do not show the action.
+
+The command advances exactly one level at a time. Each step sets experience to
+that level's threshold, recalculates stats and HP with the normal party-Pokémon
+logic, and then uses the native Rare Candy presentation for stat changes and
+level-up moves. Every move prompt is handled before the next level begins.
+When a level triggers an evolution, the normal evolution scene runs and the
+command resumes on the same party slot afterward, including when the evolution
+is cancelled. No item is required or consumed.
+
+The visible `QUIT` button is omitted from the normal party context menu; the B
+button still closes it. This leaves room for `LEVEL TO CAP` alongside every
+usable field move without removing either a field move or the leveling action.
+
 ## Progression
 
 | Victory | New cap |

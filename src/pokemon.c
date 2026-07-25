@@ -1894,6 +1894,57 @@ u32 LONG_CALL IsLevelAtLevelCap(u32 level)
     return level >= GetLevelCap();
 }
 
+/**
+ *  @brief check whether a PartyPokemon can gain another level under the current cap
+ *
+ *  @param mon PartyPokemon to check
+ *  @return TRUE when the Pokemon is not an Egg and is below the level cap
+ */
+BOOL LONG_CALL Pokemon_CanLevelToCap(struct PartyPokemon *mon)
+{
+#ifdef IMPLEMENT_LEVEL_CAP
+    if (GetMonData(mon, MON_DATA_IS_EGG, NULL)) {
+        return FALSE;
+    }
+
+    return GetMonData(mon, MON_DATA_LEVEL, NULL) < GetLevelCap();
+#else
+    return FALSE;
+#endif
+}
+
+/**
+ *  @brief advance a PartyPokemon by exactly one level under the current cap
+ *
+ *  @param mon PartyPokemon to level up
+ *  @return TRUE when a level was gained; FALSE when no level can be gained
+ */
+BOOL LONG_CALL Pokemon_LevelToCapOneLevel(struct PartyPokemon *mon)
+{
+#ifdef IMPLEMENT_LEVEL_CAP
+    u32 level;
+    u32 experience;
+    u16 species;
+    int growthRate;
+
+    if (!Pokemon_CanLevelToCap(mon)) {
+        return FALSE;
+    }
+
+    level = GetMonData(mon, MON_DATA_LEVEL, NULL) + 1;
+    species = (u16)GetMonData(mon, MON_DATA_SPECIES, NULL);
+    growthRate = PokePersonalParaGet(species, PERSONAL_EXP_GROUP);
+    experience = GetExpByGrowthRateAndLevel(growthRate, level);
+
+    SetMonData(mon, MON_DATA_EXPERIENCE, &experience);
+    SetMonData(mon, MON_DATA_LEVEL, &level);
+    RecalcPartyPokemonStats(mon);
+    return TRUE;
+#else
+    return FALSE;
+#endif
+}
+
 #ifdef IMPLEMENT_LEVEL_CAP
 
 /**

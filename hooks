@@ -557,6 +557,11 @@ arm9 DestroyHeap_hook 0201AA24 3
 0012 load_max_move_num_metronome 022408AC 0
 
 arm9 PartyMenu_ItemUseFunc_LevelUpLearnMovesLoop_Case6_hook 02081E54 0
+#ifdef IMPLEMENT_LEVEL_CAP
+arm9 LevelToCap_UseItemOnMonInParty_hook 02081AF8 7
+arm9 LevelToCap_ResumePartyMenu_hook 02081ED0 3
+arm9 LevelToCap_AfterEvolution_hook 0203DB2C 0
+#endif
 arm9 PartyMenu_ItemUseFunc_ReuseItem_hook 0208138C 3
 
 arm9 BufferItemNameWithIndefArticle 0200C100 3

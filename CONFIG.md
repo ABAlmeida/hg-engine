@@ -1,6 +1,8 @@
 # Configuration Options
 
 ### ``armips\include\config.s`` and ``include\config.h``
+ ``DISABLE_BATTLE_EXPERIENCE`` (``include/config.h`` only) skips the complete battle experience sequence for player Pokemon, including its messages, bar animations, and level-ups. Every non-empty party Pokemon with HP remaining still receives effort values. This option cannot be enabled together with ``IMPLEMENT_CAPTURE_EXPERIENCE``.
+
  ``DISALLOW_DEXIT_GEN`` (``armips/include/config.s`` only) controls whether to disallow selection of dexited moves in later generations, or disallow selection of unimplemented moves.
 
  ``FAIRY_TYPE_IMPLEMENTED`` should be set to 0 in both of these files in order to disable the fairy type implementation.  By default, it is 1 to implement the fairy type.
@@ -47,7 +49,7 @@
 
  ``IMPLEMENT_NEW_EV_IV_VIEWER`` (``include/config.h`` only) is a toggle that will enable an EV/IV viewer on the summary screen using the L, R, and Select buttons to swap between the EV's, IV's, and normal stats respectively.  This also adds up and down arrows to the stat names to make it clear which is boosted and which is nerfed.
 
- ``IMPLEMENT_LEVEL_CAP`` (``include/config.h`` only) enables the Heartless Gold hard level cap. The current cap is stored in the expanded save data, starts at level 5, and is raised by configured story-trainer victories. Lower cap rewards are ignored. If a Pokémon is at or above the cap, experience gain is disabled and Rare Candies stop working. ``UNCAP_CANDIES_FROM_LEVEL_CAP`` further decouples Rare Candies from this requirement, allowing Rare Candies to level Pokémon beyond the level cap. Contrarily, ``ALLOW_LEVEL_CAP_EVOLVE`` allows Rare Candies to trigger an evolution if the Pokémon would otherwise have evolved upon leveling up. See ``documentation/LEVEL_CAPS.md`` for the progression table.
+ ``IMPLEMENT_LEVEL_CAP`` (``include/config.h`` only) enables the Heartless Gold hard level cap. The current cap is stored in the expanded save data, starts at level 5, and is raised by configured story-trainer victories. Lower cap rewards are ignored. Eligible Pokémon below the cap gain a ``LEVEL TO CAP`` command in their normal party-menu actions. It advances one level at a time, runs every move-learning and evolution prompt, and stops at the saved cap without consuming an item. If a Pokémon is at or above the cap, experience gain is disabled and Rare Candies stop working. ``UNCAP_CANDIES_FROM_LEVEL_CAP`` further decouples Rare Candies from this requirement, allowing Rare Candies to level Pokémon beyond the level cap. Contrarily, ``ALLOW_LEVEL_CAP_EVOLVE`` allows Rare Candies to trigger an evolution if the Pokémon would otherwise have evolved upon leveling up. See ``documentation/LEVEL_CAPS.md`` for the progression table and command behavior.
 
  ``UPDATE_OVERWORLD_POISON`` (``include/config.h`` only) is a toggle that disables overworld poison when enabled.  Overworld poison is disabled by default.
 

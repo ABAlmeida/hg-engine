@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "data_config.h"
+
 #define GEN_CHAMPIONS 99
 
 #ifdef DEBUG_BATTLE_SCENARIOS
@@ -68,6 +70,14 @@
 // IMPLEMENT_CAPTURE_EXPERIENCE defines whether or not capturing wild pokemon will net experience
 // commenting this line out disables capture experience
 // #define IMPLEMENT_CAPTURE_EXPERIENCE
+
+// DISABLE_BATTLE_EXPERIENCE prevents player Pokemon from gaining experience in battle.
+// Effort values are still awarded to every non-empty party Pokemon with HP remaining.
+#define DISABLE_BATTLE_EXPERIENCE
+
+#if defined(DISABLE_BATTLE_EXPERIENCE) && defined(IMPLEMENT_CAPTURE_EXPERIENCE)
+#error "Capture experience cannot be enabled when battle experience is disabled"
+#endif
 
 // IMPLEMENT_CRITICAL_CAPTURE defines whether or not throwing a poké ball has a certain percent chance of a guaranteed capture called a critical throw
 // commenting this line out disables critical captures
@@ -237,12 +247,5 @@
 
 // ENTIRE_PARTY_AFFECTS_ROCK_SMASH causes the abilities of all party Pokemon to influence the odds of getting an item from breaking rocks, rather than just the following Pokemon.
 // #define ENTIRE_PARTY_AFFECTS_ROCK_SMASH
-
-// Champions-specific move configurations. Set to 0 to use Scarlet/Violet values.
-#define CHAMPIONS_POWER_CHANGES         1
-#define CHAMPIONS_TYPE_CHANGES          1
-#define CHAMPIONS_ACC_CHANGES           1
-#define CHAMPIONS_PP_CHANGES            0
-#define CHAMPIONS_EFFECT_CHANCE_CHANGES 1
 
 #endif

@@ -1766,6 +1766,22 @@ u32 LONG_CALL GetLevelCap(void);
 u32 LONG_CALL IsLevelAtLevelCap(u32 level);
 
 /**
+ *  @brief check whether a PartyPokemon can gain another level under the current cap
+ *
+ *  @param mon PartyPokemon to check
+ *  @return TRUE when the Pokemon is not an Egg and is below the level cap
+ */
+BOOL LONG_CALL Pokemon_CanLevelToCap(struct PartyPokemon *mon);
+
+/**
+ *  @brief advance a PartyPokemon by exactly one level under the current cap
+ *
+ *  @param mon PartyPokemon to level up
+ *  @return TRUE when a level was gained; FALSE when no level can be gained
+ */
+BOOL LONG_CALL Pokemon_LevelToCapOneLevel(struct PartyPokemon *mon);
+
+/**
  *  @brief grab the nature of a BoxPokemon factoring in the nature mint override field
  *
  *  @param boxMon BoxPokemon whose nature to grab

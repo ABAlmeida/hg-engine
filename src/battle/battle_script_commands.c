@@ -51,6 +51,9 @@ BOOL btl_scr_cmd_17_playanimation(void *bw, struct BattleStruct *sp);
 BOOL btl_scr_cmd_18_playanimation2(void *bw, struct BattleStruct *sp);
 BOOL btl_scr_cmd_24_jumptocurmoveeffectscript(void *bw, struct BattleStruct *sp);
 BOOL btl_scr_cmd_27_shouldgetexp(void *bw, struct BattleStruct *sp);
+#ifdef DISABLE_BATTLE_EXPERIENCE
+static void Battle_DistributeEffortValuesWithoutExperience(void *bw, struct BattleStruct *sp);
+#endif
 void Task_DistributeExp_Extend(void *arg0, void *work);
 BOOL Task_DistributeExp_capture_experience(void *arg0, void *work, u32 get_client_no);
 BOOL btl_scr_cmd_33_statbuffchange(void *bw, struct BattleStruct *sp);
@@ -1436,6 +1439,10 @@ BOOL btl_scr_cmd_27_shouldgetexp(void *bw, struct BattleStruct *sp)
 
     if ((/*cp->client_type*/ sp->fainting_client & 1) && ((fight_type & BATTLE_TYPE_NO_EXPERIENCE) == 0)) {
 
+#ifdef DISABLE_BATTLE_EXPERIENCE
+        Battle_DistributeEffortValuesWithoutExperience(bw, sp);
+        IncrementBattleScriptPtr(sp, adrs);
+#else
         // exp. calculation has been entirely moved to Task_DistributeExp_Extend as of the implementation of capture experience.
 
         // #if EXPERIENCE_FORMULA_GEN < 5 || EXPERIENCE_FORMULA_GEN == 6 // flat exp rate.  we move this to the task calc itself if the scaled is enabled
@@ -1493,6 +1500,7 @@ BOOL btl_scr_cmd_27_shouldgetexp(void *bw, struct BattleStruct *sp)
         //             sp->exp_share_obtained_exp = 0;
         //         }
         // #endif
+#endif
 
     } else {
         IncrementBattleScriptPtr(sp, adrs);
@@ -1500,6 +1508,37 @@ BOOL btl_scr_cmd_27_shouldgetexp(void *bw, struct BattleStruct *sp)
 
     return FALSE;
 }
+
+#ifdef DISABLE_BATTLE_EXPERIENCE
+
+/**
+ *  @brief distribute effort values without entering the battle experience sequence
+ *
+ *  @param bw battle work structure
+ *  @param sp global battle structure
+ */
+static void Battle_DistributeEffortValuesWithoutExperience(void *bw, struct BattleStruct *sp)
+{
+    const int expClientNo = 0;
+    struct Party *party = BattleWorkPokePartyGet(bw, expClientNo);
+    int partyCount = BattleWorkPokeCountGet(bw, expClientNo);
+
+    for (int slot = 0; slot < partyCount; slot++) {
+        struct PartyPokemon *mon = BattleWorkPokemonParamGet(bw, expClientNo, slot);
+        if (mon == NULL
+            || GetMonData(mon, MON_DATA_SPECIES, NULL) == SPECIES_NONE
+            || GetMonData(mon, MON_DATA_HP, NULL) == 0) {
+            continue;
+        }
+
+        DistributeEffortValues(party,
+                slot,
+                sp->battlemon[sp->fainting_client].species,
+                sp->battlemon[sp->fainting_client].form_no);
+    }
+}
+
+#endif
 
 // global variables to track experience
 u8 ALIGN4 scratchpad[4] = { 0, 0, 0, 0 };

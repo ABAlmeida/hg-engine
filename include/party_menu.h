@@ -143,7 +143,7 @@ typedef enum PartyMonContextMenuItem {
     PARTY_MON_CONTEXT_MENU_TAKE_MAIL,
     PARTY_MON_CONTEXT_MENU_STORE,
     PARTY_MON_CONTEXT_MENU_QUIT,
-    PARTY_MON_CONTEXT_MENU_UNUSED,           // 10
+    PARTY_MON_CONTEXT_MENU_LEVEL_TO_CAP,     // 10
     PARTY_MON_CONTEXT_MENU_ENTER,
     PARTY_MON_CONTEXT_MENU_NO_ENTRY,
     PARTY_MON_CONTEXT_MENU_CONTEST_ENTER,
@@ -449,5 +449,6 @@ struct PartyMenuContextMenuCursor *LONG_CALL PartyMenu_CreateContextMenuCursor(s
 void LONG_CALL PartyMenu_DisableMainScreenBlend_AfterYesNo(void);
 void LONG_CALL PartyMonContextMenuAction_RotomCatalog(struct PartyMenu *partyMenu, int *pState);
 void LONG_CALL PartyMonContextMenuAction_QuitToBag(struct PartyMenu *partyMenu, int *pState);
+void LONG_CALL PartyMonContextMenuAction_LevelToCap(struct PartyMenu *partyMenu, int *pState);
 
 #endif // POKEHEARTGOLD_PARTY_MENU_H

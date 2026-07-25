@@ -24,6 +24,24 @@ u32 LONG_CALL getButtonColorDepressed(int selection);
 u32 LONG_CALL getButtonColorRaised(int selection);
 void PartyMenu_ShowRotomCatalogList(struct PartyMenu *partyMenu);
 
+#ifdef IMPLEMENT_LEVEL_CAP
+
+#define LEVEL_TO_CAP_RESUME_SENTINEL (-1)
+
+#define START_MENU_FIELD_MOVE_CHECK_DATA_OFFSET 0x370
+#define START_MENU_EXIT_ENVIRONMENT_OFFSET      0x380
+#define START_MENU_EXIT_ENVIRONMENT_2_OFFSET    0x384
+
+typedef int (*PartyMenuStateFunc)(struct PartyMenu *);
+typedef void (*StartMenuExitTaskFunc)(void *);
+
+static BOOL sLevelToCapActive;
+
+static int LevelToCap_StartNextLevel(struct PartyMenu *partyMenu);
+static void LevelToCap_RestorePartySelectionUI(struct PartyMenu *partyMenu);
+
+#endif
+
 u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
 {
     struct PartyPokemon *pp = Party_GetMonByIndex(wk->args->party, wk->partyMonIndex);
@@ -32,6 +50,9 @@ u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
     u8 i;
     u8 count = 0;
     u8 fieldEffect;
+#ifdef IMPLEMENT_LEVEL_CAP
+    BOOL showLevelToCap;
+#endif
 
     u8 isEgg = GetMonData(pp, MON_DATA_IS_EGG, NULL);
     u32 item = GetMonData(pp, MON_DATA_HELD_ITEM, NULL);
@@ -40,6 +61,13 @@ u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
     ++count;
     if (!FieldSystem_MapIsBattleTowerMultiPartnerSelectRoom(wk->args->fieldSystem))
     {
+#ifdef IMPLEMENT_LEVEL_CAP
+        showLevelToCap = Pokemon_CanLevelToCap(pp);
+        if (showLevelToCap) {
+            buf[count] = PARTY_MON_CONTEXT_MENU_LEVEL_TO_CAP;
+            ++count;
+        }
+#endif
         buf[count] = PARTY_MON_CONTEXT_MENU_SWITCH;
         ++count;
         if (!isEgg)
@@ -53,8 +81,11 @@ u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
                 buf[count] = PARTY_MON_CONTEXT_MENU_ITEM;
             }
             ++count;
+
+#ifndef IMPLEMENT_LEVEL_CAP
             buf[count] = PARTY_MON_CONTEXT_MENU_QUIT;
             ++count;
+#endif
 
             // here is where a custom check would go.  replace the below for loop with your own checks
 
@@ -129,6 +160,14 @@ void LONG_CALL sub_0207AFC4(struct PartyMenu *wk)
     }
 
     PartyMenu_OpenContextMenu(wk, buf, numItems);
+#ifdef IMPLEMENT_LEVEL_CAP
+    for (u8 i = 0; i < numItems; ++i) {
+        if (buf[i] == PARTY_MON_CONTEXT_MENU_LEVEL_TO_CAP) {
+            wk->listMenuItems[i].value = (u32)PartyMonContextMenuAction_LevelToCap;
+            break;
+        }
+    }
+#endif
     Heap_FreeExplicit(HEAP_ID_PARTY_MENU, buf);
     sub_0207D1C8(wk);
     PartyMenu_PrintMessageOnWindow33(wk, -1, TRUE);
@@ -146,6 +185,21 @@ int PartyMenu_ItemUseFunc_LevelUpLearnMovesLoop_Case6(struct PartyMenu *wk) {
         wk->args->selectedAction = 0x9;
         return 0x20;
     }
+#ifdef IMPLEMENT_LEVEL_CAP
+    if (sLevelToCapActive) {
+        if (Pokemon_CanLevelToCap(mon)) {
+            return LevelToCap_StartNextLevel(wk);
+        }
+
+        sLevelToCapActive = FALSE;
+        wk->args->context = PARTY_MENU_CONTEXT_0;
+        wk->args->selectedAction = PARTY_MENU_ACTION_RETURN_0;
+        ClearFrameAndWindow2(&wk->windows[PARTY_MENU_WINDOW_ID_34], TRUE);
+        PartyMenu_PrintMessageOnWindow32(wk, 29, TRUE);
+        LevelToCap_RestorePartySelectionUI(wk);
+        return PARTY_MENU_STATE_1;
+    }
+#endif
     wk->args->selectedAction = 0x0;
     if (Bag_HasItem(wk->args->bag, wk->args->itemId, 1, HEAP_ID_PARTY_MENU)) {
         ClearFrameAndWindow2(&wk->windows[34], TRUE);
@@ -154,6 +208,153 @@ int PartyMenu_ItemUseFunc_LevelUpLearnMovesLoop_Case6(struct PartyMenu *wk) {
     }
     return 0x20;
 }
+
+#ifdef IMPLEMENT_LEVEL_CAP
+
+static void LevelToCap_RestorePartySelectionUI(struct PartyMenu *partyMenu)
+{
+    partyMenu->topScreenPanelShow = FALSE;
+    thunk_Sprite_SetPalIndex(partyMenu->sprites[PARTY_MENU_SPRITE_ID_CURSOR], 0);
+}
+
+/**
+ *  @brief begin one native level-up presentation for the Level to Cap command
+ *
+ *  @param partyMenu active party menu
+ *  @return next PartyMenuState
+ */
+static int LevelToCap_StartNextLevel(struct PartyMenu *partyMenu)
+{
+    struct PartyPokemon *mon = Party_GetMonByIndex(partyMenu->args->party, partyMenu->partyMonIndex);
+    PartyMenuStateFunc levelUpFunc = (PartyMenuStateFunc)(0x02081A74 | 1);
+
+    if (!Pokemon_CanLevelToCap(mon)) {
+        sLevelToCapActive = FALSE;
+        partyMenu->args->context = PARTY_MENU_CONTEXT_0;
+        PartyMenu_PrintMessageOnWindow32(partyMenu, 29, TRUE);
+        LevelToCap_RestorePartySelectionUI(partyMenu);
+        return PARTY_MENU_STATE_1;
+    }
+
+    partyMenu->args->levelUpMoveSearchState = 0;
+    partyMenu->args->itemId = ITEM_NONE;
+    partyMenu->args->context = PARTY_MENU_CONTEXT_0;
+    return levelUpFunc(partyMenu);
+}
+
+/**
+ *  @brief handle the contextual Level to Cap party-menu action
+ *
+ *  @param partyMenu active party menu
+ *  @param pState destination for the next PartyMenuState
+ */
+void LONG_CALL PartyMonContextMenuAction_LevelToCap(struct PartyMenu *partyMenu, int *pState)
+{
+    ClearFrameAndWindow2(&partyMenu->windows[PARTY_MENU_WINDOW_ID_33], TRUE);
+    PartyMenu_DeleteContextMenuAndList(partyMenu);
+    LevelToCap_RestorePartySelectionUI(partyMenu);
+    sLevelToCapActive = TRUE;
+    *pState = LevelToCap_StartNextLevel(partyMenu);
+}
+
+/**
+ *  @brief replace Rare Candy mutation with one cap-aware level while the command is active
+ */
+BOOL LONG_CALL LevelToCap_UseItemOnMonInParty(struct Party *party,
+    u16 itemId,
+    s32 partySlot,
+    u8 moveSlot,
+    u16 mapSection,
+    u32 heapId)
+{
+    typedef BOOL (*UseItemOnMonInPartyFunc)(struct Party *, u16, s32, u8, u16, u32);
+    UseItemOnMonInPartyFunc useItem = (UseItemOnMonInPartyFunc)(0x020908AC | 1);
+
+    if (sLevelToCapActive && itemId == ITEM_NONE) {
+        return Pokemon_LevelToCapOneLevel(Party_GetMonByIndex(party, partySlot));
+    }
+
+    return useItem(party, itemId, partySlot, moveSlot, mapSection, heapId);
+}
+
+/**
+ *  @brief resume a Level to Cap run after an evolution has reopened the party menu
+ *
+ *  @return next PartyMenuState, or -1 when vanilla move-learning resume should run
+ */
+int LONG_CALL LevelToCap_TryResumePartyMenu(struct PartyMenu *partyMenu)
+{
+    if (!sLevelToCapActive
+        || partyMenu->args->levelUpMoveSearchState != LEVEL_TO_CAP_RESUME_SENTINEL) {
+        return -1;
+    }
+
+    partyMenu->args->levelUpMoveSearchState = 0;
+    return LevelToCap_StartNextLevel(partyMenu);
+}
+
+BOOL LONG_CALL LevelToCap_IsActive(void)
+{
+    return sLevelToCapActive;
+}
+
+/**
+ *  @brief reopen the selected Pokemon after its evolution instead of returning to the Bag
+ */
+void LONG_CALL LevelToCap_AfterEvolution(void *startMenu, FieldSystem *fieldSystem)
+{
+    typedef PartyMenuArgs *(*PartyMenuLaunchFunc)(FieldSystem *, void *, u8);
+    typedef void (*SetExitTaskFunc)(void *, StartMenuExitTaskFunc);
+
+    u8 *startMenuBytes = startMenu;
+    void **environment = (void **)(startMenuBytes + START_MENU_EXIT_ENVIRONMENT_OFFSET);
+    void **environment2 = (void **)(startMenuBytes + START_MENU_EXIT_ENVIRONMENT_2_OFFSET);
+    int partySlot = *(int *)(*environment2);
+    PartyMenuLaunchFunc launchPartyMenu = (PartyMenuLaunchFunc)(0x0203E550 | 1);
+    SetExitTaskFunc setExitTask = (SetExitTaskFunc)(0x0203C8F0 | 1);
+    PartyMenuArgs *args;
+
+    args = launchPartyMenu(fieldSystem,
+        startMenuBytes + START_MENU_FIELD_MOVE_CHECK_DATA_OFFSET,
+        (u8)partySlot);
+    args->context = PARTY_MENU_CONTEXT_REPLACE_MOVE_LEVELUP;
+    args->levelUpMoveSearchState = LEVEL_TO_CAP_RESUME_SENTINEL;
+    *environment = args;
+
+    sys_FreeMemoryEz(*environment2);
+    *environment2 = NULL;
+    setExitTask(startMenu, (StartMenuExitTaskFunc)(0x0203CA9C | 1));
+}
+
+#else
+
+// The assembly trampolines are always linked, while the hooks that install
+// them are controlled by IMPLEMENT_LEVEL_CAP in the hooks manifest.
+BOOL LONG_CALL LevelToCap_UseItemOnMonInParty(struct Party *party UNUSED,
+    u16 itemId UNUSED,
+    s32 partySlot UNUSED,
+    u8 moveSlot UNUSED,
+    u16 mapSection UNUSED,
+    u32 heapId UNUSED)
+{
+    return FALSE;
+}
+
+int LONG_CALL LevelToCap_TryResumePartyMenu(struct PartyMenu *partyMenu UNUSED)
+{
+    return -1;
+}
+
+BOOL LONG_CALL LevelToCap_IsActive(void)
+{
+    return FALSE;
+}
+
+void LONG_CALL LevelToCap_AfterEvolution(void *startMenu UNUSED, FieldSystem *fieldSystem UNUSED)
+{
+}
+
+#endif // IMPLEMENT_LEVEL_CAP
 
 /*
  * @brief hooks into the ending of pokeheartgold PartyMenu_ItemUseFunc_WaitTextPrinterThenExit

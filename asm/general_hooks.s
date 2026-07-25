@@ -115,6 +115,51 @@ bl PartyMenu_ItemUseFunc_LevelUpLearnMovesLoop_Case6
 ldr r1, =0x02081ea6 | 1
 bx r1
 
+.global LevelToCap_UseItemOnMonInParty_hook
+LevelToCap_UseItemOnMonInParty_hook:
+bl LevelToCap_UseItemOnMonInParty
+mov r0, r4
+mov r1, #0xa1
+ldr r3, =0x02081b00 | 1
+bx r3
+
+.global LevelToCap_ResumePartyMenu_hook
+LevelToCap_ResumePartyMenu_hook:
+push {r3-r5, lr}
+mov r4, r0
+bl LevelToCap_TryResumePartyMenu
+cmp r0, #0
+bge LevelToCap_ResumePartyMenu_return
+ldr r0, =0x02081c51
+mov r1, #0xc5
+lsl r1, #4
+add r1, #4
+mov r2, #3
+ldr r3, =0x02081eda | 1
+bx r3
+
+LevelToCap_ResumePartyMenu_return:
+pop {r3-r5, pc}
+
+.global LevelToCap_AfterEvolution_hook
+LevelToCap_AfterEvolution_hook:
+bl LevelToCap_IsActive
+cmp r0, #0
+beq LevelToCap_AfterEvolution_vanilla
+mov r0, r4
+mov r1, r5
+bl LevelToCap_AfterEvolution
+ldr r3, =0x0203db60 | 1
+bx r3
+
+LevelToCap_AfterEvolution_vanilla:
+mov r0, r5
+mov r1, #0xd6
+lsl r1, #2
+add r1, r4
+ldr r3, =0x0203db34 | 1
+bx r3
+
 .global PartyMenu_ItemUseFunc_ReuseItem_hook
 PartyMenu_ItemUseFunc_ReuseItem_hook:
 mov r0, r4
