@@ -21,7 +21,11 @@ def sorter(e):
 
 def main():
     rawtext = sys.argv[1].strip()
-    onlydirs = [f for f in listdir(rawtext) if isdir(join(rawtext, f))]
+    requested = set(sys.argv[2:])
+    onlydirs = [
+        f for f in listdir(rawtext)
+        if isdir(join(rawtext, f)) and (not requested or f in requested)
+    ]
     for dir in onlydirs:
         process_text(os.path.join(rawtext, dir))
 
@@ -46,24 +50,33 @@ def process_text(folder):
             break
     onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))]
     onlyfiles.sort(key=sorter)
-    with open(folder + '.txt', 'w', encoding='utf-8') as out:
-        for file in onlyfiles:
-            try:
-                infile = open(os.path.join(folder, file), 'r', encoding='utf-8').read()
-            except UnicodeDecodeError:
-                # potentially try and detect it based on sys.platform.startswith('win')?
-                infile = open(os.path.join(folder, file), 'r', encoding='cp1252').read()
-            #with open(os.path.join(folder, file), 'r', encoding='utf-8') as infile:
-            s = infile.replace('"','”').replace('\'','’').replace('`','’')
-            if caps:
-                s = s.upper()
-            if articles:
-                s = ('an ' if s.upper().startswith('A') or s.upper().startswith('E') or s.upper().startswith('I') or s.upper().startswith('O') or s.upper().startswith('U') else 'a ') + s
-            if s != '':
-                if force_length != '':
-                    while len(s) < force_lengths[force_length]:
-                        s = ' ' + s
-            out.write(s + '\n')
+    lines = []
+    for file in onlyfiles:
+        try:
+            infile = open(os.path.join(folder, file), 'r', encoding='utf-8').read()
+        except UnicodeDecodeError:
+            # potentially try and detect it based on sys.platform.startswith('win')?
+            infile = open(os.path.join(folder, file), 'r', encoding='cp1252').read()
+        #with open(os.path.join(folder, file), 'r', encoding='utf-8') as infile:
+        s = infile.replace('"','”').replace('\'','’').replace('`','’')
+        if caps:
+            s = s.upper()
+        if articles:
+            s = ('an ' if s.upper().startswith('A') or s.upper().startswith('E') or s.upper().startswith('I') or s.upper().startswith('O') or s.upper().startswith('U') else 'a ') + s
+        if s != '':
+            if force_length != '':
+                while len(s) < force_lengths[force_length]:
+                    s = ' ' + s
+        lines.append(s + '\n')
+
+    output = ''.join(lines)
+    output_path = folder + '.txt'
+    if isfile(output_path):
+        with open(output_path, 'r', encoding='utf-8') as existing:
+            if existing.read() == output:
+                return
+    with open(output_path, 'w', encoding='utf-8', newline='') as out:
+        out.write(output)
 
 
 if __name__ == '__main__':

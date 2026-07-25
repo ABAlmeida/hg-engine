@@ -1,5 +1,6 @@
 CC := gcc
 CFLAGS := -std=c11 -O2 -Wall -Wextra -I../../..
+DATA_CFLAGS := -std=c11 -O0 -Wall -Wextra -I../../..
 TARGET := ../../../tools/movedatagen
 
 SRCS := move_data_gen.c
@@ -23,8 +24,8 @@ $(DEPDIR): ; @mkdir -p $@
 %.o: %.c $(DEPDIR)/%.d | $(DEPDIR)
 	$(CC) $(CFLAGS) $(DEPFLAGS) -c -o $@ $<
 
-$(DATA_OBJ): $(DATA_SRC) ../../../include/move_data.h ../../../include/config.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+$(DATA_OBJ): $(DATA_SRC) ../../../include/move_data.h ../../../include/data_config.h
+	$(CC) $(DATA_CFLAGS) -c -o $@ $<
 
 clean:
 	$(RM) $(TARGET) movedatagen.exe $(OBJS)

@@ -24,9 +24,6 @@ MSGDATA_COMPILETIME_DEPENDENCIES_DIR := $(BUILD)/rawtext
 CHARMAP := charmap.txt
 
 
-$(BUILD)/rawtext/%.txt: $(BUILD_NARC)/a011.narc $(BUILD_NARC)/a055.narc $(BUILD_NARC)/personal.narc $(BUILD_NARC)/trainer_text_map.narc scripts/msg_cat.py
-	$(PYTHON) scripts/msg_cat.py $(BUILD)/rawtext
-
 # actual msgdata rule at bottom to allow MSGDATA_COMPILETIME_DEPENDENCIES to be fully defined
 NARC_FILES += $(MSGDATA_NARC)
 REQUIRED_DIRECTORIES += $(MSGDATA_DIR) $(MSGDATA_COMPILETIME_DEPENDENCIES_DIR)
@@ -678,8 +675,13 @@ $(SCR_SEQ_NARC): $(SCR_SEQ_DEPENDENCIES)
 	for file in $^; do $(ARMIPS) $$file; done
 	$(NARCHIVE) create $@ $(SCR_SEQ_DIR) -nf
 
-# for convenience, rebuild SCR_SEQ_NARC every build so that DSPRE changes are not overwritten
-.PHONY: $(SCR_SEQ_NARC)
+# DSPRE edits made directly to the extracted archive are outside Make's source
+# graph. Use `make rebuild_scripts` after such an edit; normal builds can then
+# keep this archive incremental.
+.PHONY: rebuild_scripts
+rebuild_scripts:
+	rm -f $(SCR_SEQ_NARC)
+	$(MAKE) $(SCR_SEQ_NARC)
 
 NARC_FILES += $(SCR_SEQ_NARC)
 
@@ -783,8 +785,14 @@ clean_trgfx:
 	rm -rf $(TRAINER_GFX_DIR) $(TRAINER_GFX_NARC) $(TRAINER_GFX_BACK_DIR) $(TRAINER_GFX_BACK_NARC)
 
 
-$(MSGDATA_NARC): $(MSGDATA_DEPENDENCIES) $(MSGDATA_COMPILETIME_DEPENDENCIES)
+MSGDATA_COMPILETIME_STAMP := $(MSGDATA_COMPILETIME_DEPENDENCIES_DIR)/.generated
+
+$(MSGDATA_COMPILETIME_STAMP): $(BUILD_NARC)/a011.narc $(BUILD_NARC)/a055.narc $(BUILD_NARC)/personal.narc $(BUILD_NARC)/trainer_text_map.narc scripts/msg_cat.py
+	$(PYTHON) scripts/msg_cat.py $(MSGDATA_COMPILETIME_DEPENDENCIES_DIR) $(notdir $(basename $(MSGDATA_COMPILETIME_DEPENDENCIES)))
+	@touch $@
+
+$(MSGDATA_NARC): $(MSGDATA_DEPENDENCIES) $(MSGDATA_COMPILETIME_STAMP)
 	$(NARCHIVE) extract $(MSGDATA_TARGET) -o $(MSGDATA_DIR) -nf
 	for file in $(MSGDATA_DEPENDENCIES); do $(PYTHON) tools/source/dumptools/validate_text_archive.py $(CHARMAP) $$file || exit 1; done
-	for file in $^; do $(MSGENC) -e -c $(CHARMAP) $$file $(MSGDATA_DIR)/7_$$(basename $$file .txt); done
+	for file in $(MSGDATA_DEPENDENCIES) $(MSGDATA_COMPILETIME_DEPENDENCIES); do $(MSGENC) -e -c $(CHARMAP) $$file $(MSGDATA_DIR)/7_$$(basename $$file .txt); done
 	$(NARCHIVE) create $@ $(MSGDATA_DIR) -nf

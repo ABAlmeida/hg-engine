@@ -7,7 +7,7 @@
 #include "constants/moves.h"
 #include "constants/pokemon.h"
 
-#include "config.h"
+#include "data_config.h"
 
 #define SPLIT_PHYSICAL 0
 #define SPLIT_SPECIAL  1

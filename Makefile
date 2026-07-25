@@ -66,6 +66,14 @@ CC = $(DEVKITARM)/$(PREFIX)gcc
 LD = $(DEVKITARM)/$(PREFIX)ld
 OBJCOPY = $(DEVKITARM)/$(PREFIX)objcopy
 endif
+
+# Use ccache automatically when it is installed. Builds fall back to the
+# compiler directly when ccache is unavailable.
+CCACHE := $(shell command -v ccache 2>/dev/null)
+ifneq ($(CCACHE),)
+CC := $(CCACHE) $(CC)
+endif
+
 PYTHON_NO_VENV = python3
 VENV = .venv
 PYTHON_VENV_VERSION := $(shell $(PYTHON_NO_VENV) -m ensurepip 2>&1 | grep -i -q 'No module named'; echo $$?)
@@ -81,7 +89,7 @@ PYTHON = $(PYTHON_NO_VENV)
 VENV_ACTIVATE =
 endif
 
-.PHONY: clean all dumprom move_narc refresh_base_code
+.PHONY: clean all code dumprom full-rom move_narc quick-rom refresh_base_code
 
 move_narc clean restore: NOSCAN = 1
 
@@ -148,6 +156,7 @@ BUILD := build
 BUILD_NARC := $(BUILD)/narc
 BASE := base
 FILESYS := $(BASE)/root
+BASE_EXTRACTION_STAMP := $(BASE)/.extracted
 
 LINK = $(BUILD)/linked.o
 OUTPUT = $(BUILD)/output.bin
@@ -243,7 +252,7 @@ $(GFX): $(NITROGFX_SOURCES)
 
 TOOLS += $(GFX)
 
-$(MOVEDATAGEN): $(wildcard tools/source/movedatagen/*.c) data/Moves.c include/move_data.h include/config.h
+$(MOVEDATAGEN): $(wildcard tools/source/movedatagen/*.c) data/Moves.c include/move_data.h include/data_config.h
 	cd tools/source/movedatagen ; $(MAKE)
 
 TOOLS += $(MOVEDATAGEN)
@@ -253,7 +262,7 @@ $(POKEDEXDATAGEN): $(wildcard tools/source/pokedexdatagen/*.c) data/PokedexSort.
 
 TOOLS += $(POKEDEXDATAGEN)
 
-$(SPECIESDATAGEN): $(wildcard tools/source/speciesdatagen/*.c) data/Species.c include/species_data.h include/config.h
+$(SPECIESDATAGEN): $(wildcard tools/source/speciesdatagen/*.c) data/Species.c include/species_data.h include/data_config.h
 	cd tools/source/speciesdatagen ; $(MAKE)
 
 TOOLS += $(SPECIESDATAGEN)
@@ -293,7 +302,7 @@ $(CODE_BUILD_DIRS):
 # generate .d dependency files that are included as part of compiling if it does not exist
 define SRC_OBJ_INC_DEFINE
 # this generates the objects as part of generating the dependency list which will just be massive files of rules
-$1: $2 $(LEARNSETS_HEADER) $(BATTLETESTS_HEADER) | $(dir $1)
+$1: $2 | $(dir $1)
 	$(CC) -MMD -MF $(basename $1).d $(CFLAGS) -c $2 -o $1
 	@#printf "\t$(CC) $(CFLAGS) -c $2 -o $1" >> $(basename $1).d
 
@@ -303,6 +312,14 @@ endef
 ifneq (1,$(NOSCAN))
 $(foreach src, $(ALL_C_SRCS), $(eval $(call SRC_OBJ_INC_DEFINE,$(patsubst $(C_SUBDIR)/%.c,$(BUILD)/%.o, $(src)),$(src))))
 endif
+
+# Generated headers only invalidate the source files that include them.
+$(BUILD)/field/move_tutor.o \
+$(BUILD)/field/script_commands.o \
+$(BUILD)/individual/PartyMenu_HandleUseItemOnMon.o \
+$(BUILD)/pokemon.o: $(LEARNSETS_HEADER)
+
+$(BUILD)/test_battle.o: $(BATTLETESTS_HEADER)
 
 define ASM_OBJ_INC_DEFINE
 # these should have similar dependency scanning, but we do not currently use them in a way conducive to it
@@ -320,33 +337,32 @@ $(LINK):$(OBJS)
 $(OUTPUT):$(LINK)
 	$(OBJCOPY) -O binary $< $@
 
-# only reextract from the rom if the romname is newer than the extracted arm9.bin
-$(BASE)/arm9.bin: $(ROMNAME) $(NDSTOOL) $(VENV_ACTIVATE)
+# Only reextract when the source ROM changes. The separate stamp is not
+# modified by later executable refreshes, so it is safe for dependency checks.
+$(BASE_EXTRACTION_STAMP): $(ROMNAME) $(NDSTOOL) $(VENV_ACTIVATE)
 	rm -rf $(BASE)
 	@mkdir -p $(REQUIRED_DIRECTORIES)
 	$(NDSTOOL) -x $(ROMNAME) -9 $(BASE)/arm9.bin -7 $(BASE)/arm7.bin -y9 $(BASE)/overarm9.bin -y7 $(BASE)/overarm7.bin -d $(FILESYS) -y $(BASE)/overlay -t $(BASE)/banner.bin -h $(BASE)/header.bin
 	$(NARCHIVE) extract $(FILESYS)/a/0/2/8 -o $(BUILD)/a028/ -nf
+	@touch $@
 
 # Binary patches are conditional and are not all reversible. In particular, an
 # AUTO_TEST build leaves debug hooks behind if a later normal build patches the
 # same extracted files in place. Restore the executable inputs from rom.nds
 # before every patch pass while preserving the generated NitroFS in base/root.
-refresh_base_code: $(BASE)/arm9.bin $(NDSTOOL)
+refresh_base_code: $(BASE_EXTRACTION_STAMP) $(NDSTOOL)
 	rm -rf $(BASE)/overlay
 	@mkdir -p $(BASE)/overlay
 	$(NDSTOOL) -x $(ROMNAME) -9 $(BASE)/arm9.bin -y9 $(BASE)/overarm9.bin -y $(BASE)/overlay
 
-all: $(OUTPUT) $(OVERLAY_OUTPUTS) $(TOOLS) refresh_base_code
-	@# find and delete macOS and windows files
-	find . \( -name "*.DS_Store" -o -name "*:Zone.Identifier" \) -delete
-	$(PYTHON) scripts/make.py $(CFLAGS)
-# TODO: find a convenient way to not have this be a separate $(MAKE)
-	$(MAKE) move_narc
-	$(ARMIPS) armips/global.s $(ARMIPS_FLAGS)
-	$(NARCHIVE) create $(FILESYS)/a/0/2/8 $(BUILD)/a028/ -nf
-	@echo "Making ROM..."
-	$(NDSTOOL) -c $(BUILDROM) -9 $(BASE)/arm9.bin -7 $(BASE)/arm7.bin -y9 $(BASE)/overarm9.bin -y7 $(BASE)/overarm7.bin -d $(FILESYS) -y $(BASE)/overlay -t $(BASE)/banner.bin -h $(BASE)/header.bin
-	@echo "Done.  See output $(BUILDROM)."
+all: $(BUILDROM)
+
+# Compile and link injected code without modifying base/ or packaging a ROM.
+code: $(OUTPUT) $(OVERLAY_OUTPUTS)
+
+# This named entry point uses the safe incremental graph. It never skips stale
+# data; code-only changes naturally take the short path.
+quick-rom full-rom: $(BUILDROM)
 
 
 ####################### Restore clean base ################
@@ -378,8 +394,9 @@ clean_code:
 ####################### Final ROM Build #######################
 CODE_ADDON_ARTIFACTS := $(wildcard $(BUILD)/a028/9_*) $(wildcard $(BUILD)/a028/8_1*) $(wildcard build/$(BUILD)/8_2*) $(BUILD)/a028/8_07 $(BUILD)/a028/8_08 $(BUILD)/a028/8_09
 CODE_ADDON_ARTIFACTS := $(filter-out $(BUILD)/a028/8_1 $(BUILD)/a028/8_2 $(BUILD)/a028/8_3 $(BUILD)/a028/8_4 $(BUILD)/a028/8_5 $(BUILD)/a028/8_6, $(CODE_ADDON_ARTIFACTS))
+DATA_INSTALL_STAMP := $(BUILD)/.data_installed
 
-move_narc: $(NARC_FILES)
+move_narc $(DATA_INSTALL_STAMP): $(NARC_FILES) $(BASE_EXTRACTION_STAMP)
 	@echo "battle hud layout:"
 	cp $(BATTLEHUD_NARC) $(BATTLEHUD_TARGET)
 
@@ -563,6 +580,36 @@ move_narc: $(NARC_FILES)
 
 	@echo "hidden item params:"
 	cp $(HIDDEN_ITEM_PARAMS_BIN) $(HIDDEN_ITEM_PARAMS_TARGET)
+	@touch $(DATA_INSTALL_STAMP)
+
+####################### Incremental ROM assembly #######################
+PATCH_STAMP := $(BUILD)/.base_patched
+CODE_NARC_STAMP := $(BUILD)/.code_narc_installed
+ARMIPS_INPUTS := $(shell find armips -type f)
+PATCH_INPUTS := scripts/make.py hooks armhooks bytereplacement repoints routinepointers $(ARMIPS_INPUTS)
+
+# Many archive generators extract an existing file from base/root. Ensure the
+# source ROM has been extracted before any of them can run in parallel.
+$(NARC_FILES): | $(BASE_EXTRACTION_STAMP)
+
+# Restore pristine executable inputs immediately before every actual patch
+# pass. A true no-op build skips this entire stage.
+$(PATCH_STAMP): $(OUTPUT) $(OVERLAY_OUTPUTS) $(TOOLS) $(DATA_INSTALL_STAMP) $(PATCH_INPUTS)
+	rm -rf $(BASE)/overlay
+	@mkdir -p $(BASE)/overlay
+	$(NDSTOOL) -x $(ROMNAME) -9 $(BASE)/arm9.bin -y9 $(BASE)/overarm9.bin -y $(BASE)/overlay
+	$(PYTHON) scripts/make.py $(CFLAGS)
+	$(ARMIPS) armips/global.s $(ARMIPS_FLAGS)
+	@touch $@
+
+$(CODE_NARC_STAMP): $(PATCH_STAMP)
+	$(NARCHIVE) create $(FILESYS)/a/0/2/8 $(BUILD)/a028/ -nf
+	@touch $@
+
+$(BUILDROM): $(CODE_NARC_STAMP)
+	@echo "Making ROM..."
+	$(NDSTOOL) -c $@ -9 $(BASE)/arm9.bin -7 $(BASE)/arm7.bin -y9 $(BASE)/overarm9.bin -y7 $(BASE)/overarm7.bin -d $(FILESYS) -y $(BASE)/overlay -t $(BASE)/banner.bin -h $(BASE)/header.bin
+	@echo "Done.  See output $@."
 
 update_machine_moves: $(VENV_ACTIVATE)
 	$(PYTHON) scripts/update_machine_moves.py --descriptions --sprites

@@ -8,7 +8,7 @@
 #include "constants/pokemon.h"
 #include "constants/species.h"
 
-#include "config.h"
+#include "data_config.h"
 
 #ifndef TYPES_H
 typedef uint8_t u8;
