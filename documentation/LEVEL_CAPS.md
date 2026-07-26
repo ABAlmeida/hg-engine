@@ -1,7 +1,7 @@
 # Heartless Gold Level Caps
 
 Heartless Gold stores the current level cap in the expanded miscellaneous save
-block. New saves start at level 5. Winning a configured story battle calls
+block. New saves start at level 7. Winning a configured story battle calls
 `SetNewLevelCap`; the setter accepts equal or higher caps and ignores lower
 caps.
 
@@ -30,7 +30,7 @@ usable field move without removing either a field move or the leveling action.
 
 | Victory | New cap |
 | --- | ---: |
-| New save | 5 |
+| New save | 7 |
 | Silver fight 1 | 13 |
 | Falkner | 17 |
 | Bugsy | 18 |
@@ -87,7 +87,7 @@ The complete symbolic trainer IDs are defined in
 
 ## Save behavior
 
-- `SAVE_MISC_DATA.levelCap` is initialized to 5 for a new save.
+- `SAVE_MISC_DATA.levelCap` is initialized to 7 for a new save.
 - A configured victory writes its cap before control returns to the field.
 - A reward lower than the saved cap is ignored.
 - An equal reward is accepted, so same-cap milestones remain explicit.

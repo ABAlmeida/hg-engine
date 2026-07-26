@@ -7,8 +7,9 @@ generated ROM or an emulator save.
 ## Repository layout and upstream
 
 - Run project commands from this directory (`hg-engine`), not its parent.
-- The project currently tracks branch `main` at
-  `b38bce6a76196111219275f248e57f7a9ece4448`.
+- The project is based on hg-engine commit
+  `b38bce6a76196111219275f248e57f7a9ece4448`. Do not treat that upstream base
+  commit as the current Heartless Gold `main` revision.
 - The configured `origin` is `https://github.com/ABAlmeida/hg-engine.git`.
   hg-engine's canonical upstream is `https://github.com/BluRosie/hg-engine.git`,
   but no local `upstream` remote is currently configured.
@@ -67,6 +68,20 @@ make -j$(nproc)
 
 The generated ROM is `test.nds` at repository root.
 
+Use the narrowest build target that covers the change:
+
+```sh
+make code                  # compile and link injected code only
+make quick-rom -j$(nproc)  # safe incremental ROM build
+make full-rom -j$(nproc)   # full normal dependency graph
+make rebuild_scripts       # explicitly import DSPRE script-archive edits
+```
+
+`quick-rom` and `full-rom` currently share the same safe timestamp-driven
+dependency graph; the separate names communicate intent. `rebuild_scripts` is
+only for deliberately importing edits made directly to the installed script
+archive. Normal source-controlled script changes do not need it.
+
 For a clean baseline rebuild:
 
 ```sh
@@ -88,6 +103,11 @@ Do not use `make restore` unless the required local `romClean.nds` workflow has
 been deliberately set up; ROM backup copies remain local and ignored.
 
 ## Testing commands
+
+Never run the automated battle-test suite unless the user explicitly requests
+it in the current conversation. Building a ROM, smoke-testing it in an
+emulator, and running battle tests are separate actions and require their own
+authorization.
 
 Build the automated battle-test ROM and run the headless suite:
 
@@ -132,8 +152,11 @@ smoke test. Battle-engine changes should add scenarios under
 
 - `README.md`, `CONFIG.md`, and `CONTRIBUTING.md` are the primary setup and
   contribution references.
-- `include/config.h` and `armips/include/config.s` are separate configuration
-  surfaces; keep equivalent settings consistent where both exist.
+- `include/config.h` and `armips/include/config.s` are normally separate
+  configuration surfaces; keep equivalent settings consistent where both
+  exist. Bait encounters are the deliberate exception: the build generates
+  `build/armips_config.s` from `IMPLEMENT_BAIT_ENCOUNTERS` in
+  `include/config.h`.
 - Expanded save support must remain enabled through `ALLOW_SAVE_CHANGES`;
   expanded PC boxes are enabled with `EXPAND_PC_BOXES`. Ordinary HeartGold
   saves and PKHeX compatibility are not project requirements.
@@ -152,6 +175,7 @@ smoke test. Battle-engine changes should add scenarios under
 
 ## Current baseline
 
-See `documentation/BASELINE_BUILD.md`. The 2026-07-23 clean normal build and
-melonDS 1.1 boot check pass. Keep that build-and-boot baseline green before
-starting or merging gameplay feature work.
+See `documentation/BASELINE_BUILD.md` for the preserved 2026-07-23 clean
+baseline. Later Heartless Gold feature builds and manual checks are tracked in
+`documentation/PROJECT_PLAN.md`; do not rewrite the historical baseline as
+though newer features were present in it.

@@ -25,7 +25,7 @@
 
  ``DELETABLE_HMS`` (``armips/include/config.s`` only) makes code edits to make HM's forgettable.  Strongly recommended at this time to pair with ``REUSABLE_TMS`` in order to preserve the HM's in the bag.
 
- ``NO_PARTNER_DOUBLE_BATTLES`` (``armips/include/config.s`` only) removes the requirement to put in a partner NPC in the overworld for trainers with double battles.  Note that the entry in `armips/data/trainers/trainertext.s` has to use `TEXT_DOUBLE_DEFEATED_IN_BATTLE_1`, but the overworld entries can remain the same.
+ ``NO_PARTNER_DOUBLE_BATTLES`` (``armips/include/config.s`` only) removes the requirement to put a partner NPC in the overworld for trainers with double battles. Trainer definitions and their text now live in ``data/Trainers.c``; double-battle defeat text should use the corresponding ``TRMSG_LOSE`` entry there.
 
  ``APPLY_ANTIPIRACY`` (``armips/include/config.s`` only) is a toggle that will apply the typical anti-piracy code changes to your ROM.  This will allow it to work on hardware (R4, TWLmenu) better, preventing various crashes and softlocks.
 
@@ -37,7 +37,7 @@
 
  ``PRIMAL_REVERSION`` (``include/config.h`` only) is a toggle for the compilation of the primal reversion system.  Commenting the line out will disable Groudon and Kyogre from primally reverting under any circumstances.
 
- ``IMPLEMENT_BDHCAM_ROUTINE`` (``include/config.h`` only) is a toggle for the assembly of [Mikelan's BDHCAM system](pokehacking.com/r/20110901) into overlay 131.  This is because hg-engine does not use the synthetic overlay system, so it needs to dynamically link it itself.
+ ``IMPLEMENT_BDHCAM_ROUTINE`` (``include/config.h`` only) is a toggle for the assembly of [Mikelan's BDHCAM system](https://pokehacking.com/r/20110901) into overlay 131.  This is because hg-engine does not use the synthetic overlay system, so it needs to dynamically link it itself.
 
  ``IMPLEMENT_TRANSPARENT_TEXTBOXES`` (``include/config.h`` only) is a toggle for the compilation and inclusion of transparent textboxes in your hack.
 
@@ -49,7 +49,7 @@
 
  ``IMPLEMENT_NEW_EV_IV_VIEWER`` (``include/config.h`` only) is a toggle that will enable an EV/IV viewer on the summary screen using the L, R, and Select buttons to swap between the EV's, IV's, and normal stats respectively.  This also adds up and down arrows to the stat names to make it clear which is boosted and which is nerfed.
 
- ``IMPLEMENT_LEVEL_CAP`` (``include/config.h`` only) enables the Heartless Gold hard level cap. The current cap is stored in the expanded save data, starts at level 5, and is raised by configured story-trainer victories. Lower cap rewards are ignored. Eligible Pokémon below the cap gain a ``LEVEL TO CAP`` command in their normal party-menu actions. It advances one level at a time, runs every move-learning and evolution prompt, and stops at the saved cap without consuming an item. If a Pokémon is at or above the cap, experience gain is disabled and Rare Candies stop working. ``UNCAP_CANDIES_FROM_LEVEL_CAP`` further decouples Rare Candies from this requirement, allowing Rare Candies to level Pokémon beyond the level cap. Contrarily, ``ALLOW_LEVEL_CAP_EVOLVE`` allows Rare Candies to trigger an evolution if the Pokémon would otherwise have evolved upon leveling up. See ``documentation/LEVEL_CAPS.md`` for the progression table and command behavior.
+ ``IMPLEMENT_LEVEL_CAP`` (``include/config.h`` only) enables the Heartless Gold hard level cap. The current cap is stored in the expanded save data, starts at level 7, and is raised by configured story-trainer victories. Lower cap rewards are ignored. Eligible Pokémon below the cap gain a ``LEVEL TO CAP`` command in their normal party-menu actions. It advances one level at a time, runs every move-learning and evolution prompt, and stops at the saved cap without consuming an item. If a Pokémon is at or above the cap, experience gain is disabled and Rare Candies stop working. ``UNCAP_CANDIES_FROM_LEVEL_CAP`` further decouples Rare Candies from this requirement, allowing Rare Candies to level Pokémon beyond the level cap. Contrarily, ``ALLOW_LEVEL_CAP_EVOLVE`` allows Rare Candies to trigger an evolution if the Pokémon would otherwise have evolved upon leveling up. See ``documentation/LEVEL_CAPS.md`` for the progression table and command behavior.
 
  ``UPDATE_OVERWORLD_POISON`` (``include/config.h`` only) is a toggle that disables overworld poison when enabled.  Overworld poison is disabled by default.
 
@@ -63,7 +63,7 @@
 
  ``PROTEAN_GENERATION`` (``include/config.h`` only) defines the generation that Protean's behavior is implemented from.  Later generations make Protean only activate once per appearance in battle.
 
- ``IMPLEMENT_BAIT_ENCOUNTERS`` (``include/config.h``) disables ordinary passive land and surfing encounters and enables the custom Poké Bait items. Poké Bait starts one ordinary encounter from the current terrain's normal table; Shiny Bait does the same and assigns a genuinely shiny personality value. Roamers, Safari Zone, Bug-Catching Contest, fishing, Rock Smash, Headbutt, and static or scripted encounters keep their normal entry points. This option replaces ``IMPLEMENT_REUSABLE_REPELS``; the two systems are not compatible. The build generates the matching Armips setting automatically, so commenting out the C definition restores passive encounters and the original Repel metadata and acquisition sources. See ``documentation/BAIT_ENCOUNTERS.md`` for implementation and acquisition details.
+ ``IMPLEMENT_BAIT_ENCOUNTERS`` (``include/config.h``) disables ordinary passive land and surfing encounters and enables the custom Poké Bait items. Poké Bait starts one ordinary encounter from the current terrain's normal table; Shiny Bait does the same and assigns a genuinely shiny personality value. Roamers, Safari Zone, Bug-Catching Contest, fishing, Rock Smash, Headbutt, and static or scripted encounters keep their normal entry points. This option replaces ``IMPLEMENT_REUSABLE_REPELS``; the two systems are not compatible. The build generates the matching Armips setting automatically, so commenting out the C definition restores passive encounters, the original Repel metadata and acquisition sources, and the original Rare Candy rewards. See ``documentation/BAIT_ENCOUNTERS.md`` for implementation and acquisition details.
 
  ``UPDATE_VITAMIN_EV_CAPS`` (``include/config.h`` only) updates the EV caps for vitamins from 100 to 252 like later generations.
 
