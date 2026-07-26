@@ -1,1 +1,2 @@
-{COLOR 255}Custom Items{COLOR 0}
+{COLOR 255}Poké Bait{COLOR 0}
+{COLOR 255}Shiny Bait{COLOR 0}

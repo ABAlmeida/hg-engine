@@ -164,8 +164,11 @@
 // Otherwise: Hail
 #define SNOW_WARNING_GENERATION GEN_LATEST
 
-// IMPLEMENT_REUSABLE_REPELS defines whether or not a prompt to use another repel automatically appears upon the previous repel being used up
-#define IMPLEMENT_REUSABLE_REPELS
+// IMPLEMENT_BAIT_ENCOUNTERS disables ordinary passive encounters and enables Poké Bait and Shiny Bait.
+#define IMPLEMENT_BAIT_ENCOUNTERS
+
+// Reusable Repels are incompatible with the Bait encounter system.
+// #define IMPLEMENT_REUSABLE_REPELS
 
 // UPDATE_VITAMIN_EV_CAPS changes the cap on the vitamins from 100 to 252 per recent generations
 #define UPDATE_VITAMIN_EV_CAPS
@@ -184,6 +187,22 @@
 
 // POKEATHLON_EXPANSION allows for adding and modifying items to the Pokéathlon shop inventories
 // #define POKEATHLON_SHOP_EXPANSION
+
+#if defined(IMPLEMENT_BAIT_ENCOUNTERS) && defined(IMPLEMENT_REUSABLE_REPELS)
+#error "Bait encounters and reusable Repels cannot be enabled together"
+#endif
+
+#if defined(IMPLEMENT_BAIT_ENCOUNTERS) && !defined(ALLOW_SAVE_CHANGES)
+#error "Bait encounters require expanded save support for custom item storage"
+#endif
+
+#if defined(IMPLEMENT_BAIT_ENCOUNTERS) && !defined(ITEM_POCKET_EXPANSION)
+#error "Bait encounters require expanded item pockets"
+#endif
+
+#if defined(IMPLEMENT_BAIT_ENCOUNTERS) && !defined(MART_EXPANSION)
+#error "Bait encounters require expanded mart inventories"
+#endif
 
 // STATIC_HP_BAR updates the HP bar to increase/decrease at a fixed rate like later generations
 #define STATIC_HP_BAR

@@ -157,6 +157,8 @@ BUILD_NARC := $(BUILD)/narc
 BASE := base
 FILESYS := $(BASE)/root
 BASE_EXTRACTION_STAMP := $(BASE)/.extracted
+ARMIPS_CONFIG := $(BUILD)/armips_config.s
+ARMIPS_CONFIG_GENERATOR := tools/generate_armips_config.py
 
 LINK = $(BUILD)/linked.o
 OUTPUT = $(BUILD)/output.bin
@@ -173,6 +175,10 @@ ASM_OBJS := $(patsubst $(ASM_SUBDIR)/%.s,$(BUILD)/%.o,$(ASM_SRCS))
 OBJS     := $(C_OBJS) $(ASM_OBJS)
 
 REQUIRED_DIRECTORIES += $(BASE) $(BUILD) $(BUILD_NARC)
+
+$(ARMIPS_CONFIG): include/config.h $(ARMIPS_CONFIG_GENERATOR) $(VENV_ACTIVATE)
+	@mkdir -p $(dir $@)
+	$(PYTHON) $(ARMIPS_CONFIG_GENERATOR) $< $@
 
 
 ## includes
@@ -586,7 +592,7 @@ move_narc $(DATA_INSTALL_STAMP): $(NARC_FILES) $(BASE_EXTRACTION_STAMP)
 PATCH_STAMP := $(BUILD)/.base_patched
 CODE_NARC_STAMP := $(BUILD)/.code_narc_installed
 ARMIPS_INPUTS := $(shell find armips -type f)
-PATCH_INPUTS := scripts/make.py hooks armhooks bytereplacement repoints routinepointers $(ARMIPS_INPUTS)
+PATCH_INPUTS := scripts/make.py hooks armhooks bytereplacement repoints routinepointers $(ARMIPS_INPUTS) $(ARMIPS_CONFIG)
 
 # Many archive generators extract an existing file from base/root. Ensure the
 # source ROM has been extracted before any of them can run in parallel.

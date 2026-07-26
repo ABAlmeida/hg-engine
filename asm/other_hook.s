@@ -828,6 +828,55 @@ bx r1
 .pool
 
 
+.equ BAIT_ROAMER_CHECK_ORIGINAL, 0x02248361
+.equ BAIT_ROAMER_CHECK_RESUME, 0x022471ED
+.equ PASSIVE_SURF_SAFARI_RESUME, 0x02246F0D
+.equ PASSIVE_SURF_SUPPRESSED_RESUME, 0x02246F15
+
+.global Bait_RoamerEncounterHook
+Bait_RoamerEncounterHook:
+bl Bait_IsGeneratingEncounter
+cmp r0, #0
+bne _bait_skip_roamer
+
+// Preserve the original roamer check for Honey and Sweet Scent.
+mov r0, r5
+add r1, sp, #0x18
+ldr r3, =BAIT_ROAMER_CHECK_ORIGINAL
+bl bx_r3
+b _bait_resume_roamer_check
+
+_bait_skip_roamer:
+mov r0, #0
+
+_bait_resume_roamer_check:
+cmp r0, #0
+ldr r3, =BAIT_ROAMER_CHECK_RESUME
+bx r3
+
+.pool
+
+
+.global DisablePassiveSurfEncounterHook
+DisablePassiveSurfEncounterHook:
+ldr r0, [sp, #0xC]
+cmp r0, #0
+beq _bait_suppress_passive_surf
+
+ldr r1, [sp, #0x10]
+str r0, [sp, #4]
+ldr r2, [sp, #0x20]
+ldr r3, =PASSIVE_SURF_SAFARI_RESUME
+bx r3
+
+_bait_suppress_passive_surf:
+mov r0, #0
+ldr r3, =PASSIVE_SURF_SUPPRESSED_RESUME
+bx r3
+
+.pool
+
+
 .data
 
 .align 2

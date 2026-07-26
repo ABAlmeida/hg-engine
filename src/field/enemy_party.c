@@ -1,4 +1,5 @@
 #include "../../include/bag.h"
+#include "../../include/bait.h"
 #include "../../include/battle.h"
 #include "../../include/config.h"
 #include "../../include/constants/ability.h"
@@ -440,6 +441,16 @@ BOOL LONG_CALL AddWildPartyPokemon(int inTarget, EncounterInfo *encounterInfo, s
     }
 
     species = GetMonData(encounterPartyPokemon, MON_DATA_SPECIES, NULL);
+
+    if (Bait_ShouldForceShiny()) {
+        u32 otId = GetMonData(encounterPartyPokemon, MON_DATA_OTID, NULL);
+        u32 personality = GetMonData(encounterPartyPokemon, MON_DATA_PERSONALITY, NULL);
+
+        personality = GenerateShinyPIDKeepSubstructuresIntact(otId, personality);
+        SetMonData(encounterPartyPokemon, MON_DATA_PERSONALITY, &personality);
+        RecalcPartyPokemonStats(encounterPartyPokemon);
+        ResetPartyPokemonAbility(encounterPartyPokemon);
+    }
 
     if (space_for_setmondata != 0) {
         change_form = 1;

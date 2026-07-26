@@ -667,21 +667,32 @@ REQUIRED_DIRECTORIES += $(PW_POKEICON_DIR) $(PW_POKEICON_ART_DIR)
 SCR_SEQ_DIR := $(BUILD)/a012
 SCR_SEQ_NARC := $(BUILD_NARC)/scr_seq.narc
 SCR_SEQ_TARGET := $(FILESYS)/a/0/1/2
+SCR_SEQ_PRISTINE := $(BUILD)/pristine/scr_seq.narc
+SCR_SEQ_EXTRACTOR := tools/extract_rom_file.py
 SCR_SEQ_DEPENDENCIES_DIR := armips/scr_seq
-SCR_SEQ_DEPENDENCIES := $(SCR_SEQ_DEPENDENCIES_DIR)/*
+SCR_SEQ_PATCHES := $(wildcard $(SCR_SEQ_DEPENDENCIES_DIR)/*.s)
+SCR_SEQ_DEPENDENCIES := $(SCR_SEQ_PATCHES) armips/include/config.s $(ARMIPS_CONFIG) asm/include/items.inc
 
-$(SCR_SEQ_NARC): $(SCR_SEQ_DEPENDENCIES)
-	$(NARCHIVE) extract $(SCR_SEQ_TARGET) -o $(SCR_SEQ_DIR) -nf
-	for file in $^; do $(ARMIPS) $$file; done
+$(SCR_SEQ_PRISTINE): $(ROMNAME) $(SCR_SEQ_EXTRACTOR) $(VENV_ACTIVATE)
+	$(PYTHON) $(SCR_SEQ_EXTRACTOR) $(ROMNAME) a/0/1/2 $@
+
+# Always apply source-controlled patches to the original ROM archive. The
+# installed target is mutable and may already contain patches from an earlier
+# build with different configuration options.
+$(SCR_SEQ_NARC): $(SCR_SEQ_DEPENDENCIES) $(SCR_SEQ_PRISTINE)
+	$(NARCHIVE) extract $(SCR_SEQ_PRISTINE) -o $(SCR_SEQ_DIR) -nf
+	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file; done
 	$(NARCHIVE) create $@ $(SCR_SEQ_DIR) -nf
 
-# DSPRE edits made directly to the extracted archive are outside Make's source
-# graph. Use `make rebuild_scripts` after such an edit; normal builds can then
-# keep this archive incremental.
+# DSPRE edits made directly to the installed archive are outside Make's source
+# graph. This explicit target imports that mutable archive once, then reapplies
+# the source-controlled patches. Later automatic rebuilds return to the
+# pristine ROM archive above, so configuration changes remain reversible.
 .PHONY: rebuild_scripts
-rebuild_scripts:
-	rm -f $(SCR_SEQ_NARC)
-	$(MAKE) $(SCR_SEQ_NARC)
+rebuild_scripts: $(BASE_EXTRACTION_STAMP)
+	$(NARCHIVE) extract $(SCR_SEQ_TARGET) -o $(SCR_SEQ_DIR) -nf
+	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file; done
+	$(NARCHIVE) create $(SCR_SEQ_NARC) $(SCR_SEQ_DIR) -nf
 
 NARC_FILES += $(SCR_SEQ_NARC)
 

@@ -544,4 +544,10 @@
 
 #define MAP_ID_MAX                            540
 
+// Semantic aliases for the Ruins of Alph maps with puzzle-gated encounters.
+#define MAP_RUINS_OF_ALPH_UNDERGROUND_HALL                MAP_D24R0205
+#define MAP_RUINS_OF_ALPH_UNDERGROUND_HALL_SINJOH_EVENT   MAP_D24R0216
+#define MAP_RUINS_OF_ALPH_HALL_ENTRANCE_SINJOH_EVENT      MAP_D24R0217
+#define MAP_RUINS_OF_ALPH_UNDERGROUND_HALL_SINJOH_EVENT_2 MAP_D24R0218
+
 #endif //POKEHEARTGOLD_CONSTANTS_MAPS_H

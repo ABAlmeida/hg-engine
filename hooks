@@ -11,6 +11,12 @@ arm9 EncounterFinishLevelCapHook 020506F4
 #overlay 1 is loaded in at 021E5900
 #overlay 2 is loaded in at 02245B80
 #overlay 12 is loaded in at 022378C0
+
+#ifdef IMPLEMENT_BAIT_ENCOUNTERS
+0002 Bait_RoamerEncounterHook 022471E2 3
+0002 DisablePassiveSurfEncounterHook 02246F04 3
+#endif
+
 #mega
 0012 LoadMegaOam 0226715C 1
 0012 MegaButtonCheck 02267F04 2

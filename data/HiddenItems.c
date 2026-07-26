@@ -9,6 +9,14 @@ typedef struct HiddenItemData {
     u16 index;
 } HiddenItemData;
 
+#ifdef IMPLEMENT_BAIT_ENCOUNTERS
+#define BAIT_REPLACE_REPEL(originalItem) ITEM_POKE_BAIT
+#define BAIT_REPLACE_RARE_CANDY         ITEM_SHINY_BAIT
+#else
+#define BAIT_REPLACE_REPEL(originalItem) (originalItem)
+#define BAIT_REPLACE_RARE_CANDY         ITEM_RARE_CANDY
+#endif
+
 const HiddenItemData sHiddenItemParam[] = {
     { ITEM_POTION, 1, 0, 0, 0 }, // New Bark Town
     { ITEM_NUGGET, 1, 0, 0, 1 }, // Cherrygrove
@@ -24,7 +32,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_GREAT_BALL, 1, 0, 0, 146 }, // Ruins of Alph E
     { ITEM_BIG_MUSHROOM, 1, 0, 0, 147 }, // Ruins of Alph SW
     { ITEM_TINY_MUSHROOM, 1, 0, 0, 148 }, // Ruins of Alph W
-    { ITEM_RARE_CANDY, 1, 0, 0, 149 }, // Ruins of Alph NW
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 149 }, // Ruins of Alph NW
     { ITEM_NUGGET, 1, 0, 0, 150 }, // Ruins of Alph SW
     { ITEM_GREAT_BALL, 1, 0, 0, 151 }, // Union Cave 1F E
     { ITEM_PARALYZE_HEAL, 1, 0, 0, 152 }, // Union Cave 1F S
@@ -45,11 +53,11 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_FULL_HEAL, 1, 0, 0, 32 }, // Ilex Forest
     { ITEM_ETHER, 1, 0, 0, 33 }, // Ilex Forest
     { ITEM_TINY_MUSHROOM, 1, 0, 0, 211 }, // Ilex Forest
-    { ITEM_REPEL, 1, 0, 0, 212 }, // Ilex Forest
+    { BAIT_REPLACE_REPEL(ITEM_REPEL), 1, 0, 0, 212 }, // Ilex Forest
     { ITEM_BIG_MUSHROOM, 1, 0, 0, 213 }, // Ilex Forest W Surf
     { ITEM_TINY_MUSHROOM, 1, 0, 0, 214 }, // Ilex Forest
     { ITEM_TINY_MUSHROOM, 1, 0, 0, 215 }, // Ilex Forest
-    { ITEM_RARE_CANDY, 1, 0, 0, 7 }, // R34 Centre
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 7 }, // R34 Centre
     { ITEM_SUPER_POTION, 1, 0, 0, 8 }, // R34 E
     { ITEM_SUPER_POTION, 1, 0, 0, 9 }, // Goldenrod
     { ITEM_PARALYZE_HEAL, 1, 0, 0, 52 }, // Goldenrod Dept Store Basement W
@@ -65,7 +73,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_PROTEIN, 1, 0, 0, 160 }, // Pokeathlon Dome W
     { ITEM_HYPER_POTION, 1, 0, 0, 12 }, // Ecruteak Centre
     { ITEM_ETHER, 1, 0, 0, 13 }, // Ecruteak N
-    { ITEM_RARE_CANDY, 1, 0, 0, 132 }, // Ecruteak NE
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 132 }, // Ecruteak NE
     { ITEM_ULTRA_BALL, 1, 0, 0, 133 }, // Ecruteak W
     { ITEM_ETHER, 1, 0, 0, 19 }, // Burned Tower Entrance N
     { ITEM_ULTRA_BALL, 1, 0, 0, 20 }, // Burned Tower Entrance SW
@@ -83,21 +91,21 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_NUGGET, 1, 0, 0, 98 }, // R39 Centre SE
     { ITEM_PP_UP, 1, 0, 0, 135 }, // R39 W
     { ITEM_X_ATTACK, 1, 0, 0, 136 }, // R39 Centre NE
-    { ITEM_RARE_CANDY, 1, 0, 0, 23 }, // Olivine Rock Climb
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 23 }, // Olivine Rock Climb
     { ITEM_FULL_HEAL, 1, 0, 0, 137 }, // Olivine Rock
     { ITEM_HYPER_POTION, 1, 0, 0, 66 }, // Olivine
     { ITEM_PROTEIN, 1, 0, 0, 86 }, // Olivine
     { ITEM_PEARL, 1, 0, 0, 158 }, // Olivine Dock
-    { ITEM_RARE_CANDY, 1, 0, 0, 161 }, // Frontier Access
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 161 }, // Frontier Access
     { ITEM_HYPER_POTION, 1, 0, 0, 24 }, // R40
     { ITEM_MAX_ETHER, 1, 0, 0, 99 }, // Whirl Islands
     { ITEM_STARDUST, 1, 0, 0, 170 }, // Whirl Islands
     { ITEM_STARDUST, 1, 0, 0, 171 }, // Whirl Islands
     { ITEM_STARDUST, 1, 0, 0, 172 }, // Whirl Islands
     { ITEM_STARDUST, 1, 0, 0, 173 }, // Whirl Islands
-    { ITEM_RARE_CANDY, 1, 0, 0, 73 }, // Whirl Islands
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 73 }, // Whirl Islands
     { ITEM_ULTRA_BALL, 1, 0, 0, 74 }, // Whirl Islands
-    { ITEM_SUPER_REPEL, 1, 0, 0, 191 }, // Whirl Islands
+    { BAIT_REPLACE_REPEL(ITEM_SUPER_REPEL), 1, 0, 0, 191 }, // Whirl Islands
     { ITEM_PEARL, 1, 0, 0, 192 }, // Whirl Islands
     { ITEM_REVIVE, 1, 0, 0, 193 }, // Whirl Islands
     { ITEM_FULL_RESTORE, 1, 0, 0, 75 }, // Whirl Islands
@@ -113,9 +121,9 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_MAX_POTION, 1, 0, 0, 42 }, // R42
     { ITEM_HYPER_POTION, 1, 0, 0, 43 }, // Mt Mortar Entrance W
     { ITEM_REVIVE, 1, 0, 0, 44 }, // Mt Mortar Entrance E
-    { ITEM_MAX_REPEL, 1, 0, 0, 45 }, // Mt Mortar Back
+    { BAIT_REPLACE_REPEL(ITEM_MAX_REPEL), 1, 0, 0, 45 }, // Mt Mortar Back
     { ITEM_ETHER, 1, 0, 0, 46 }, // Mt Mortar Back
-    { ITEM_RARE_CANDY, 1, 0, 0, 140 }, // Mt Mortar Back
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 140 }, // Mt Mortar Back
     { ITEM_ULTRA_BALL, 1, 0, 0, 141 }, // Mt Mortar Back
     { ITEM_NUGGET, 1, 0, 0, 142 }, // Mt Mortar Back
     { ITEM_FULL_RESTORE, 1, 0, 0, 47 }, // Mt Mortar 2F
@@ -128,7 +136,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_FULL_HEAL, 1, 0, 0, 54 }, // Rocket HQ B2F S
     { ITEM_X_SP_DEF, 1, 0, 0, 55 }, // Rocket HQ B2F E
     { ITEM_FULL_RESTORE, 1, 0, 0, 36 }, // Lake of Rage SW
-    { ITEM_RARE_CANDY, 1, 0, 0, 37 }, // Lake of Rage E
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 37 }, // Lake of Rage E
     { ITEM_MAX_POTION, 1, 0, 0, 102 }, // Lake of Rage NE
     { ITEM_ELIXIR, 1, 0, 0, 100 }, // R44
     { ITEM_MAX_POTION, 1, 0, 0, 70 }, // Ice Path 1F W
@@ -150,7 +158,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_ULTRA_BALL, 1, 0, 0, 189 }, // Victory Road
     { ITEM_HYPER_POTION, 1, 0, 0, 187 }, // Victory Road
     { ITEM_ZINC, 1, 0, 0, 188 }, // Victory Road
-    { ITEM_RARE_CANDY, 1, 0, 0, 190 }, // Indigo Plateau
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 190 }, // Indigo Plateau
     { ITEM_IRON, 1, 0, 0, 84 }, // Vermillion
     { ITEM_FULL_HEAL, 1, 0, 0, 103 }, // Vermillion
     { ITEM_HEART_SCALE, 1, 0, 0, 168 }, // Vermillion
@@ -198,7 +206,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_STARDUST, 1, 0, 0, 175 }, // R21
     { ITEM_STARDUST, 1, 0, 0, 176 }, // R21
     { ITEM_STARDUST, 1, 0, 0, 177 }, // R21
-    { ITEM_RARE_CANDY, 1, 0, 0, 114 }, // Cinnabar
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 114 }, // Cinnabar
     { ITEM_IRON, 1, 0, 0, 166 }, // Cinnabar
     { ITEM_STAR_PIECE, 1, 0, 0, 167 }, // Cinnabar
     { ITEM_ESCAPE_ROPE, 1, 0, 0, 88 }, // Seafoam Islands
@@ -206,19 +214,19 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_PEARL, 1, 0, 0, 90 }, // Seafoam Islands
     { ITEM_PEARL, 1, 0, 0, 91 }, // Seafoam Islands
     { ITEM_MAX_REVIVE, 1, 0, 0, 92 }, // Seafoam Islands
-    { ITEM_RARE_CANDY, 1, 0, 0, 210 }, // Seafoam Islands
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 210 }, // Seafoam Islands
     { ITEM_ZINC, 1, 0, 0, 223 }, // Seafoam Islands
     { ITEM_BIG_PEARL, 1, 0, 0, 180 }, // R19
     { ITEM_PEARL, 1, 0, 0, 178 }, // R19
     { ITEM_PEARL, 1, 0, 0, 179 }, // R19
     { ITEM_REVIVE, 1, 0, 0, 207 }, // R19
     { ITEM_MAX_ELIXIR, 1, 0, 0, 208 }, // R19
-    { ITEM_RARE_CANDY, 1, 0, 0, 115 }, // R28
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 115 }, // R28
     { ITEM_FULL_RESTORE, 1, 0, 0, 116 }, // Mt Silver PC
     { ITEM_DIRE_HIT, 1, 0, 0, 76 }, // Mt Silver
     { ITEM_ULTRA_BALL, 1, 0, 0, 77 }, // Mt Silver
     { ITEM_REVIVE, 1, 0, 0, 201 }, // Mt Silver
-    { ITEM_RARE_CANDY, 1, 0, 0, 165 }, // Mt Silver
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 165 }, // Mt Silver
     { ITEM_MAX_ETHER, 1, 0, 0, 204 }, // Mt Silver
     { ITEM_HYPER_POTION, 1, 0, 0, 205 }, // Mt Silver
     { ITEM_ULTRA_BALL, 1, 0, 0, 202 }, // Mt Silver
@@ -227,7 +235,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_IRON, 1, 0, 0, 222 }, // Mt Silver
     { ITEM_MAX_REVIVE, 1, 0, 0, 206 }, // Mt Silver
     { ITEM_HYPER_POTION, 1, 0, 0, 93 }, // Cerulean Cave
-    { ITEM_RARE_CANDY, 1, 0, 0, 94 }, // Cerulean Cave
+    { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 94 }, // Cerulean Cave
     { ITEM_REVIVE, 1, 0, 0, 95 }, // Cerulean Cave
     { ITEM_ULTRA_BALL, 1, 0, 0, 96 }, // Cerulean Cave
     { ITEM_PP_UP, 1, 0, 0, 117 }, // Cerulean Cave
@@ -242,3 +250,6 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_DEEP_SEA_SCALE, 1, 0, 0, 229 }, // R20
     { ITEM_PP_MAX, 1, 0, 0, 230 }, // R46
 };
+
+#undef BAIT_REPLACE_REPEL
+#undef BAIT_REPLACE_RARE_CANDY

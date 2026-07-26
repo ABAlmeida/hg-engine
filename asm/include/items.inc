@@ -2692,5 +2692,7 @@
 
 // define your custom move effects below like this
 // .equ ITEM_CUSTOM_1, (MAX_BASE_ITEM_NUM + 1)
+.equ ITEM_POKE_BAIT,  (MAX_BASE_ITEM_NUM + 1)
+.equ ITEM_SHINY_BAIT, (MAX_BASE_ITEM_NUM + 2)
 
 .endif

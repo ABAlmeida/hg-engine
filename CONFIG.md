@@ -63,7 +63,7 @@
 
  ``PROTEAN_GENERATION`` (``include/config.h`` only) defines the generation that Protean's behavior is implemented from.  Later generations make Protean only activate once per appearance in battle.
 
- ``IMPLEMENT_REUSABLE_REPELS`` (``include/config.h`` only) implements reusable repels, queuing up the next repel in the order of max, super, and then normal repels depending on which the player yet has.
+ ``IMPLEMENT_BAIT_ENCOUNTERS`` (``include/config.h``) disables ordinary passive land and surfing encounters and enables the custom Poké Bait items. Poké Bait starts one ordinary encounter from the current terrain's normal table; Shiny Bait does the same and assigns a genuinely shiny personality value. Roamers, Safari Zone, Bug-Catching Contest, fishing, Rock Smash, Headbutt, and static or scripted encounters keep their normal entry points. This option replaces ``IMPLEMENT_REUSABLE_REPELS``; the two systems are not compatible. The build generates the matching Armips setting automatically, so commenting out the C definition restores passive encounters and the original Repel metadata and acquisition sources. See ``documentation/BAIT_ENCOUNTERS.md`` for implementation and acquisition details.
 
  ``UPDATE_VITAMIN_EV_CAPS`` (``include/config.h`` only) updates the EV caps for vitamins from 100 to 252 like later generations.
 

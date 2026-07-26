@@ -55,6 +55,7 @@ SysTask *LONG_CALL SysTask_CreateOnVBlankQueue(SysTaskFunc func, void *data, int
 void LONG_CALL TaskManager_Call(TaskManager *taskman, TaskFunc taskFunc, void *env);
 BOOL LONG_CALL Task_TutorialBattle(TaskManager *taskManager);
 
+void LONG_CALL FieldSystem_LoadFieldOverlay(FieldSystem *fieldSystem);
 void LONG_CALL CallTask_StartEncounter(TaskManager *taskManager, BattleSetup *setup, s32 effect, s32 bgm, u32 *winFlag);
 
 #endif

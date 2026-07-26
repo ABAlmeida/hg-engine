@@ -1,5 +1,6 @@
 #include "../include/item.h"
 
+#include "../include/bait.h"
 #include "../include/config.h"
 #include "../include/constants/file.h"
 #include "../include/constants/item.h"
@@ -8,7 +9,7 @@
 #include "../include/script.h"
 #include "../include/types.h"
 
-#define GFX_ITEM_DUMMY_ID  ((MAX_TOTAL_ITEM_NUM) * 2 + 2)
+#define GFX_ITEM_DUMMY_ID  ((MAX_TOTAL_ITEM_NUM + 1) * 2 + 2)
 #define GFX_ITEM_RETURN_ID ((MAX_TOTAL_ITEM_NUM + 1) * 2 + 4)
 #define NEW_ITEM_GFX       (797)
 
@@ -411,13 +412,18 @@ const struct ItemUseFuncDat sItemFieldUseFuncs[] = {
     { ItemMenuUseFunc_Gracidea, ItemFieldUseFunc_Gracidea, NULL },
     { ItemMenuUseFunc_VSRecorder, ItemFieldUseFunc_VSRecorder, NULL },
     // new item use entries
-    { ItemMenuUseFunc_RevealGlass, ItemFieldUseFunc_RevealGlass, NULL },
-    { ItemMenuUseFunc_DNASplicers, ItemFieldUseFunc_DNASplicers, NULL },
-    { ItemMenuUseFunc_AbilityCapsule, NULL, NULL },
-    { ItemMenuUseFunc_Mint, NULL, NULL },
-    { ItemMenuUseFunc_Nectar, NULL, NULL },
-    { ItemMenuUseFunc_RotomCatalog, NULL, NULL },
+    [ITEM_FIELD_USE_FUNC_REVEAL_GLASS] = { ItemMenuUseFunc_RevealGlass, ItemFieldUseFunc_RevealGlass, NULL },
+    [ITEM_FIELD_USE_FUNC_DNA_SPLICERS] = { ItemMenuUseFunc_DNASplicers, ItemFieldUseFunc_DNASplicers, NULL },
+    [ITEM_FIELD_USE_FUNC_ABILITY_CAPSULE] = { ItemMenuUseFunc_AbilityCapsule, NULL, NULL },
+    [ITEM_FIELD_USE_FUNC_MINT] = { ItemMenuUseFunc_Mint, NULL, NULL },
+    [ITEM_FIELD_USE_FUNC_NECTAR] = { ItemMenuUseFunc_Nectar, NULL, NULL },
+    [ITEM_FIELD_USE_FUNC_ROTOM_CATALOG] = { ItemMenuUseFunc_RotomCatalog, NULL, NULL },
+    [ITEM_FIELD_USE_FUNC_BAIT] = { ItemMenuUseFunc_Bait, NULL, ItemCheckUseFunc_Bait },
 };
+
+_Static_assert(
+    NELEMS(sItemFieldUseFuncs) == ITEM_FIELD_USE_FUNC_COUNT,
+    "Item field-use function table is out of sync");
 
 u16 GetItemIndex(u16 item, u16 type)
 {
@@ -501,7 +507,7 @@ void *LONG_CALL ItemDataTableLoad(int heapID)
 
     max = GetItemIndex(MAX_TOTAL_ITEM_NUM, ITEM_GET_DATA);
 
-    return AllocAndReadFromNarcMemberByIdPair(ARC_ITEM_DATA, 0, heapID, 0, sizeof(ITEMDATA) * max); // 800757Ch
+    return AllocAndReadFromNarcMemberByIdPair(ARC_ITEM_DATA, 0, heapID, 0, sizeof(ITEMDATA) * (max + 1)); // 800757Ch
 }
 
 /**
