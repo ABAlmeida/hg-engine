@@ -1,5 +1,6 @@
 #include "../../include/battle.h"
 #include "../../include/battle_controller_player.h"
+#include "../../include/capture_rules.h"
 #include "../../include/config.h"
 #include "../../include/constants/battle_message_constants.h"
 #include "../../include/constants/battle_script_constants.h"
@@ -11,6 +12,103 @@
 #ifdef DEBUG_BATTLE_SCENARIOS
 #include "../../include/test_battle.h"
 #endif // DEBUG_BATTLE_SCENARIOS
+
+#ifdef IMPLEMENT_CAPTURE_RULES
+// playerActions stores the selected Bag item as one packed 32-bit word.
+typedef struct CaptureRulesBattleItem {
+    u16 itemId;
+    u8 page;
+    u8 monIndex;
+} CaptureRulesBattleItem;
+
+enum {
+    CAPTURE_RULES_BATTLE_ITEM_PAGE_BALLS = 2,
+};
+
+_Static_assert(sizeof(CaptureRulesBattleItem) == sizeof(u32), "Battle item selection must fit one player action word");
+
+void LONG_CALL BattleControllerPlayer_SelectionScreenInput(
+    struct BattleSystem *battleSystem,
+    struct BattleStruct *ctx);
+
+static u16 CaptureRules_GetBlockedMessage(CapturePermission permission)
+{
+    return permission == CAPTURE_PERMISSION_BLOCKED_AREA
+        ? BATTLE_MSG_CAPTURE_AREA_CONSUMED
+        : BATTLE_MSG_CAPTURE_SPECIES_DUPLICATE;
+}
+
+static void CaptureRules_RejectBall(
+    struct BattleSystem *bsys,
+    struct BattleStruct *ctx,
+    int battlerId,
+    CapturePermission permission)
+{
+    BattleMessage msg;
+
+    // Queue the appropriate no-substitution rejection text for this battler.
+    msg.id = CaptureRules_GetBlockedMessage(permission);
+    msg.tag = TAG_NONE;
+    ov12_022639B8(bsys, battlerId, msg);
+
+    // SSI_STATE_15 waits for the message acknowledgement, then resumes at
+    // ret_seq_no. Returning to SELECT_COMMAND_INIT discards the pending Ball
+    // choice and reopens the battle command menu without consuming the Ball.
+    ctx->com_seq_no[battlerId] = SSI_STATE_15;
+    ctx->ret_seq_no[battlerId] = SSI_STATE_SELECT_COMMAND_INIT;
+}
+
+static void CaptureRules_BlockDisallowedBall(struct BattleSystem *bsys, struct BattleStruct *ctx)
+{
+    CapturePermission permission = CaptureRules_GetEncounterPermission();
+    int battlerId;
+    int maxBattlers;
+
+    if (permission != CAPTURE_PERMISSION_BLOCKED_AREA
+        && permission != CAPTURE_PERMISSION_BLOCKED_DUPLICATE) {
+        return;
+    }
+
+    maxBattlers = BattleWorkClientSetMaxGet(bsys);
+    for (battlerId = 0; battlerId < maxBattlers; battlerId++) {
+        CaptureRulesBattleItem item;
+
+        if ((battlerId != BATTLER_PLAYER && battlerId != BATTLER_PLAYER2)
+            || ctx->playerActions[battlerId][0] != CONTROLLER_COMMAND_ITEM_INPUT
+            || ctx->com_seq_no[battlerId] != SSI_STATE_13) {
+            continue;
+        }
+
+        // The item-selection payload begins at playerActions[battlerId][2].
+        memcpy(&item, &ctx->playerActions[battlerId][2], sizeof(item));
+        if (item.page != CAPTURE_RULES_BATTLE_ITEM_PAGE_BALLS) {
+            continue;
+        }
+
+        CaptureRules_RejectBall(bsys, ctx, battlerId, permission);
+    }
+
+    // Safari records Throw Ball directly instead of passing through Bag input.
+    if (ctx->playerActions[BATTLER_PLAYER][0] == CONTROLLER_COMMAND_SAFARI_THROW_BALL
+        && ctx->com_seq_no[BATTLER_PLAYER] == SSI_STATE_END
+        && ctx->ret_seq_no[BATTLER_PLAYER] == SSI_STATE_13
+        && (BattleTypeGet(bsys) & BATTLE_TYPE_SAFARI) != 0) {
+        CaptureRules_RejectBall(bsys, ctx, BATTLER_PLAYER, permission);
+    }
+}
+
+void LONG_CALL CaptureRules_BattleControllerPlayer_SelectionScreenInput(
+    struct BattleSystem *bsys,
+    struct BattleStruct *ctx)
+{
+    BattleControllerPlayer_SelectionScreenInput(bsys, ctx);
+
+    // The original handler has now recorded the player's choice, but the item
+    // and Safari throw commands have not run yet. Rejecting here prevents Ball
+    // consumption without depending on BattleContext_Main's later dispatch.
+    CaptureRules_BlockDisallowedBall(bsys, ctx);
+}
+#endif
 
 #if defined (DISABLE_ITEMS_IN_TRAINER_BATTLE)
 void overrideItemUsage(struct BattleSystem *bsys, struct BattleStruct *ctx)
@@ -123,6 +221,9 @@ BOOL LONG_CALL BattleContext_Main(struct BattleSystem *bsys, struct BattleStruct
 
     if (ctx->server_seq_no == CONTROLLER_COMMAND_45)
     {
+#ifdef IMPLEMENT_CAPTURE_RULES
+        CaptureRules_ResetEncounterState();
+#endif
         return TRUE;
     }
     return FALSE;
@@ -146,6 +247,9 @@ void LONG_CALL BattleControllerPlayer_GetBattleMon(struct BattleSystem *battleSy
         }
     }
 
+#ifdef IMPLEMENT_CAPTURE_RULES
+    CaptureRules_InitializeSpecialBattle(battleSystem);
+#endif
     ctx->hp_temp = ctx->battlemon[1].hp;
     ctx->server_seq_no = CONTROLLER_COMMAND_START_ENCOUNTER;
 }

@@ -1,4 +1,5 @@
 #include "../include/types.h"
+#include "../include/capture_rules.h"
 #include "../include/config.h"
 #include "../include/debug.h"
 #include "../include/level_cap.h"
@@ -37,6 +38,9 @@ void LONG_CALL Sav2_Misc_init_new_fields(struct SAVE_MISC_DATA *saveMiscData)
     InitStoredMons(saveMiscData);
 #ifdef IMPLEMENT_LEVEL_CAP
     saveMiscData->levelCap = LEVEL_CAP_INITIAL;
+#endif
+#ifdef IMPLEMENT_CAPTURE_RULES
+    CaptureRules_Init(&saveMiscData->captureRules);
 #endif
 }
 

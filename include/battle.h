@@ -1805,10 +1805,12 @@ struct PACKED newBattleStruct {
 struct PACKED BATTLE_PARAM {
     /*0x0000*/ u32 fight_type;
     /*0x0004*/ struct Party *poke_party[4];
-    /*0x0008*/ int win_lose_flag;
-    /*0x000C*/ int trainer_id[4];
-    /*0x001C*/ TRAINER_DATA trainer_data[4]; // 0xD0 bytes
-    /*0x00EC*/ u8 fill[0xD4];
+    /*0x0014*/ int win_lose_flag;
+    /*0x0018*/ int trainer_id[4];
+    /*0x0028*/ TRAINER_DATA trainer_data[4]; // 0xD0 bytes
+    /*0x00F8*/ u8 fill_00F8[0x5C]; // unmodelled original fields through offset 0x153
+    /*0x0154*/ u32 map_section; // displayed map section used by location-based rules
+    /*0x0158*/ u8 fill_0158[0x68]; // unmodelled original fields through offset 0x1BF
     /*0x01C0*/ void *savedata;
 };
 

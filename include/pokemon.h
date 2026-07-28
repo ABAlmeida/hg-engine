@@ -607,15 +607,13 @@ typedef struct FieldSystem {
     /* 0x50 */ u8 unk50[0x5C];
     /* 0xAC */ u32 unkAC;
     /* 0xB0 */ u8 unkB0[0x4];
-    /* 0xB4 */ s64 unkB4;
+    /* 0xB4 */ u32 unkB4[2]; // unknown original fields; preserve their word alignment
     /* 0xBC */ u8 unkBC[0x28];
     /* 0xE4 */ FollowMon followMon;
-    // u8 unk104[4];
-    // void *unk108;//struct FieldSystemUnk108 *unk108;
-    // u8 filler_10C[8];
-    // void *unk114;//struct UnkFsysSub_114* unk114;
-    // void *bugContest;//BUGCONTEST* bugContest;
-    // u8 unk11C[0xC];
+    /*0x104*/ u8 unk104[0x10];
+    /*0x114*/ void *unk114; // struct UnkFsysSub_114 *unk114;
+    /*0x118*/ void *bugContest; // active BugContest work, or NULL outside the Contest
+    /*0x11C*/ u8 unk11C[0xC];
 } FieldSystem; // size: 0x128
 
 struct IconFormChangeData {

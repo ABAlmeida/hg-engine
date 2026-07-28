@@ -177,6 +177,59 @@ def Hook(rom: _io.BufferedReader, space: int, hookAt: int, register=0, memAddres
     rom.write(bytes(data))
 
 
+def EncodeThumbCall(targetAddress: int, sourceAddress: int, originalData: bytes) -> bytes:
+    """Retarget an existing ARMv4T Thumb BL while preserving call/return semantics."""
+    if sourceAddress & 1:
+        raise ValueError(f"Thumb BL hook source address {sourceAddress:08X} is not halfword-aligned.")
+
+    if targetAddress & 1:
+        raise ValueError(f"Thumb BL hook target address {targetAddress:08X} is not halfword-aligned.")
+
+    if len(originalData) != 4:
+        raise ValueError(f"Could not read the Thumb BL instruction at {sourceAddress:08X}.")
+
+    firstHalfword, secondHalfword = struct.unpack("<HH", originalData)
+    if (firstHalfword & 0xF800) != 0xF000 or (secondHalfword & 0xF800) != 0xF800:
+        raise ValueError(
+            f"Expected a Thumb BL instruction at {sourceAddress:08X}, "
+            f"found {firstHalfword:04X} {secondHalfword:04X}."
+        )
+
+    displacement = targetAddress - (sourceAddress + 4)
+    if displacement & 1:
+        raise ValueError(
+            f"Thumb BL from {sourceAddress:08X} to {targetAddress:08X} "
+            "has an odd displacement."
+        )
+
+    if displacement < -0x400000 or displacement > 0x3FFFFE:
+        raise ValueError(
+            f"Thumb BL target {targetAddress:08X} is out of range "
+            f"from {sourceAddress:08X}."
+        )
+
+    # ARMv4T encodes a signed, halfword-aligned displacement across the two
+    # 16-bit halves of BL. The CPU adds it to sourceAddress + 4.
+    immediate = (displacement >> 1) & 0x3FFFFF
+    firstHalfword = 0xF000 | ((immediate >> 11) & 0x7FF)
+    secondHalfword = 0xF800 | (immediate & 0x7FF)
+
+    return struct.pack("<HH", firstHalfword, secondHalfword)
+
+
+def HookThumbCall(rom: _io.BufferedReader, targetAddress: int, hookAt: int, sourceAddress: int):
+    rom.seek(hookAt)
+    originalData = rom.read(4)
+    try:
+        encodedCall = EncodeThumbCall(targetAddress, sourceAddress, originalData)
+    except ValueError as error:
+        print(f"Error: {error}")
+        sys.exit(1)
+
+    rom.seek(hookAt)
+    rom.write(encodedCall)
+
+
 def HookARM(rom: _io.BufferedReader, space: int, hookAt: int, register=0):
     # Align 4
     if hookAt & 3:
@@ -346,11 +399,15 @@ def hook():
                 if line.strip().startswith('#') or line.strip() == '':
                     continue
 
-                if (len(line.split()) == 4):
-                    files, symbol, address, register = line.split()
+                parts = line.split()
+                if len(parts) == 4:
+                    files, symbol, address, hookMode = parts
+                elif len(parts) == 3:
+                    files, symbol, address = parts
+                    hookMode = "255"
                 else:
-                    files, symbol, address = line.split()
-                    register = "255"
+                    print(f'Error: Invalid hook definition "{line.strip()}".')
+                    sys.exit(1)
                 #offset = int(address, 16) - 0x08000000
                 try:
                     code = table[symbol]
@@ -365,7 +422,10 @@ def hook():
                     with open("base/overarm9.bin", 'rb+') as y9Table:
                         y9Table.seek((int(files)*0x20)+0x4) # read the overlay memory address for offset calculation
                         offset = int(address, 16) - struct.unpack_from("<I", y9Table.read(4))[0] if int(address, 16) & 0x02000000 else int(address, 16) - 0x08000000
-                Hook(rom2, code, offset, int(register), int(address, 16))
+                if hookMode.lower() == "bl":
+                    HookThumbCall(rom2, code, offset, int(address, 16))
+                else:
+                    Hook(rom2, code, offset, int(hookMode), int(address, 16))
                 rom2.close()
 
 

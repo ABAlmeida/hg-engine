@@ -1,6 +1,7 @@
 #ifndef SAVE_H
 #define SAVE_H
 
+#include "capture_rules.h"
 #include "config.h"
 #include "pokemon.h"
 #include "rtc.h"
@@ -119,6 +120,8 @@ struct SAVE_MISC_DATA
     u8 isMonStored[NUM_OF_STORED_MONS];
     u8 levelCap;
     u8 levelCapPadding[3];
+    // Persistent state for one-encounter-per-area and Contest retention rules.
+    CaptureRulesSave captureRules;
 
 #endif
 

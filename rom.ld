@@ -250,6 +250,11 @@ BattleWorkPlaceIDGet = 0x0223AB60 | 1;
 HeldItemHealStatusCheck = 0x02254E7C | 1;
 Battle_GetClientPartySize = 0x0223a834 | 1;
 Battle_GetClientPartyMon = 0x0223a880 | 1;
+/* Original Bug Contest lifecycle functions used by the replacement script command. */
+BugContest_New = 0x022598C0 | 1;
+BugContest_Delete = 0x02259928 | 1;
+/* Original post-Contest Bill/PC-full phone check; its upstream name is unresolved. */
+sub_02093070 = 0x02093070 | 1;
 
 ov12_0223ABB8 = 0x0223ABB8 | 1;
 
@@ -624,6 +629,8 @@ sub_0200E3D8 = 0x0200E3D8 | 1;
 TryAppendMonMove = 0x0207137C | 1;
 
 BattleControllerPlayer_CalcExecutionOrder = 0x02249190 | 1;
+/* Original handler called first by the capture-rules command-table wrapper. */
+BattleControllerPlayer_SelectionScreenInput = 0x02248848 | 1;
 
 Mon_UpdateRotomForm = 0x02071EC0 | 1;
 Mon_UpdateShayminForm = 0x02071D6C | 1;
@@ -820,6 +827,8 @@ sBattleBgProfileTable = 0x0226E70C;
 
 BattleSetup_New = 0x020518D8 | 1;
 BattleSetup_InitFromFieldSystem = 0x02051F00 | 1;
+/* Original normal wild generator called by CaptureRules_GenerateOrdinaryEncounter. */
+GenerateWildNonShinyAndAddToParty = 0x02247A18 | 1;
 ov02_02247F30 = 0x02247F30 | 1;
 BattleSetup_GetWildTransitionEffect = 0x020517E8 | 1;
 BattleSetup_GetWildBattleMusic = 0x020517FC | 1;

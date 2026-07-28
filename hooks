@@ -17,6 +17,18 @@ arm9 EncounterFinishLevelCapHook 020506F4
 0002 DisablePassiveSurfEncounterHook 02246F04 3
 #endif
 
+#ifdef IMPLEMENT_CAPTURE_RULES
+# Replace only the normal wild-generation Thumb call in overlay 2. The wrapper
+# calls the original generator, then evaluates the Pokemon actually appended to
+# the wild party for the shiny, duplicate, and consumed-area rules.
+0002 CaptureRules_GenerateOrdinaryEncounter 02247D96 bl
+# Replace the complete Bug-Catching Contest script command in overlay 1. The
+# wrapper preserves allocation/deletion and intercepts the caught flag before
+# BugContest_Delete can transfer the final Pokemon. The trailing 1 selects r1
+# as the scratch register for the generated function-entry jump.
+0001 CaptureRules_ScrCmdBugContestAction 02202930 1
+#endif
+
 #mega
 0012 LoadMegaOam 0226715C 1
 0012 MegaButtonCheck 02267F04 2

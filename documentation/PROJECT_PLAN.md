@@ -18,6 +18,10 @@ complete.
 - Let eligible party Pokémon advance to the saved cap through `LEVEL TO CAP`,
   preserving normal move-learning and evolution flows.
 - Replace passive land and surfing encounters with Poké Bait and Shiny Bait.
+- Apply capture challenge rules immediately on a new save. Track one eligible
+  encounter per displayed map section, use the Pokédex for exact-species
+  duplicate checks, and treat Safari Zone and Bug-Catching Contest encounters
+  through their documented special rules.
 - Keep Generation 5+ species work deferred until the core progression and
   encounter systems are stable.
 
@@ -37,7 +41,8 @@ complete.
 | Forced-female protagonist | Pending | Skip gender selection, write the female profile value, continue to name selection, and retain the standard Lyra graphics without replacing Ethan's unrelated NPC assets. Existing saves do not need migration. |
 | HM field actions | Pending | Remove the requirement for a party Pokémon to know or be compatible with Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Fly, or Flash while preserving terrain checks and badge/story progression gates. |
 | Evolution modernization | Pending | Convert trade and hardware/location-dependent evolutions to accessible items, lower the friendship threshold, and preserve reasonable distinctive conditions. |
-| Capture challenge rules | Pending | Activate when Poké Balls are first received; track one eligible encounter per displayed area and captured evolutionary families in dedicated save data; block Poké Balls with clear messages for consumed areas or duplicates; preserve the documented gift, static, roaming, Safari, Contest, egg, trade, and scripted exclusions. |
+| Capture challenge rules | Implemented; manual verification pending | Ordinary encounters, Safari's shared saved opportunity, duplicate enforcement, the shiny clause, and first-retained-Pokémon Contest handling are implemented. Focused Safari and revised Contest retention checks remain. See `CAPTURE_RULES_PLAN.md`. |
+| Bug-Catching Contest availability | Pending after capture rules | Remove the weekday restriction so the Contest can be entered every day. Preserve other entry requirements and the existing daily participation limit unless changed separately. |
 | Generation 5+ Pokémon integration | Deferred | Audit species data, assets, cries, forms, evolutions, learnsets, Pokédex/save paths, encounters, gifts, and trainer placement. Compiling a species does not place it in the game. |
 | Trainer and wild content rebalance | Pending | Build teams and encounter tables around the finalized cap curve and available roster. |
 | Trainer AI changes | Pending | First enable the strongest suitable existing trainer AI, then add a trainer-only fair-information decision layer, switching and item evaluation, doubles coordination, and bounded search. Wild and scripted AI must retain their original routes. |
@@ -58,6 +63,14 @@ are in [`BAIT_ENCOUNTERS.md`](BAIT_ENCOUNTERS.md). Rare Candy remains
 functional but has no normal acquisition source. Repel, Super Repel, and Max
 Repel retain their IDs for table stability but have no normal field use or
 acquisition source while Bait encounters are enabled.
+
+## Capture challenge rules
+
+The reviewed implementation design is in
+[`CAPTURE_RULES_PLAN.md`](CAPTURE_RULES_PLAN.md). It records immediate
+activation, exact-species Pokédex duplicates, the shiny clause, the map-section
+save model, Safari Zone handling, Bug-Catching Contest retention, and the later
+Contest scheduling change.
 
 ## Verification policy
 

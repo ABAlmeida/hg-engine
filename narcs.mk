@@ -667,7 +667,9 @@ REQUIRED_DIRECTORIES += $(PW_POKEICON_DIR) $(PW_POKEICON_ART_DIR)
 SCR_SEQ_DIR := $(BUILD)/a012
 SCR_SEQ_NARC := $(BUILD_NARC)/scr_seq.narc
 SCR_SEQ_TARGET := $(FILESYS)/a/0/1/2
-SCR_SEQ_PRISTINE := $(BUILD)/pristine/scr_seq.narc
+# narcpy prefixes extracted members with the input basename. Keep this named
+# "2" so patches can address the original archive-style names such as 2_141.
+SCR_SEQ_PRISTINE := $(BUILD)/pristine/2
 SCR_SEQ_EXTRACTOR := tools/extract_rom_file.py
 SCR_SEQ_DEPENDENCIES_DIR := armips/scr_seq
 SCR_SEQ_PATCHES := $(wildcard $(SCR_SEQ_DEPENDENCIES_DIR)/*.s)
@@ -678,8 +680,10 @@ $(SCR_SEQ_PRISTINE): $(ROMNAME) $(SCR_SEQ_EXTRACTOR) $(VENV_ACTIVATE)
 
 # Always apply source-controlled patches to the original ROM archive. The
 # installed target is mutable and may already contain patches from an earlier
-# build with different configuration options.
+# build with different configuration options. Clear the generated directory so
+# members from an older extraction cannot be mixed into the rebuilt archive.
 $(SCR_SEQ_NARC): $(SCR_SEQ_DEPENDENCIES) $(SCR_SEQ_PRISTINE)
+	rm -rf $(SCR_SEQ_DIR)
 	$(NARCHIVE) extract $(SCR_SEQ_PRISTINE) -o $(SCR_SEQ_DIR) -nf
 	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file; done
 	$(NARCHIVE) create $@ $(SCR_SEQ_DIR) -nf
@@ -687,9 +691,11 @@ $(SCR_SEQ_NARC): $(SCR_SEQ_DEPENDENCIES) $(SCR_SEQ_PRISTINE)
 # DSPRE edits made directly to the installed archive are outside Make's source
 # graph. This explicit target imports that mutable archive once, then reapplies
 # the source-controlled patches. Later automatic rebuilds return to the
-# pristine ROM archive above, so configuration changes remain reversible.
+# pristine ROM archive above, so configuration changes remain reversible. The
+# generated directory is also cleared here to preserve member ordering.
 .PHONY: rebuild_scripts
 rebuild_scripts: $(BASE_EXTRACTION_STAMP)
+	rm -rf $(SCR_SEQ_DIR)
 	$(NARCHIVE) extract $(SCR_SEQ_TARGET) -o $(SCR_SEQ_DIR) -nf
 	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file; done
 	$(NARCHIVE) create $(SCR_SEQ_NARC) $(SCR_SEQ_DIR) -nf

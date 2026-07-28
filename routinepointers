@@ -1,4 +1,11 @@
+#include "include/config.h"
+
 #0012 Symbol Offset
+#ifdef IMPLEMENT_CAPTURE_RULES
+# Overlay 12's selection-screen command-table slot. The replacement calls the
+# original handler, then rejects blocked Ball choices before a throw consumes one.
+0012 CaptureRules_BattleControllerPlayer_SelectionScreenInput 0226CAA4
+#endif
 arm9 PokeListProc_End_Extend 081015A4
 # 0223E858
 0012 Task_DistributeExp_Extend 0223E858
