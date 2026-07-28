@@ -6,6 +6,7 @@
 #include "../include/constants/item.h"
 #include "../include/constants/moves.h"
 #include "../include/message.h"
+#include "../include/reusable_healer.h"
 #include "../include/script.h"
 #include "../include/types.h"
 
@@ -419,6 +420,7 @@ const struct ItemUseFuncDat sItemFieldUseFuncs[] = {
     [ITEM_FIELD_USE_FUNC_NECTAR] = { ItemMenuUseFunc_Nectar, NULL, NULL },
     [ITEM_FIELD_USE_FUNC_ROTOM_CATALOG] = { ItemMenuUseFunc_RotomCatalog, NULL, NULL },
     [ITEM_FIELD_USE_FUNC_BAIT] = { ItemMenuUseFunc_Bait, NULL, ItemCheckUseFunc_Bait },
+    [ITEM_FIELD_USE_FUNC_REUSABLE_HEALER] = { ItemMenuUseFunc_ReusableHealer, NULL, NULL },
 };
 
 _Static_assert(

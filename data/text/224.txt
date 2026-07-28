@@ -1,2 +1,3 @@
 {COLOR 255}Poké Bait{COLOR 0}
 {COLOR 255}Shiny Bait{COLOR 0}
+{COLOR 255}Healing Kit{COLOR 0}

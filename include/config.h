@@ -175,6 +175,9 @@
 // IMPLEMENT_BAIT_ENCOUNTERS disables ordinary passive encounters and enables Poké Bait and Shiny Bait.
 #define IMPLEMENT_BAIT_ENCOUNTERS
 
+// Professor Elm gives a reusable Key Item that fully heals the party.
+#define IMPLEMENT_REUSABLE_HEALER
+
 // Reusable Repels are incompatible with the Bait encounter system.
 // #define IMPLEMENT_REUSABLE_REPELS
 
@@ -210,6 +213,14 @@
 
 #if defined(IMPLEMENT_BAIT_ENCOUNTERS) && !defined(MART_EXPANSION)
 #error "Bait encounters require expanded mart inventories"
+#endif
+
+#if defined(IMPLEMENT_REUSABLE_HEALER) && !defined(ALLOW_SAVE_CHANGES)
+#error "The reusable healer requires expanded save support for custom item storage"
+#endif
+
+#if defined(IMPLEMENT_REUSABLE_HEALER) && !defined(ITEM_POCKET_EXPANSION)
+#error "The reusable healer requires expanded item pockets"
 #endif
 
 // STATIC_HP_BAR updates the HP bar to increase/decrease at a fixed rate like later generations

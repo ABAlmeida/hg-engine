@@ -20,9 +20,11 @@ def main() -> None:
 
     config = args.config.read_text(encoding="utf-8")
     bait_enabled = int(is_defined(config, "IMPLEMENT_BAIT_ENCOUNTERS"))
+    reusable_healer_enabled = int(is_defined(config, "IMPLEMENT_REUSABLE_HEALER"))
     generated = (
         "// Generated from include/config.h. Do not edit.\n"
         f"IMPLEMENT_BAIT_ENCOUNTERS equ {bait_enabled}\n"
+        f"IMPLEMENT_REUSABLE_HEALER equ {reusable_healer_enabled}\n"
     )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)

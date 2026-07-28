@@ -126,4 +126,5 @@ Berry Pocket\nFor sorting and storing different\nBerries.
 Mail Pocket\nFor sorting and storing vibrant\nstationery.
 Battle Items Pocket\nFor items that are useful during battle.
 Key Items Pocket\nFor items that are indispensable for\nyour adventure.
+Your Pokémon were fully healed!
 STOP

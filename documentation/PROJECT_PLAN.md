@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-07-26
+Last updated: 2026-07-28
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -37,7 +37,7 @@ complete.
 | Persistent level caps | Complete; manually verified | New saves begin at level 7 and story-trainer victories raise the saved cap according to `LEVEL_CAPS.md`. |
 | Level to Cap | Complete; manually verified | The party action advances one level at a time and preserves move and evolution prompts. |
 | Bait encounters | Complete; manually verified | Poké Bait and Shiny Bait work on valid terrain; invalid use is rejected; preserved encounter types remain available. See `BAIT_ENCOUNTERS.md`. |
-| Reusable healer | Pending | Add a starting, reusable key item that fully restores party HP, PP, and major status outside battle, is never consumed, and cannot be used in battle. |
+| Reusable healer | Implemented; build and manual verification pending | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, and cannot be used in battle. See `REUSABLE_HEALER_PLAN.md`. |
 | Forced-female protagonist | Pending | Skip gender selection, write the female profile value, continue to name selection, and retain the standard Lyra graphics without replacing Ethan's unrelated NPC assets. Existing saves do not need migration. |
 | HM field actions | Pending | Remove the requirement for a party Pokémon to know or be compatible with Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Fly, or Flash while preserving terrain checks and badge/story progression gates. |
 | Evolution modernization | Pending | Convert trade and hardware/location-dependent evolutions to accessible items, lower the friendship threshold, and preserve reasonable distinctive conditions. |
@@ -72,12 +72,20 @@ activation, exact-species Pokédex duplicates, the shiny clause, the map-section
 save model, Safari Zone handling, Bug-Catching Contest retention, and the later
 Contest scheduling change.
 
+## Reusable healer
+
+The reviewed implementation design is in
+[`REUSABLE_HEALER_PLAN.md`](REUSABLE_HEALER_PLAN.md). Normal Bag use follows
+the standard Key Item flow: it closes the Bag, heals through one central
+operation, displays the success message in the field, and returns control to
+the overworld. Registration is deliberately disabled.
+
 ## Verification policy
 
 - Building the ROM, manually smoke-testing it, and running automated battle
   tests are distinct activities.
-- Do not run the automated battle-test suite unless the user explicitly asks
-  for it in the current conversation.
+- Codex does not run Heartless Gold builds, tests, test scripts, or emulators;
+  it provides the user with the narrow build and manual verification steps.
 - Do not reuse emulator save states across code revisions when validating
   hooks or save-backed behavior; use an in-game save and reload.
 - Preserve the historical baseline in `BASELINE_BUILD.md`. Record later

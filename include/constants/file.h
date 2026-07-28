@@ -67,6 +67,8 @@
 #define BAG_TR_ICON 96
 
 // message data file indexes
+#define MSG_DATA_BAG                      10
+#define MSG_DATA_BAG_REUSABLE_HEALER      128
 #define MSG_DATA_ITEM_DESCRIPTION_CUSTOM  221
 #define MSG_DATA_ITEM_NAME_ARTICLE_CUSTOM 223
 #define MSG_DATA_ITEM_NAME_PLURAL_CUSTOM  224

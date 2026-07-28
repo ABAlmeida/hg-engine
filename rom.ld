@@ -501,6 +501,8 @@ Save_Daycare_Get = 0x020293D4 | 1;
 
 /* item use funcs */
 ItemFieldUseFunc_Generic = 0x02065150 | 1;
+/* Standard field-side Key Item message task used by the reusable healer. */
+Task_PrintRegisteredKeyItemUseMessage = 0x0206518C | 1;
 ItemMenuUseFunc_HealingItem = 0x02064B54 | 1;
 ItemCheckUseFunc_Dummy = 0x02064BF4 | 1;
 ItemMenuUseFunc_Bicycle = 0x02064BFC | 1;

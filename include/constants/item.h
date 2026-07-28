@@ -2695,8 +2695,9 @@
 // #define ITEM_CUSTOM_1 (MAX_BASE_ITEM_NUM + 1)
 #define ITEM_POKE_BAIT  (MAX_BASE_ITEM_NUM + 1)
 #define ITEM_SHINY_BAIT (MAX_BASE_ITEM_NUM + 2)
+#define ITEM_HEALING_KIT (MAX_BASE_ITEM_NUM + 3)
 
-#define MAX_TOTAL_ITEM_NUM ITEM_SHINY_BAIT
+#define MAX_TOTAL_ITEM_NUM ITEM_HEALING_KIT
 
 
 #define NUM_MEGA_STONES (48) // includes the pixie plate, doesn't include plza megas due to overflowing bag

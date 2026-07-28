@@ -1,2 +1,3 @@
 Use it on suitable terrain to\nimmediately attract a wild Pokémon.
 Use it on suitable terrain to\nimmediately attract a shiny wild Pokémon.
+A reusable kit that fully restores the\nHP, PP, and status of all party Pokémon.
