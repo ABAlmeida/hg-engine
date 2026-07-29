@@ -730,6 +730,8 @@ ov12_022639B8 = 0x022639B8 | 1;
 FieldSystem_MapIsBattleTowerMultiPartnerSelectRoom = 0x02067584 | 1;
 MoveId_GetFieldEffectId = 0x0207BCC0 | 1;
 PartyMenu_ContextMenuAddFieldMove = 0x0207D0A0 | 1;
+/* Returns the base field-move use or check callback for a field-move index. */
+FieldMove_GetMoveFunc = 0x02067DF4 | 1;
 ClearFrameAndWindow2 = 0x0200E9BC | 1;
 sub_0207B23C = 0x0207B23C | 1;
 PartyMenu_SetContextMenuItems_GiveCapsule = 0x0207B1BC | 1;

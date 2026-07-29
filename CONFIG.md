@@ -65,6 +65,15 @@
 
  ``IMPLEMENT_BAIT_ENCOUNTERS`` (``include/config.h``) disables ordinary passive land and surfing encounters and enables the custom Poké Bait items. Poké Bait starts one ordinary encounter from the current terrain's normal table; Shiny Bait does the same and assigns a genuinely shiny personality value. Roamers, Safari Zone, Bug-Catching Contest, fishing, Rock Smash, Headbutt, and static or scripted encounters keep their normal entry points. This option replaces ``IMPLEMENT_REUSABLE_REPELS``; the two systems are not compatible. The build generates the matching Armips setting automatically, so commenting out the C definition restores passive encounters, the original Repel metadata and acquisition sources, and the original Rare Candy rewards. See ``documentation/BAIT_ENCOUNTERS.md`` for implementation and acquisition details.
 
+ ``IMPLEMENT_MACHINE_FIELD_ACTIONS`` (``include/config.h`` only) lets an owned
+ HM provide Cut, Fly, Surf, Strength, Whirlpool, Rock Smash, Waterfall, or Rock
+ Climb without teaching it to a compatible Pokémon. Owned TM70 provides Flash
+ in the same way. Existing badge, terrain, map, follower, costume, Safari, and
+ Pal Park restrictions remain in force. Direct obstacle interactions use the
+ first non-Egg party Pokémon when no party member knows the move; context-valid
+ Party-menu actions use the selected non-Egg Pokémon. HM and TM teaching
+ behavior is unchanged. See ``documentation/HM_FIELD_ACTIONS_PLAN.md``.
+
  ``UPDATE_VITAMIN_EV_CAPS`` (``include/config.h`` only) updates the EV caps for vitamins from 100 to 252 like later generations.
 
  ``DISABLE_ITEMS_IN_TRAINER_BATTLE`` (``include/config.h`` only) disables items being used while in trainer battles.

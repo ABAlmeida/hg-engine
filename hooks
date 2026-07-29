@@ -29,6 +29,14 @@ arm9 EncounterFinishLevelCapHook 020506F4
 0001 CaptureRules_ScrCmdBugContestAction 02202930 1
 #endif
 
+#ifdef IMPLEMENT_MACHINE_FIELD_ACTIONS
+# Replace only script command 141's party-slot lookup. The implementation
+# preserves real move users, then supplies a non-Egg presentation Pokemon when
+# the corresponding machine is owned. This is the US HeartGold function entry;
+# its original prologue begins B5 F8 B0 82.
+arm9 MachineFieldAction_ScrCmdGetPartySlotWithMove 0204D3CC
+#endif
+
 #mega
 0012 LoadMegaOam 0226715C 1
 0012 MegaButtonCheck 02267F04 2

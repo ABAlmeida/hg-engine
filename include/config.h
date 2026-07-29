@@ -178,6 +178,10 @@
 // Professor Elm gives a reusable Key Item that fully heals the party.
 #define IMPLEMENT_REUSABLE_HEALER
 
+// Owned HMs and Flash's TM can perform their field actions without being
+// taught to a compatible party Pokemon.
+#define IMPLEMENT_MACHINE_FIELD_ACTIONS
+
 // Reusable Repels are incompatible with the Bait encounter system.
 // #define IMPLEMENT_REUSABLE_REPELS
 

@@ -927,6 +927,14 @@ void LONG_CALL SetBoxMonData(struct BoxPokemon *boxmon, int id, const void *buf)
 struct PartyPokemon *LONG_CALL Party_GetMonByIndex(struct Party *party, int pos);
 
 /**
+ *  @brief return the number of Pokemon currently stored in a Party
+ *
+ *  @param party Party whose members to count
+ *  @return number of occupied party slots
+ */
+int LONG_CALL PokeParty_GetPokeCount(struct Party *party);
+
+/**
  *  @brief grab personal field accounting for form (for vanilla forms)
  *
  *  @param mons_no base species index

@@ -1,6 +1,7 @@
 #include "../include/bag.h"
 #include "../include/battle.h"
 #include "../include/config.h"
+#include "../include/machine_field_actions.h"
 #include "../include/overlay.h"
 #include "../include/party_menu.h"
 #include "../include/pokemon.h"
@@ -42,6 +43,59 @@ static void LevelToCap_RestorePartySelectionUI(struct PartyMenu *partyMenu);
 
 #endif
 
+#ifdef IMPLEMENT_MACHINE_FIELD_ACTIONS
+
+static BOOL PartyMenu_FieldMoveWasAdded(
+    const u16 *addedMoves,
+    u8 numAddedMoves,
+    u16 moveId)
+{
+    u8 i;
+
+    for (i = 0; i < numAddedMoves; i++) {
+        if (addedMoves[i] == moveId) {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+static BOOL PartyMenu_TryAddFieldMove(
+    struct PartyMenu *partyMenu,
+    u8 *items,
+    u8 *numItems,
+    u16 *addedMoves,
+    u8 *numFieldMoves,
+    u16 moveId)
+{
+    u8 fieldEffect;
+
+    if (*numItems >= MAX_BUTTONS_IN_PARTY_MENU
+        || *numFieldMoves >= MAX_MON_MOVES
+        || PartyMenu_FieldMoveWasAdded(
+            addedMoves,
+            *numFieldMoves,
+            moveId)) {
+        return FALSE;
+    }
+
+    fieldEffect = MoveId_GetFieldEffectId(moveId);
+    if (fieldEffect == 0xFF) {
+        return FALSE;
+    }
+
+    items[(*numItems)++] = fieldEffect;
+    PartyMenu_ContextMenuAddFieldMove(
+        partyMenu,
+        moveId,
+        *numFieldMoves);
+    addedMoves[(*numFieldMoves)++] = moveId;
+    return TRUE;
+}
+
+#endif
+
 u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
 {
     struct PartyPokemon *pp = Party_GetMonByIndex(wk->args->party, wk->partyMonIndex);
@@ -49,9 +103,12 @@ u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
     u8 fieldMoveIndex = 0;
     u8 i;
     u8 count = 0;
-    u8 fieldEffect;
 #ifdef IMPLEMENT_LEVEL_CAP
     BOOL showLevelToCap;
+#endif
+#ifdef IMPLEMENT_MACHINE_FIELD_ACTIONS
+    u16 addedFieldMoves[MAX_MON_MOVES] = { MOVE_NONE };
+    u32 machineActionIndex;
 #endif
 
     u8 isEgg = GetMonData(pp, MON_DATA_IS_EGG, NULL);
@@ -87,7 +144,28 @@ u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
             ++count;
 #endif
 
-            // here is where a custom check would go.  replace the below for loop with your own checks
+#ifdef IMPLEMENT_MACHINE_FIELD_ACTIONS
+            // Show only owned machine actions that the engine says are usable
+            // in the current field context. This keeps the bounded context menu
+            // focused instead of appending every HM to every Pokemon.
+            for (machineActionIndex = 0;
+                 machineActionIndex < MachineFieldAction_GetCount();
+                 machineActionIndex++) {
+                move = MachineFieldAction_GetMove(machineActionIndex);
+                if (MachineFieldAction_IsUsable(
+                        wk->args->fieldSystem->savedata,
+                        move,
+                        wk->args->fieldMoveCheckData)) {
+                    PartyMenu_TryAddFieldMove(
+                        wk,
+                        buf,
+                        &count,
+                        addedFieldMoves,
+                        &fieldMoveIndex,
+                        move);
+                }
+            }
+#endif
 
             for (i = 0; i < MAX_MON_MOVES; ++i)
             {
@@ -97,6 +175,17 @@ u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
                     break;
                 }
 
+#ifdef IMPLEMENT_MACHINE_FIELD_ACTIONS
+                PartyMenu_TryAddFieldMove(
+                    wk,
+                    buf,
+                    &count,
+                    addedFieldMoves,
+                    &fieldMoveIndex,
+                    move);
+#else
+                u8 fieldEffect;
+
                 fieldEffect = MoveId_GetFieldEffectId(move);
                 if (fieldEffect != 0xFF)
                 {
@@ -105,6 +194,7 @@ u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
                     PartyMenu_ContextMenuAddFieldMove(wk, move, fieldMoveIndex);
                     ++fieldMoveIndex;
                 }
+#endif
             }
         }
         else

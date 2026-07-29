@@ -153,6 +153,4 @@ Manually verify with a new in-game save that:
 16. the item remains present after saving and reloading; and
 17. Pokémon Center healing continues to work normally.
 
-After implementation, mark the project status as
-`Implemented; build and manual verification pending`. Mark it complete only
-after the user reports that the build and focused manual checks pass.
+Implementation and focused in-game verification are complete.

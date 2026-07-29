@@ -22,6 +22,13 @@ complete.
   encounter per displayed map section, use the Pokédex for exact-species
   duplicate checks, and treat Safari Zone and Bug-Catching Contest encounters
   through their documented special rules.
+- Permanently retire fainted party Pokémon after battles. Preserve up to 300
+  of them in a separate, read-only 10-box Graveyard and recover a wiped party
+  from the first usable Pokémon in ordinary PC storage.
+- Provide portable access to the shared PC menu through a reusable Laptop Key
+  Item. Mum initially gives it during the existing Pokégear sequence.
+- End a run with a dedicated defeat message and return to the title screen
+  when a wiped player has no usable Pokémon in ordinary PC storage.
 - Keep Generation 5+ species work deferred until the core progression and
   encounter systems are stable.
 
@@ -37,9 +44,11 @@ complete.
 | Persistent level caps | Complete; manually verified | New saves begin at level 7 and story-trainer victories raise the saved cap according to `LEVEL_CAPS.md`. |
 | Level to Cap | Complete; manually verified | The party action advances one level at a time and preserves move and evolution prompts. |
 | Bait encounters | Complete; manually verified | Poké Bait and Shiny Bait work on valid terrain; invalid use is rejected; preserved encounter types remain available. See `BAIT_ENCOUNTERS.md`. |
-| Reusable healer | Implemented; build and manual verification pending | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, and cannot be used in battle. See `REUSABLE_HEALER_PLAN.md`. |
+| Reusable healer | Complete; manually verified | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, and cannot be used in battle. See `REUSABLE_HEALER_PLAN.md`. |
+| Graveyard and wipe recovery | Planned | Add a separate read-only 10-box Graveyard, retire fainted party Pokémon after battles, discard retirements when it is full, and recover a wiped party from the first usable Pokémon in ordinary PC storage. A wipe with no usable reserve shows a defeat message and returns to the title screen. See `GRAVEYARD_AND_LAPTOP_PLAN.md`. |
+| Laptop PC access | Planned | Add a reusable Laptop Key Item that opens the same PC menu and Graveyard access from safe field contexts. Mum initially gives it during the existing Pokégear sequence. See `GRAVEYARD_AND_LAPTOP_PLAN.md`. |
 | Forced-female protagonist | Pending | Skip gender selection, write the female profile value, continue to name selection, and retain the standard Lyra graphics without replacing Ethan's unrelated NPC assets. Existing saves do not need migration. |
-| HM field actions | Pending | Remove the requirement for a party Pokémon to know or be compatible with Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Fly, or Flash while preserving terrain checks and badge/story progression gates. |
+| HM field actions | Implemented; build and manual verification pending | Owned machines enable Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Rock Climb, Fly, or Flash without teaching or compatibility requirements while preserving the original field checks and Pokémon presentation. See `HM_FIELD_ACTIONS_PLAN.md`. |
 | Evolution modernization | Pending | Convert trade and hardware/location-dependent evolutions to accessible items, lower the friendship threshold, and preserve reasonable distinctive conditions. |
 | Capture challenge rules | Implemented; manual verification pending | Ordinary encounters, Safari's shared saved opportunity, duplicate enforcement, the shiny clause, and first-retained-Pokémon Contest handling are implemented. Focused Safari and revised Contest retention checks remain. See `CAPTURE_RULES_PLAN.md`. |
 | Bug-Catching Contest availability | Pending after capture rules | Remove the weekday restriction so the Contest can be entered every day. Preserve other entry requirements and the existing daily participation limit unless changed separately. |
@@ -79,6 +88,21 @@ The reviewed implementation design is in
 the standard Key Item flow: it closes the Bag, heals through one central
 operation, displays the success message in the field, and returns control to
 the overworld. Registration is deliberately disabled.
+
+## Graveyard and Laptop
+
+The storage model, post-battle retirement timing, wipe recovery, dedicated
+defeat-to-title ending, restricted PC view, Mum's initial Laptop gift, portable
+PC entry path, and implementation stages are in
+[`GRAVEYARD_AND_LAPTOP_PLAN.md`](GRAVEYARD_AND_LAPTOP_PLAN.md).
+
+## HM field actions
+
+The machine-ownership model, centralized move mapping, direct-interaction
+hook, Party-menu integration, preserved field checks, scope exclusions, and
+verification matrix are in
+[`HM_FIELD_ACTIONS_PLAN.md`](HM_FIELD_ACTIONS_PLAN.md). The standard
+Pokémon-driven field-move presentation is retained.
 
 ## Verification policy
 
