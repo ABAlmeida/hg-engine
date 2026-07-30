@@ -135,6 +135,12 @@ smoke test. Battle-engine changes should add scenarios under
 ## Repository conventions
 
 - Keep logical changes small and independently buildable.
+- For plans and reviews that affect injected code or runtime memory, apply the
+  repository-local budgeting skill at
+  `.agents/skills/budget-heartless-gold-code/SKILL.md`.
+- For DSPRE/HGSS script planning, edits, diagnosis, or review, apply the
+  repository-local scripting skill at
+  `.agents/skills/hgss-scripting-rules/SKILL.md`.
 - Before editing, run `git status --short --branch`; preserve unrelated user
   changes.
 - Follow `.clang-format` for `src/**/*.c` and `include/**/*.h`. Configure the

@@ -1,6 +1,26 @@
 #include "include/config.h"
 #include "include/debug.h"
 
+#ifdef IMPLEMENT_PERMANENT_DEATH
+
+# The saved-party commit wrapper ends at 0x02050738. Use the eight-byte r2
+# entry jump so the hook cannot overwrite the following encounter task.
+arm9 PermanentDeath_PostBattleCommitHook 02050724 2
+
+# Display ordinary notifications only after the normal fade has made the
+# restored overworld visible. The notification itself is a field script.
+arm9 PermanentDeath_CallTaskFadeFromBlack 0205532C
+
+# The terminal-wipe path reuses the vanilla blackout screen, skips the Pokemon
+# Center warp, and resets after its replacement message. Recoverable wipes
+# continue through the original calls wrapped by these four Thumb call sites.
+arm9 PermanentDeath_BlackoutWarpOrSkip 020528B2 bl
+arm9 PermanentDeath_BlackoutPrintMessage 020526A2 bl
+arm9 PermanentDeath_BlackoutPrintMessage 020526B0 bl
+arm9 PermanentDeath_BlackoutRestoreOrEnd 0205291C bl
+
+#endif
+
 #ifdef IMPLEMENT_LEVEL_CAP
 
 # common encounter-result handler, before BattleSetup is freed
@@ -24,8 +44,10 @@ arm9 EncounterFinishLevelCapHook 020506F4
 0002 CaptureRules_GenerateOrdinaryEncounter 02247D96 bl
 # Replace the complete Bug-Catching Contest script command in overlay 1. The
 # wrapper preserves allocation/deletion and intercepts the caught flag before
-# BugContest_Delete can transfer the final Pokemon. The trailing 1 selects r1
-# as the scratch register for the generated function-entry jump.
+# BugContest_Delete can transfer the final Pokemon. After deletion restores the
+# persistent party, the same wrapper runs deferred permanent-death processing.
+# The trailing 1 selects r1 as the scratch register for the generated
+# function-entry jump.
 0001 CaptureRules_ScrCmdBugContestAction 02202930 1
 #endif
 

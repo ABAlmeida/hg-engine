@@ -1,0 +1,4 @@
+interface:
+  display_name: "Heartless Gold Code Budget"
+  short_description: "Guard the injected-code and runtime memory budgets"
+  default_prompt: "Use $budget-heartless-gold-code to review this Heartless Gold change for code-size and memory impact."

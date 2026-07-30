@@ -119,3 +119,6 @@ NOT TELLING
 The repellent’s effect wore off!\nWould you like to use another one?
 You used the {STRVAR_1 8, 1, 0}.
 Begin auto-battle.
+Your Pokémon that died have\nleft the party.
+You have no usable Pokémon\nremaining...\nYour journey is over.
+{STRVAR_1 1, 0, 0} was moved from the PC\nand joined your party!

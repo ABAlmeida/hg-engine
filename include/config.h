@@ -141,6 +141,14 @@
 // comment out the line below to keep the max at 18
 #define EXPAND_PC_BOXES
 
+// IMPLEMENT_PERMANENT_DEATH removes fainted Pokemon from the party after
+// eligible battles and recovers a wiped party from ordinary PC storage.
+#define IMPLEMENT_PERMANENT_DEATH
+
+#if defined(IMPLEMENT_PERMANENT_DEATH) && !defined(IMPLEMENT_CAPTURE_RULES)
+#error "Permanent death currently requires capture rules for Bug-Catching Contest integration"
+#endif
+
 // SHINY_ODDS are the odds that a pokémon will be shiny.  actual odds are SHINY_ODDS over 65,536, by default 8 / 65536 or 1 / 8192
 // note that changing this still has no chance of spawning shiny mons in for trainers like the tutorial's method does
 // this will change existing mons too!  if you want to change the odds of wild mons only, you will have to add a certain amount of pid rerolls to the AddWildPartyPokemon routine

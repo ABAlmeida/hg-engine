@@ -1,6 +1,8 @@
 #include "../include/capture_rules.h"
 
 #include "../include/battle.h"
+#include "../include/config.h"
+#include "../include/permanent_death.h"
 #include "../include/pokedex.h"
 #include "../include/pokemon.h"
 #include "../include/save.h"
@@ -296,7 +298,16 @@ BOOL LONG_CALL CaptureRules_ScrCmdBugContestAction(SCRIPTCONTEXT *ctx)
 
         BugContest_Delete(fieldSystem->bugContest);
         fieldSystem->bugContest = NULL;
+#ifdef IMPLEMENT_PERMANENT_DEATH
+        // BugContest_Delete has now restored the persistent party. Processing
+        // earlier would remove from the temporary one-Pokemon contest party.
+        PermanentDeath_ProcessPartyAfterBattle(fieldSystem->savedata);
+#endif
         sub_02093070(fieldSystem);
+#ifdef IMPLEMENT_PERMANENT_DEATH
+        // Defer until the Contest script has completely released the field.
+        PermanentDeath_ScheduleNotification(fieldSystem);
+#endif
     }
 
     return FALSE;

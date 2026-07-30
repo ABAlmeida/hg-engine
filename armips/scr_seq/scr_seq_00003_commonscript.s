@@ -88,6 +88,7 @@ scrdef scr_seq_0003_070
 scrdef scr_seq_0003_071
 scrdef scr_seq_0003_072_repels
 scrdef scr_seq_0003_073_autobattle_testing
+scrdef scr_seq_0003_074_permanent_death_notification
 scrdef_end
 
 scr_seq_0003_002:
@@ -1039,6 +1040,7 @@ scr_seq_0003_012:
     wait_movement
     fade_screen 6, 1, 1, RGB_BLACK
     wait_fade
+    call _permanent_death_notification
     buffer_players_name 0
     npc_msg 41
     fade_screen 6, 1, 0, RGB_BLACK
@@ -1061,6 +1063,7 @@ scr_seq_0003_013:
     lockall
     fade_screen 6, 1, 1, RGB_BLACK
     wait_fade
+    call _permanent_death_notification
     get_player_state VAR_SPECIAL_RESULT
     compare VAR_SPECIAL_RESULT, PLAYER_STATE_ROCKET
     goto_if_ne _0ED4
@@ -1740,6 +1743,48 @@ scr_seq_0003_073_autobattle_testing:
     trainer_battle 5, 0, 0, 0
     //setvar 0x800B, 1
     //WildBattleSp 785 | (1 << 11), 50, 0
+    releaseall
+    end
+
+// Entry used by ordinary battle returns and the Bug-Catching Contest. The
+// blackout scripts call the shared body directly because they already hold
+// the field lock.
+scr_seq_0003_074_permanent_death_notification:
+    lockall
+    call _permanent_death_notification
+    releaseall
+    endstd
+    end
+
+_permanent_death_notification:
+    GetPermanentDeathPending VAR_SPECIAL_x8000
+    compare VAR_SPECIAL_x8000, 0
+    goto_if_eq _permanent_death_return
+    npc_msg 121
+    wait_button
+    closemsg
+    GetPermanentDeathRecoveredSlot VAR_SPECIAL_x8001
+    compare VAR_SPECIAL_x8001, 255
+    goto_if_eq _permanent_death_check_end
+    bufferpartymonnick 0, VAR_SPECIAL_x8001
+    npc_msg 123
+    wait_button
+    closemsg
+
+_permanent_death_check_end:
+    GetPermanentDeathShouldEnd VAR_SPECIAL_x8002
+    compare VAR_SPECIAL_x8002, 1
+    goto_if_eq _permanent_death_end_run
+    FinishPermanentDeathNotification 0
+
+_permanent_death_return:
+    return
+
+_permanent_death_end_run:
+    npc_msg 122
+    wait_button
+    closemsg
+    FinishPermanentDeathNotification 1
     releaseall
     end
 

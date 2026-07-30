@@ -508,7 +508,7 @@ int HandleWriteSaveAsync_PCBoxes(SaveData *saveData, struct AsyncWriteManager *w
         saveData->nextBoxToWrite = 0;
         //r7 = PCStorage_GetSizeOfBox() * PCStorage_GetNumBoxes();
         r7 = 0x1000 * NUM_PC_BOXES;
-        saveData->pcStorageCRC = GF_CalcCRC16(SaveArray_Get(saveData, 41), r7);
+        saveData->pcStorageCRC = GF_CalcCRC16(SaveArray_Get(saveData, SAVE_ARRAY_PC_STORAGE), r7);
         if (saveData->numModifiedBoxes == 0) {
             GF_ASSERT(saveData->pcStorageCRC == saveData->pcStorageLastCRC);
             sub_020271A0(saveData);

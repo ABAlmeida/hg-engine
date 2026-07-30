@@ -836,13 +836,19 @@ GenerateWildNonShinyAndAddToParty = 0x02247A18 | 1;
 ov02_02247F30 = 0x02247F30 | 1;
 BattleSetup_GetWildTransitionEffect = 0x020517E8 | 1;
 BattleSetup_GetWildBattleMusic = 0x020517FC | 1;
+BattleSetup_CommitToSave = 0x0205239C | 1;
 CallTask_StartEncounter = 0x0205085C | 1;
 SetupAndStartWildBattle = 0x02051020 | 1;
 
 BattleSetup_New_Tutorial = 0x02051AAC | 1;
 Encounter_New = 0x020506BC | 1;
 TaskManager_Call = 0x02050530 | 1;
+FieldSystem_IsMainApplicationRunning = 0x0203DF7C | 1;
+Task_WaitPaletteFade = 0x020552D4 | 1;
 Task_TutorialBattle = 0x0205128C | 1;
+Blackout_PrintMessage = 0x020527D0 | 1;
+Blackout_StartDeathWarp = 0x020537A8 | 1;
+CallTask_RestoreOverworld = 0x020552A4 | 1;
 
 GetItemAttrSub = 0x02077E48 | 1;
 

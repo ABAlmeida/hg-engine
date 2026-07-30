@@ -54,15 +54,21 @@ typedef struct PC_Box {
 
 struct PACKED PokemonStorageSystem {
     /* 00000 */ PC_BOX boxes[NUM_PC_BOXES];
-    /* 12000 */ int curBox;
-    /* 12004 */ u32 boxModifiedFlag;
-    /* 12008 */ u16 box_names[NUM_PC_BOXES][BOX_NAME_LENGTH];
-    /* 122D8 */ u8 wallpapers[NUM_PC_BOXES];
-    /* 122EA */ u8 unlockedWallpapers;
-    /* 122EB */ u8 filler_122EB[0x11];
+    /* 1E000 */ int curBox;
+    /* 1E004 */ u32 boxModifiedFlag;
+    /* 1E008 */ u16 box_names[NUM_PC_BOXES][BOX_NAME_LENGTH];
+    /* 1E4B8 */ u8 wallpapers[NUM_PC_BOXES];
+    /* 1E4D6 */ u8 unlockedWallpapers;
+    /* 1E4D7 */ u8 filler_1E4D7[0x11];
 };
+
+_Static_assert(sizeof(PCStorage) == 0x1E4E8, "Expanded PCStorage layout changed");
+_Static_assert(offsetof(PCStorage, curBox) == 0x1E000, "PCStorage active-box offset changed");
+_Static_assert(offsetof(PCStorage, boxModifiedFlag) == 0x1E004, "PCStorage modified-box offset changed");
 
 BOOL PCStorage_PlaceMonInBoxFirstEmptySlot(PCStorage* storage, u32 boxno, struct BoxPokemon *boxMon);
 void PCStorage_SetBoxModified(PCStorage *storage, u8 boxno);
+void PCStorage_DeleteBoxMonByIndexPair(PCStorage *storage, u32 boxno, u32 slotno);
+struct BoxPokemon *PCStorage_GetMonByIndexPair(PCStorage *storage, u32 boxno, u32 slotno);
 
 #endif // INCLUDE_POKEMON_STORAGE_SYSTEM_H

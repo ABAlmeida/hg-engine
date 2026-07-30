@@ -309,6 +309,7 @@ void LONG_CALL SaveData_InitSubstructs(struct SaveArrayHeader *headers);
 void LONG_CALL SaveData_InitSlotSpecs(struct SaveSlotSpec *slotSpecs, struct SaveArrayHeader *headers);
 int LONG_CALL Save_GetSaveFilesStatus(SaveData *saveData);
 BOOL LONG_CALL Save_LoadDynamicRegion(SaveData *saveData);
+void *LONG_CALL SaveArray_Get(SaveData *saveData, int id);
 u32 LONG_CALL Save_GetPCBoxModifiedFlags(SaveData *saveData);
 void LONG_CALL Save_CheckFrontierData(SaveData *saveData, int *err1, int *err2);
 void LONG_CALL Save_InitDynamicRegion(SaveData *saveData);

@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-07-28
+Last updated: 2026-07-29
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -22,9 +22,9 @@ complete.
   encounter per displayed map section, use the Pokédex for exact-species
   duplicate checks, and treat Safari Zone and Bug-Catching Contest encounters
   through their documented special rules.
-- Permanently retire fainted party Pokémon after battles. Preserve up to 300
-  of them in a separate, read-only 10-box Graveyard and recover a wiped party
-  from the first usable Pokémon in ordinary PC storage.
+- Permanently remove fainted party Pokémon after eligible battles. On a wipe,
+  recover the first usable boxed Pokémon and name it in the recovery message.
+  Keep all 30 expanded PC boxes available for ordinary storage.
 - Provide portable access to the shared PC menu through a reusable Laptop Key
   Item. Mum initially gives it during the existing Pokégear sequence.
 - End a run with a dedicated defeat message and return to the title screen
@@ -45,8 +45,8 @@ complete.
 | Level to Cap | Complete; manually verified | The party action advances one level at a time and preserves move and evolution prompts. |
 | Bait encounters | Complete; manually verified | Poké Bait and Shiny Bait work on valid terrain; invalid use is rejected; preserved encounter types remain available. See `BAIT_ENCOUNTERS.md`. |
 | Reusable healer | Complete; manually verified | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, and cannot be used in battle. See `REUSABLE_HEALER_PLAN.md`. |
-| Graveyard and wipe recovery | Planned | Add a separate read-only 10-box Graveyard, retire fainted party Pokémon after battles, discard retirements when it is full, and recover a wiped party from the first usable Pokémon in ordinary PC storage. A wipe with no usable reserve shows a defeat message and returns to the title screen. See `GRAVEYARD_AND_LAPTOP_PLAN.md`. |
-| Laptop PC access | Planned | Add a reusable Laptop Key Item that opens the same PC menu and Graveyard access from safe field contexts. Mum initially gives it during the existing Pokégear sequence. See `GRAVEYARD_AND_LAPTOP_PLAN.md`. |
+| Permanent death and wipe recovery | Implemented; build and manual verification pending | Eligible fainted party Pokémon are deleted centrally after battle. Common field scripts report deaths and transactional reserve recovery after the overworld is visible; no-reserve wipes show the ending message and return to title. See `PERMANENT_DEATH_PLAN.md`. |
+| Laptop PC access | Planned; independent from permanent death | Add a reusable Laptop Key Item that opens the shared PC menu from safe field contexts. Mum initially gives it during the existing Pokégear sequence. See `LAPTOP_PLAN.md`. |
 | Forced-female protagonist | Pending | Skip gender selection, write the female profile value, continue to name selection, and retain the standard Lyra graphics without replacing Ethan's unrelated NPC assets. Existing saves do not need migration. |
 | HM field actions | Implemented; build and manual verification pending | Owned machines enable Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Rock Climb, Fly, or Flash without teaching or compatibility requirements while preserving the original field checks and Pokémon presentation. See `HM_FIELD_ACTIONS_PLAN.md`. |
 | Evolution modernization | Pending | Convert trade and hardware/location-dependent evolutions to accessible items, lower the friendship threshold, and preserve reasonable distinctive conditions. |
@@ -89,12 +89,18 @@ the standard Key Item flow: it closes the Bag, heals through one central
 operation, displays the success message in the field, and returns control to
 the overworld. Registration is deliberately disabled.
 
-## Graveyard and Laptop
+## Permanent death and wipe recovery
 
-The storage model, post-battle retirement timing, wipe recovery, dedicated
-defeat-to-title ending, restricted PC view, Mum's initial Laptop gift, portable
-PC entry path, and implementation stages are in
-[`GRAVEYARD_AND_LAPTOP_PLAN.md`](GRAVEYARD_AND_LAPTOP_PLAN.md).
+The centralized final-HP deletion policy, transactional reserve selection,
+script-driven post-fade notifications, no-reserve defeat-to-title ending,
+memory impact, and verification matrix are in
+[`PERMANENT_DEATH_PLAN.md`](PERMANENT_DEATH_PLAN.md).
+
+## Laptop PC access
+
+The independent Laptop item, shared physical-PC launcher, safe field-use
+lifetime, Mum's initial gift, and implementation steps are in
+[`LAPTOP_PLAN.md`](LAPTOP_PLAN.md).
 
 ## HM field actions
 

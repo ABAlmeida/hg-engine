@@ -1,0 +1,4 @@
+interface:
+  display_name: "HGSS Scripting Rules"
+  short_description: "Verified, maintainable HGSS script editing"
+  default_prompt: "Use $hgss-scripting-rules to make a verified HGSS script change and document the pattern."
