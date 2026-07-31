@@ -586,6 +586,9 @@ move_narc $(DATA_INSTALL_STAMP): $(NARC_FILES) $(BASE_EXTRACTION_STAMP)
 
 	@echo "hidden item params:"
 	cp $(HIDDEN_ITEM_PARAMS_BIN) $(HIDDEN_ITEM_PARAMS_TARGET)
+
+	@echo "level cap rewards:"
+	cp $(LEVEL_CAP_REWARDS_BIN) $(LEVEL_CAP_REWARDS_TARGET)
 	@touch $(DATA_INSTALL_STAMP)
 
 ####################### Incremental ROM assembly #######################

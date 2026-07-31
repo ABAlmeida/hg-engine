@@ -81,9 +81,10 @@ Each Silver battle has three trainer records for his starter-dependent team.
 Silver fight 1 uses the `Boy`/Passerby trainer records because it happens
 before the rival is named. The later fights use the `Silver`/Rival records.
 
-The complete symbolic trainer IDs are defined in
-`include/constants/trainer_id.h`. The cap reward table is in
-`src/level_cap.c`.
+The complete cap reward table is in `data/TrainerLevelCaps.c`. It is compiled
+as a direct-indexed byte table in the code-addons NARC rather than linked into
+the injected-code region. Unlisted trainer IDs contain zero and do not change
+the cap.
 
 ## Save behavior
 

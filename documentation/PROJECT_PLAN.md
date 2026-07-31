@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-07-29
+Last updated: 2026-07-31
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -29,8 +29,21 @@ complete.
   Item. Mum initially gives it during the existing Pokégear sequence.
 - End a run with a dedicated defeat message and return to the title screen
   when a wiped player has no usable Pokémon in ordinary PC storage.
-- Keep Generation 5+ species work deferred until the core progression and
-  encounter systems are stable.
+- Treat hg-engine's existing Generation 5-6 species engine and data foundation
+  as supplied. Keep encounter, trainer, gift, and balance placement deferred
+  until the core progression and encounter systems are stable.
+- Require the player to talk to field trainers to begin battle. Trainers must
+  not interrupt movement or initiate battles through line of sight.
+- Give a deterministic item reward only for the first victory over a trainer
+  ID, according to a source-controlled table stored in ROM data rather than
+  linked C data. Rematch IDs and other trainers can be configured with no
+  reward.
+- Prevent the player from using active items in battle. Trainer battles omit
+  Bag access; ordinary wild battles retain access to every valid capture Ball
+  in the Ball pocket so the capture rules remain playable. Held items are
+  unaffected.
+- Remove normal acquisition sources for every item in the Battle Items pocket.
+  Retain their IDs and item data for archive stability.
 
 ## Status
 
@@ -49,10 +62,15 @@ complete.
 | Laptop PC access | Planned; independent from permanent death | Add a reusable Laptop Key Item that opens the shared PC menu from safe field contexts. Mum initially gives it during the existing Pokégear sequence. See `LAPTOP_PLAN.md`. |
 | Forced-female protagonist | Pending | Skip gender selection, write the female profile value, continue to name selection, and retain the standard Lyra graphics without replacing Ethan's unrelated NPC assets. Existing saves do not need migration. |
 | HM field actions | Implemented; build and manual verification pending | Owned machines enable Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Rock Climb, Fly, or Flash without teaching or compatibility requirements while preserving the original field checks and Pokémon presentation. See `HM_FIELD_ACTIONS_PLAN.md`. |
-| Evolution modernization | Pending | Convert trade and hardware/location-dependent evolutions to accessible items, lower the friendship threshold, and preserve reasonable distinctive conditions. |
+| Evolution modernization | Partially complete; upstream mechanics present | hg-engine already uses the modern friendship threshold of 160, provides Linking Cord routes for the original trade evolutions and held-item trades, and replaces the magnetic-field, moss-rock, and ice-rock evolutions with stones. Player-facing completion still requires normal acquisition sources for the Linking Cord and required held items, plus an audit of unsupported special methods such as Karrablast/Shelmet's paired trade. |
 | Capture challenge rules | Implemented; manual verification pending | Ordinary encounters, Safari's shared saved opportunity, duplicate enforcement, the shiny clause, and first-retained-Pokémon Contest handling are implemented. Focused Safari and revised Contest retention checks remain. See `CAPTURE_RULES_PLAN.md`. |
 | Bug-Catching Contest availability | Pending after capture rules | Remove the weekday restriction so the Contest can be entered every day. Preserve other entry requirements and the existing daily participation limit unless changed separately. |
-| Generation 5+ Pokémon integration | Deferred | Audit species data, assets, cries, forms, evolutions, learnsets, Pokédex/save paths, encounters, gifts, and trainer placement. Compiling a species does not place it in the game. |
+| Generation 5-6 species engine/data foundation | Complete; supplied by hg-engine | The repository contains the expanded species IDs, personal data, evolutions, learnsets, experience data, battle and follower graphics, icons, cries, forms, and expanded Pokédex tables. This records the upstream foundation as complete for project planning; it is not a claim that every species and form has received focused in-game verification. |
+| Generation 5+ Pokémon content integration | Deferred | Select and place the expanded roster in encounters, trainers, gifts, and other acquisition sources, then balance it against progression. The current encounter and trainer content does not make the compiled species available automatically. |
+| Talk-initiated trainer battles | Planned | Disable automatic sight detection before it starts trainer movement or scripts, while preserving the existing talk interaction, defeated dialogue, rematches, and paired/double-trainer behavior. |
+| Trainer victory rewards | Planned | Give each configured enemy trainer ID its item and quantity once, after the first victory only. Keep the authoritative trainer-to-reward mapping in generated ROM data, with rematches configurable as no reward, and persist claimed rewards independently from resettable trainer flags. Audit ordinary, sight-capable, double, rival, Gym, Elite Four, rematch, and other scripted trainer paths. |
+| In-battle player item restriction | Planned | Omit the Bag in trainer battles and permit every valid capture Ball from the Ball pocket in ordinary wild battles. Preserve Safari and Bug-Catching Contest capture commands, held-item effects, and enemy trainer item behavior. |
+| Battle Item acquisition removal | Planned | Remove or replace marts, visible and hidden pickups, gifts, prizes, and other sources of every Battle Items-pocket item. Keep the item IDs and records intact, and audit existing saves only for harmless unusable leftovers. |
 | Trainer and wild content rebalance | Pending | Build teams and encounter tables around the finalized cap curve and available roster. |
 | Trainer AI changes | Pending | First enable the strongest suitable existing trainer AI, then add a trainer-only fair-information decision layer, switching and item evaluation, doubles coordination, and bounded search. Wild and scripted AI must retain their original routes. |
 | Graphics and presentation | Pending | Replace the temporary Bait icons, redesign rival battle/overworld graphics, add challenge messages, and consider title-screen changes after core systems stabilize. |
@@ -109,6 +127,62 @@ hook, Party-menu integration, preserved field checks, scope exclusions, and
 verification matrix are in
 [`HM_FIELD_ACTIONS_PLAN.md`](HM_FIELD_ACTIONS_PLAN.md). The standard
 Pokémon-driven field-move presentation is retained.
+
+## Trainer interaction and victory rewards
+
+- The reward source will be a readable data file such as
+  `data/trainer_rewards.csv`, with symbolic trainer ID, item ID, and quantity
+  columns. `ITEM_NONE` with quantity zero explicitly configures a trainer ID
+  to give no reward. A build-time validator will reject unknown IDs, duplicate
+  trainer rows, and invalid item/quantity combinations.
+- The build will convert that file into a fixed-format member of
+  `ARC_CODE_ADDONS`. Runtime code will read the record for a trainer ID
+  directly; the full mapping will not occupy the fixed injected-code region.
+- Each distinct nonzero enemy trainer ID in a won battle is considered once,
+  and only if its configured reward has never been claimed. A two-trainer
+  battle can therefore award two configured first-victory rewards, while a
+  single trainer using two battler slots cannot award twice.
+- Rematch trainer IDs will be configured as no reward. Repeating a battle with
+  an already rewarded trainer ID also gives nothing, even if the underlying
+  trainer-defeated flag is later cleared or reused.
+- A save-backed claimed-reward bit indexed by trainer ID will enforce the
+  one-time rule independently from trainer flags. At the current 740 trainer
+  IDs this requires approximately 93 bytes--rounded to about 96 bytes when
+  stored as aligned words--in expanded save data. The bit is set only after
+  the item has actually been added to the Bag.
+- Reward presentation must run from a verified post-victory field-script
+  context and use the standard item-obtained and Bag-full flows. The detailed
+  implementation plan must decide how an unclaimed Bag-full reward is retained
+  rather than silently lost.
+- The trainer-script audit must cover the shared ordinary and sight-triggered
+  paths as well as story and map scripts that launch trainer battles directly.
+
+## Trainer line of sight
+
+Automatic trainer detection must be stopped before it takes control of the
+field, moves a trainer toward the player, or starts the sight-triggered trainer
+script. Merely ending that script after detection is not sufficient because it
+would still interrupt the player. Talking to an undefeated trainer must retain
+the normal pre-battle dialogue and battle flow; talking after victory must
+retain the normal defeated dialogue and rematch behavior.
+
+## In-battle items and Battle Item availability
+
+- Trainer battles do not expose a usable Bag command to the player.
+- Ordinary wild battles expose the complete Ball pocket required for capture.
+  Any Ball that is valid for the current encounter may be used; this is not
+  limited to the item named Poké Ball. Healing items, status items, escape
+  items, Battle Items, and other active Bag items cannot be selected or used.
+- Safari Zone and Bug-Catching Contest capture controls remain available.
+- Held-item effects remain active. Enemy trainer item use is not changed by
+  this player-facing restriction.
+- Every item assigned to `POCKET_BATTLE_ITEMS` is removed from normal
+  acquisition. This includes the X items, Guard Spec., Dire Hit, Poké Doll,
+  Fluffy Tail, and the battle-use flutes in the current item data.
+- Existing item IDs and item-data entries remain stable. Marts, hidden items,
+  visible pickups, gifts, prizes, scripts, and other acquisition tables must
+  be audited, with removed rewards replaced deliberately rather than leaving
+  empty interactable locations.
 
 ## Verification policy
 
