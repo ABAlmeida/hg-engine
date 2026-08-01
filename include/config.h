@@ -196,14 +196,14 @@
 // UPDATE_VITAMIN_EV_CAPS changes the cap on the vitamins from 100 to 252 per recent generations
 #define UPDATE_VITAMIN_EV_CAPS
 
-// DISABLE_ITEMS_IN_TRAINER_BATTLE will disable the usage of items in trainer battles. This is also true for the AI.
-// #define DISABLE_ITEMS_IN_TRAINER_BATTLE
+// DISABLE_ITEMS_IN_TRAINER_BATTLE rejects player Bag item selections in trainer battles.
+#define DISABLE_ITEMS_IN_TRAINER_BATTLE
 
 // REUSABLE_TMS will make TMs infinite and hide the quantity number.
-#define REUSABLE_TMS
+// #define REUSABLE_TMS
 
 // DELETABLE_HMS allows HMs to be forgotten, this also makes their quantity reduce, but the infinite TMs change prevents this.
-// #define DELETABLE_HMS
+#define DELETABLE_HMS
 
 // MART_EXPANSION allows for adding and modifying items to the mart inventories
 #define MART_EXPANSION

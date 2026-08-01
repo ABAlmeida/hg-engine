@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-07-31
+Last updated: 2026-08-01
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -38,12 +38,16 @@ complete.
   ID, according to a source-controlled table stored in ROM data rather than
   linked C data. Rematch IDs and other trainers can be configured with no
   reward.
-- Prevent the player from using active items in battle. Trainer battles omit
-  Bag access; ordinary wild battles retain access to every valid capture Ball
-  in the Ball pocket so the capture rules remain playable. Held items are
-  unaffected.
+- Disable active player item use in trainer battles through hg-engine's
+  existing `DISABLE_ITEMS_IN_TRAINER_BATTLE` behavior. Item selections are
+  rejected and return to command selection. Wild-battle Bag behavior and held
+  items remain unchanged for initial playtesting.
 - Remove normal acquisition sources for every item in the Battle Items pocket.
   Retain their IDs and item data for archive stability.
+- Consolidate the opening so Mum supplies the early travel features, Silver 1
+  occurs outside Elm's lab, the counterpart teaches Bait without a simulated
+  battle, and Mr. Pokemon gives the hatchable Egg before progression continues
+  directly toward Violet City. See `OPENING_SEQUENCE_PLAN.md`.
 
 ## Status
 
@@ -58,7 +62,8 @@ complete.
 | Level to Cap | Complete; manually verified | The party action advances one level at a time and preserves move and evolution prompts. |
 | Bait encounters | Complete; manually verified | Poké Bait and Shiny Bait work on valid terrain; invalid use is rejected; preserved encounter types remain available. See `BAIT_ENCOUNTERS.md`. |
 | Reusable healer | Complete; manually verified | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, and cannot be used in battle. See `REUSABLE_HEALER_PLAN.md`. |
-| Permanent death and wipe recovery | Implemented; build and manual verification pending | Eligible fainted party Pokémon are deleted centrally after battle. Common field scripts report deaths and transactional reserve recovery after the overworld is visible; no-reserve wipes show the ending message and return to title. See `PERMANENT_DEATH_PLAN.md`. |
+| Revised opening sequence | Planned | Consolidate Mum's early unlocks, preserve Elm's Healing Kit, give the starting supplies together, move Silver 1, shorten the counterpart's tutorial to explain Bait without a battle, move the hatchable Egg to Mr. Pokémon, and remove the return-to-Elm requirement. See `OPENING_SEQUENCE_PLAN.md`. |
+| Permanent death and wipe recovery | Complete; manually verified | Eligible fainted party Pokémon are deleted centrally after battle. Common field scripts report deaths and transactional reserve recovery after the overworld is visible; no-reserve wipes show the ending message and return to title. See `PERMANENT_DEATH_PLAN.md`. |
 | Laptop PC access | Planned; independent from permanent death | Add a reusable Laptop Key Item that opens the shared PC menu from safe field contexts. Mum initially gives it during the existing Pokégear sequence. See `LAPTOP_PLAN.md`. |
 | Forced-female protagonist | Pending | Skip gender selection, write the female profile value, continue to name selection, and retain the standard Lyra graphics without replacing Ethan's unrelated NPC assets. Existing saves do not need migration. |
 | HM field actions | Implemented; build and manual verification pending | Owned machines enable Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Rock Climb, Fly, or Flash without teaching or compatibility requirements while preserving the original field checks and Pokémon presentation. See `HM_FIELD_ACTIONS_PLAN.md`. |
@@ -69,7 +74,7 @@ complete.
 | Generation 5+ Pokémon content integration | Deferred | Select and place the expanded roster in encounters, trainers, gifts, and other acquisition sources, then balance it against progression. The current encounter and trainer content does not make the compiled species available automatically. |
 | Talk-initiated trainer battles | Planned | Disable automatic sight detection before it starts trainer movement or scripts, while preserving the existing talk interaction, defeated dialogue, rematches, and paired/double-trainer behavior. |
 | Trainer victory rewards | Planned | Give each configured enemy trainer ID its item and quantity once, after the first victory only. Keep the authoritative trainer-to-reward mapping in generated ROM data, with rematches configurable as no reward, and persist claimed rewards independently from resettable trainer flags. Audit ordinary, sight-capable, double, rival, Gym, Elite Four, rematch, and other scripted trainer paths. |
-| In-battle player item restriction | Planned | Omit the Bag in trainer battles and permit every valid capture Ball from the Ball pocket in ordinary wild battles. Preserve Safari and Bug-Catching Contest capture commands, held-item effects, and enemy trainer item behavior. |
+| In-battle player item restriction | Implemented; build and manual verification pending | `DISABLE_ITEMS_IN_TRAINER_BATTLE` rejects active player item selections in trainer battles and returns to command selection. Wild-battle Bag behavior and held items remain unchanged; revisit stricter UI or pocket filtering only if playtesting requires it. |
 | Battle Item acquisition removal | Planned | Remove or replace marts, visible and hidden pickups, gifts, prizes, and other sources of every Battle Items-pocket item. Keep the item IDs and records intact, and audit existing saves only for harmless unusable leftovers. |
 | Trainer and wild content rebalance | Pending | Build teams and encounter tables around the finalized cap curve and available roster. |
 | Trainer AI changes | Pending | First enable the strongest suitable existing trainer AI, then add a trainer-only fair-information decision layer, switching and item evaluation, doubles coordination, and bounded search. Wild and scripted AI must retain their original routes. |
@@ -106,6 +111,14 @@ The reviewed implementation design is in
 the standard Key Item flow: it closes the Bag, heals through one central
 operation, displays the success message in the field, and returns control to
 the overworld. Registration is deliberately disabled.
+
+## Revised opening sequence
+
+The consolidated Mum, Elm, assistant, Silver 1, counterpart tutorial,
+Cherrygrove guide, Mr. Pokemon Egg, phone call, and Route 30 state design is in
+[`OPENING_SEQUENCE_PLAN.md`](OPENING_SEQUENCE_PLAN.md). It preserves the
+normal Lyra/Ethan counterpart selection and records every skipped vanilla
+state that must be reproduced rather than bypassed.
 
 ## Permanent death and wipe recovery
 
@@ -168,14 +181,15 @@ retain the normal defeated dialogue and rematch behavior.
 
 ## In-battle items and Battle Item availability
 
-- Trainer battles do not expose a usable Bag command to the player.
-- Ordinary wild battles expose the complete Ball pocket required for capture.
-  Any Ball that is valid for the current encounter may be used; this is not
-  limited to the item named Poké Ball. Healing items, status items, escape
-  items, Battle Items, and other active Bag items cannot be selected or used.
-- Safari Zone and Bug-Catching Contest capture controls remain available.
-- Held-item effects remain active. Enemy trainer item use is not changed by
-  this player-facing restriction.
+- `DISABLE_ITEMS_IN_TRAINER_BATTLE` intercepts a player item selection in a
+  trainer battle, displays the standard cannot-use message, and returns the
+  player to command selection without using the item. The Bag remains
+  selectable and browsable; this is accepted for the initial implementation.
+- Ordinary wild-battle Bag behavior remains unchanged. Any normally valid
+  Ball or other active Bag item can still be used there.
+- Safari Zone and Bug-Catching Contest capture controls remain unchanged.
+- Held-item effects remain active. This option only changes player commands;
+  enemy trainer behavior is unchanged.
 - Every item assigned to `POCKET_BATTLE_ITEMS` is removed from normal
   acquisition. This includes the X items, Guard Spec., Dire Hit, Poké Doll,
   Fluffy Tail, and the battle-use flutes in the current item data.
