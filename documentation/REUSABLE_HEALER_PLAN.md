@@ -84,11 +84,14 @@ recorded in `rom.ld`. Its private task-data layout is documented locally and
 guarded by a size assertion. This fixed-address dependency must be rechecked
 if the supported base ROM changes.
 
-## 4. Leave registered-item use disabled
+## 4. Support registered-item use
 
-Set the item as non-selectable so it cannot be registered. Registered use would
-require a second entry path solely for the shortcut and is not needed for the
-initial feature.
+Set the item as selectable so it can use the standard two-slot Key Item
+registration system. The registered-field callback creates
+`Task_ReusableHealer` directly with `FieldSystem_CreateTask`; normal Bag use
+continues to schedule the same task after the Bag closes. The callback returns
+`FALSE` so the game's registered-item dispatcher frees its temporary
+`ItemFieldUseData`, matching the established bicycle and fishing-rod pattern.
 
 ## 5. Receive it from Professor Elm
 
@@ -149,7 +152,8 @@ Manually verify with a new in-game save that:
 12. multiple party members are healed in one use;
 13. Eggs and unrelated Pokémon data remain unchanged;
 14. the item is never consumed and cannot be tossed or used in battle;
-15. the item cannot be registered;
+15. the item can be registered in either slot and each registered button heals
+    and displays the same message as Bag use;
 16. the item remains present after saving and reloading; and
 17. Pokémon Center healing continues to work normally.
 

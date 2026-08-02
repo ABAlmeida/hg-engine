@@ -123,7 +123,7 @@ FLAG_EXCHANGED_RED_SCALE                                   equ 108
 FLAG_GOT_APRICORN_BOX                                      equ 109
 FLAG_GOT_TM05_FROM_ROUTE_32_MAN                            equ 110
 FLAG_UNK_06F                                               equ 111
-FLAG_UNK_070                                               equ 112
+FLAG_GOT_EGG_FROM_ELMS_ASSISTANT                           equ 112
 FLAG_TRADE_VIOLET_CITY_BELLSPROUT_ONIX                     equ 113
 FLAG_UNK_072                                               equ 114
 FLAG_GOT_TM51_FROM_FALKNER                                 equ 115
@@ -132,7 +132,7 @@ FLAG_GOT_OLD_ROD                                           equ 117
 FLAG_UNK_076                                               equ 118
 FLAG_UNK_077                                               equ 119
 FLAG_UNK_078                                               equ 120
-FLAG_UNK_079                                               equ 121
+FLAG_GAVE_RIVAL_NAME_TO_OFFICER                            equ 121
 FLAG_GOT_KINGS_ROCK_FROM_SLOWPOKE_WELL_MAN                 equ 122
 FLAG_BEAT_AZALEA_ROCKETS                                   equ 123
 FLAG_UNK_07C                                               equ 124
@@ -170,7 +170,7 @@ FLAG_UNK_09B                                               equ 155
 FLAG_GOT_POKEGEAR                                          equ 156
 FLAG_UNK_09D                                               equ 157
 FLAG_UNK_09E                                               equ 158
-FLAG_UNK_09F                                               equ 159
+FLAG_GOT_PICK_UP_EGG_CALL_FROM_ELM                         equ 159
 FLAG_UNK_0A0                                               equ 160
 FLAG_UNK_0A1                                               equ 161
 FLAG_GOT_HM03                                              equ 162

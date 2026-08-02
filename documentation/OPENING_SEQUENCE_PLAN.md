@@ -4,7 +4,9 @@ Last updated: 2026-08-01
 
 ## Status
 
-Planned. No opening-sequence scripts or events have been changed yet.
+Implemented in source. The main progression has passed an initial manual test;
+the dialogue, New Bark object cleanup, revised Silver path, Old Rod gift, and
+registered Healing Kit cleanup still need focused manual verification.
 
 ## Decisions
 
@@ -18,14 +20,19 @@ Planned. No opening-sequence scripts or events have been changed yet.
 - Elm's assistant gives 5 Potions, 20 standard Poké Balls, and 20 Poké Bait in
   one conversation before the player leaves the lab.
 - Move Silver's first battle to immediately after the player leaves Elm's lab.
-- Mum gives the normal opening menu features, the Pokégear, the Pokégear Map,
-  and Running Shoes, and starts the existing savings conversation during the
-  first downstairs conversation.
+- Preserve Mum's automatic first-downstairs cutscene. Extend that same
+  cutscene so Mum gives the normal opening menu features, the Pokégear, the
+  Pokégear Map, and Running Shoes, and starts the existing savings
+  conversation.
 - The Cherrygrove guide tour does not run. Put the guide into his established
   post-tour state because the Map and Running Shoes are already unlocked.
 - Mr. Pokémon gives the actual hatchable story Egg. It is initially Togepi;
   changing its species is deferred.
+- Preserve the later post-Falkner Violet City assistant event, but replace its
+  duplicate Egg with exactly one Shiny Bait. Rewrite both Elm's preceding
+  phone call and the assistant's dialogue to describe the new reward.
 - Preserve Professor Oak's Pokédex sequence at Mr. Pokémon's house.
+- Professor Oak also gives the Old Rod before leaving Mr. Pokémon's house.
 - On leaving Mr. Pokémon's house, Elm calls to say that he has the data he
   needs and asks the player to hatch and care for the Egg. The player does not
   return to Elm.
@@ -39,9 +46,10 @@ Planned. No opening-sequence scripts or events have been changed yet.
 
 ## Intended progression
 
-1. The player goes downstairs and speaks to Mum once.
-2. Mum completes the normal opening setup, unlocks the Pokégear Map and
-   Running Shoes, and asks whether to save the player's money.
+1. The player goes downstairs and Mum's normal automatic cutscene begins.
+2. During that one cutscene, Mum completes the normal opening setup, unlocks
+   the Pokégear Map and Running Shoes, and asks whether to save the player's
+   money.
 3. The player visits Elm and chooses a starter through the normal selection
    and nickname flow.
 4. Elm gives the Healing Kit and registers his phone number.
@@ -51,10 +59,12 @@ Planned. No opening-sequence scripts or events have been changed yet.
    Marill tutorial. It explains Bait and Balls but does not start a tutorial
    battle.
 8. Cherrygrove is already in its post-guide-tour state.
-9. Mr. Pokémon gives the hatchable Egg and Oak gives the Pokédex.
+9. Mr. Pokémon gives the hatchable Egg. Oak gives the Pokédex and Old Rod.
 10. Elm calls when the player leaves, asks them to hatch and care for the Egg,
     and releases them from the return objective.
 11. Route 30's northern path is open and normal Violet City progression begins.
+12. After Falkner, Elm directs the player to his assistant in Violet City's
+    Poké Mart. The assistant gives one Shiny Bait instead of another Egg.
 
 ## Non-goals
 
@@ -84,7 +94,8 @@ relevant script blocks and event data with DSPRE. The audit must cover:
 - the original Silver 1 encounter and its cleanup near Cherrygrove;
 - Mr. Pokémon's house, Mystery Egg, Oak, Pokédex, and Elm phone-call sequence;
 - Route 30's battling-trainer blockage and the state that clears it; and
-- the later Violet City assistant event that gives the Togepi Egg.
+- the later Violet City assistant event, Elm's preceding phone call, and the
+  legacy Egg flags and Violet scene values consumed by their downstream flow.
 
 For every branch, record:
 
@@ -131,9 +142,15 @@ Every fixed script offset must have:
 
 ## 3. Consolidate Mum's opening conversation
 
-Modify only the first valid downstairs conversation. Reuse the exact commands
-and state writes from Mum's later vanilla opening branches rather than
-reimplementing their effects.
+Extend the existing automatic first-downstairs routine, script 000 in script
+archive member 845. Do not remove its automatic trigger or modify player-house
+header member 618. Preserve the routine's existing player and Mum movements,
+music, dialogue, menu-feature grants, waits, message lifecycle, field lock,
+and release.
+
+After the existing menu-feature grants, continue within that same automatic
+cutscene by reusing the exact commands and state writes from Mum's later
+vanilla opening branches rather than reimplementing their effects.
 
 The consolidated branch must:
 
@@ -143,8 +160,15 @@ The consolidated branch must:
    item;
 4. enable Running Shoes through the verified HGSS command;
 5. run the existing Mum savings choice and preserve its yes/no behavior;
-6. advance Mum's scene to her normal post-opening dialogue; and
+6. finish with `VAR_SCENE_PLAYERS_HOUSE_1F` set to 1, as in the original
+   automatic routine, so New Bark's existing header can launch the normal
+   initial Lyra/Ethan and Marill scene after the player leaves the house;
 7. remain one-time when the player changes maps, saves, or reloads.
+
+Do not advance the player-house scene directly to its terminal value during
+this cutscene. Retire the later police/return-to-Mum sequence only after the
+moved Silver 1 battle has completed, without suppressing the initial
+counterpart scene.
 
 Known repository evidence includes `FLAG_GOT_POKEGEAR`,
 `FLAG_SYS_MOMS_SAVINGS`, `register_pokegear_card`, and
@@ -216,9 +240,22 @@ estimating it as free.
 
 ## 7. Move Silver 1 to New Bark Town
 
-Reuse the existing New Bark rival object if the target event data confirms it
-can support the approach and exit movement. Avoid adding a duplicate object
-unless the established object cannot represent the required states.
+Reuse the existing New Bark rival object. Hide the original New Bark
+counterpart and Marill objects before starting the replacement scene, matching
+the cleanup performed by the displaced vanilla post-starter scene.
+
+Keep Silver at his original window position `(682, 391)`. He runs south three
+tiles in total, but detours west through x=681 to avoid the mailbox event at
+`(682, 393)`, then runs east to face the player from `(683, 394)` and starts
+the battle. Afterward he runs south two tiles and west seven tiles to the
+verified Route 29 boundary at `(676, 396)`. This avoids both the lab footprint
+and mailbox while keeping his starting position and departure direction visible.
+
+Set the New Bark counterpart and Marill hide flags inside Elm's lab after the
+assistant's successful supply gift, before the exterior map loads. The outdoor
+scene repeats the cleanup defensively. Redirect New Bark's vanilla stage-1 map
+setup to an empty routine, because that setup explicitly clears the same flags
+and shows both objects on initial entry and on the post-battle field reload.
 
 Trigger the sequence after the player leaves Elm's lab with a starter and
 after the assistant's supplies have been awarded. Reuse the original Silver 1
@@ -319,8 +356,8 @@ command's established full-party behavior and must not claim the gift
 succeeded if it did not.
 
 Remove or retire the Mystery Egg key item so it cannot remain as an obsolete
-quest item. Mark the later Violet City assistant Egg gift as completed without
-running it, preventing a second story Egg.
+quest item. Do not suppress the later Violet City assistant event: repurpose it
+as the one-time Shiny Bait reward described below.
 
 Changing Togepi to another species remains a later content change. Keep the
 chosen species at one identifiable source location so that later work does not
@@ -348,7 +385,7 @@ sequence. The state audit must account for at least:
 - the moved and shortened catching tutorial;
 - Cherrygrove's guide tour;
 - Route 30's battling-trainer blockage; and
-- the later Violet City Egg handoff.
+- the later Violet City assistant reward and its legacy Egg progression flags.
 
 Set only values verified from the original scripts. Prefer the original final
 scene values over a new parallel flag. Confirm all downstream consumers before
@@ -358,7 +395,35 @@ The Route 30 blockers must reach their normal post-opening state so the player
 can continue north immediately. Do not merely disable collision or move an
 object without advancing the story state that controls it on reload.
 
-## 12. Source-control dialogue and patch knowledge
+## 12. Repurpose the post-Falkner assistant gift
+
+Preserve the established post-Falkner event that makes Elm's assistant appear
+in Violet City's Poké Mart. The event must still run at its normal point after
+Falkner, but its reward changes from the duplicate Togepi Egg to exactly one
+`ITEM_SHINY_BAIT`.
+
+Rewrite Elm's scripted post-Falkner phone message so he directs the player to
+his assistant for a special reward rather than telling them to collect an Egg.
+Rewrite the assistant's dialogue to say that Professor Elm sent the Shiny Bait
+as a reward for looking after the Egg and to describe its intended use without
+claiming that another Egg is being delivered. The final wording and message
+IDs must be verified in the owning HGSS message banks during implementation;
+do not invent a parallel C message.
+
+Replace the assistant script's party-count check and `GiveTogepiEgg` operation
+with the established HGSS Bag-space check and verbose item-award flow for one
+Shiny Bait. Advance the event only after the item is successfully added. If
+the Bag has no room, retain the assistant and the incomplete Violet scene so
+the player can retry; do not award twice after a successful interaction.
+
+Keep the original assistant appearance, movement, departure, visibility
+cleanup, and downstream Violet and Elm scene transitions. Existing flags whose
+names refer to receiving or collecting Elm's Egg may remain as legacy story
+milestones where downstream scripts require them. Document that compatibility
+meaning and set them at the verified points rather than adding a new save flag;
+the Violet scene transition remains the authoritative one-time reward state.
+
+## 13. Source-control dialogue and patch knowledge
 
 Keep all new dialogue in the appropriate source-controlled message banks, not
 as C strings. Preserve control codes and line endings used by the surrounding
@@ -412,7 +477,9 @@ or task ownership is correct.
    triggers, messages, flags, variables, and downstream consumers.
 2. Add the guarded revised-opening configuration and patch manifest.
 3. Initialize the fixed rival name for new saves and verify its encoding.
-4. Consolidate Mum's menu, Pokégear, Map, Running Shoes, and savings flow.
+4. Extend Mum's automatic downstairs cutscene with the Pokégear, Map, Running
+   Shoes, and savings flow while preserving the initial New Bark counterpart
+   scene.
 5. Integrate Elm's phone registration with the existing starter and Healing
    Kit patch.
 6. Add the assistant's three exact item stacks and remove the later tutorial
@@ -422,12 +489,14 @@ or task ownership is correct.
    251's tutorial battle.
 9. Advance Cherrygrove to its established post-tour state.
 10. Move the hatchable Egg to Mr. Pokémon, resolve the Egg-helper lifetime
-    issue, and retire the Mystery Egg and later duplicate gift.
+    issue, and retire the Mystery Egg key item.
 11. Replace Elm's panic call and reproduce the verified final state of the
     skipped return journey.
 12. Open Route 30 through its normal post-opening state.
-13. Add the required scripting examples and update affected documentation.
-14. Review all changes for script lifecycle, patch assertions, code size,
+13. Repurpose Elm's post-Falkner call and the Violet assistant gift as a
+    one-time Shiny Bait reward with a Bag-full retry path.
+14. Add the required scripting examples and update affected documentation.
+15. Review all changes for script lifecycle, patch assertions, code size,
     readability, maintainability, and comment correctness.
 
 Keep these steps separate enough to review, but do not produce intermediate
@@ -448,29 +517,37 @@ prohibited by the project skill.
 
 Use a new in-game save, not a save state, and manually verify:
 
-1. Mum's complete first conversation for both savings choices;
+1. Mum's complete automatic downstairs cutscene for both savings choices;
 2. menu features, Pokégear, Map, and Running Shoes before visiting Elm;
 3. no duplicate Mum conversation after map changes and save/reload;
-4. all three starters and both nickname choices;
-5. exactly one Healing Kit and one Elm phone registration;
-6. exactly 5 Potions, 20 Poké Balls, and 20 Poké Bait after the assistant;
-7. no duplicate gifts after revisiting the lab;
-8. all three Silver 1 trainer variants and the level-13 cap after a win;
-9. the existing permanent-death outcome after losing Silver 1;
-10. the saved rival name `Silver` in later dialogue after save/reload;
-11. no police naming scene and no original Silver 1 encounter;
-12. the correct Lyra/Ethan counterpart for each player gender;
-13. the retained counterpart/Marill grass animation and new Bait explanation;
-14. no tutorial battle, Ball gift, item consumption, Pokédex update, or area
+4. the normal initial New Bark Lyra/Ethan and Marill scene after leaving home;
+5. all three starters and both nickname choices;
+6. exactly one Healing Kit and one Elm phone registration, plus Healing Kit
+   registration and registered-button use;
+7. exactly 5 Potions, 20 Poké Balls, and 20 Poké Bait after the assistant;
+8. no duplicate gifts after revisiting the lab;
+9. all three Silver 1 trainer variants and the level-13 cap after a win;
+10. the existing permanent-death outcome after losing Silver 1;
+11. the saved rival name `Silver` in later dialogue after save/reload;
+12. no police naming scene and no original Silver 1 encounter;
+13. the correct Lyra/Ethan counterpart for each player gender;
+14. the retained counterpart/Marill grass animation and new Bait explanation;
+15. no tutorial battle, Ball gift, item consumption, Pokédex update, or area
     consumption from the shortened demonstration;
-15. tutorial cleanup and one-time behavior after leaving and re-entering;
-16. no Cherrygrove guide tour and the guide's correct post-tour placement;
-17. Mr. Pokémon's hatchable Togepi Egg and Oak's normal Pokédex sequence;
-18. absence of an obsolete Mystery Egg key item;
-19. the new Elm call completing without a lock, fade, or phone-task hang;
-20. no return-to-Elm objective, police scene, or later Violet duplicate Egg;
-21. immediate northern Route 30 access, including after save/reload;
-22. normal Violet City, Falkner, and post-Falkner progression;
-23. the Egg hatching and any retained Elm Egg dialogue; and
-24. later Silver encounters displaying the fixed name and using their normal
+16. tutorial cleanup and one-time behavior after leaving and re-entering;
+17. no Cherrygrove guide tour and the guide's correct post-tour placement;
+18. Mr. Pokémon's hatchable Togepi Egg and Oak's Pokédex, phone, and Old Rod
+    gifts, with no later duplicate Old Rod gift;
+19. absence of an obsolete Mystery Egg key item;
+20. the new Elm call completing without a lock, fade, or phone-task hang;
+21. no return-to-Elm objective, police scene, or later Violet duplicate Egg;
+22. immediate northern Route 30 access, including after save/reload;
+23. normal Violet City, Falkner, and post-Falkner progression;
+24. Elm's post-Falkner call referring to a special reward, not an Egg;
+25. exactly one Shiny Bait from the Violet assistant, including a successful
+    retry after a full-Bag refusal and no duplicate after save/reload;
+26. the assistant's revised dialogue, departure, and normal downstream scene
+    cleanup without granting a second Egg;
+27. the Egg hatching and any retained Elm Egg dialogue; and
+28. later Silver encounters displaying the fixed name and using their normal
     teams and progression.

@@ -19,8 +19,8 @@ There are no valuable Pokémon left...\rYou wonder who Professor Elm gave the\nl
 Huh? Me?\nI’m not the professor.\rHe’s at the back of the room.\n
 {STRVAR_1 3, 0, 0}, I want you to have these\nto help you with your task.\r
 {STRVAR_1 3, 0, 0}, I want you to have these\nto help you with your task.\r
-Pokémon are weak in the beginning.\rDon’t hesitate to use a Potion if you\nthink yours is in danger.\r
-Pokémon are weak in the beginning.\rDon’t hesitate to use a Potion if you\nthink yours is in danger.
+Use Poké Bait where wild\nPokémon live.\rThen throw a Poké Ball when\none appears.\rKeep those Potions handy, too!
+Use Poké Bait where wild\nPokémon live.\rThen throw a Poké Ball when\none appears.\rKeep those Potions handy, too!
 Who are you?\nWe are investigating the case of the\fmissing Pokémon here...\rRule number one!\n“Whoever did it will come\fback to the site.”\rOh my... So you must be...\nthe one who did it?\r
 Lyra: Hold on a second!\nHe has nothing to do with it!\rI saw it.\nThere was a red-haired boy\flooking into the building!\r
 Ethan: Hold on a second!\nShe has nothing to do with it!\rI saw it.\nThere was a red-haired boy\flooking into the building!\r
@@ -40,8 +40,8 @@ Professor Elm: What?!\rProfessor Oak gave you a Pokédex?\r{STRVAR_1 3, 0, 0}, i
 ...{STRVAR_1 3, 0, 0}. Challenging the\nGyms scattered around will be\fa long journey.\rBefore you leave, make sure\nthat you talk to your mom.\r
 Professor Elm: Don’t give up! I’ll call\nif I learn anything about that Egg!
 There was a loud noise outside...\nWhen we went to look, someone\fstole a Pokémon.\rSigh... \nThat stolen Pokémon.\rI wonder how it’s doing.\nThey say a Pokémon raised by a bad\fperson turns bad itself.
-Professor Elm: {STRVAR_1 3, 0, 0}?\nDidn’t you meet my assistant?\rHe should have met you with the Egg\nat Violet City’s Poké Mart.
-Professor Elm: {STRVAR_1 3, 0, 0}?\nDidn’t you meet my assistant?\rHe should have met you with the Egg\nat Violet City’s Poké Mart.
+Professor Elm: {STRVAR_1 3, 0, 0}?\nDidn’t you meet my assistant?\rHe should have met you with a gift\nat Violet City’s Poké Mart.
+Professor Elm: {STRVAR_1 3, 0, 0}?\nDidn’t you meet my assistant?\rHe should have met you with a gift\nat Violet City’s Poké Mart.
 Professor Elm: Hi, {STRVAR_1 3, 0, 0}!\nHow are you?\rHow is the Egg doing?\nAre you taking it everywhere you go?\rTime and care will make it hatch\nand give you a healthy\fPokémon eventually!
 Professor Elm: Hi, {STRVAR_1 3, 0, 0}!\nHow are you?\rHow is the Egg doing?\nAre you taking it everywhere you go?\rTime and care will make it hatch\nand give you a healthy\fPokémon eventually!
 Professor Elm: What?\nThat Pokémon!?\r
@@ -104,3 +104,4 @@ Professor Elm: {STRVAR_1 3, 0, 0}!\nI’m truly surprised!\rI can’t believe th
 Professor Elm: {STRVAR_1 3, 0, 0}!\nI’m truly surprised!\rI can’t believe that such a great\nTrainer has been so close by\fall this time!\r{STRVAR_1 3, 0, 0}, you have been helping\nme understand what it means to\fwalk with Pokémon.\rIt is that...\fthere is no end to the relationship\fbetween people and Pokémon!\rLet me thank you once again for\nyour support!
 Hmm...\nAs far as I know, there are no\fPokémon like this at Johto...\rJust like Mr. Pokémon was saying\nover the phone.\rYou seem to be there when\nsomething exciting happens,\f{STRVAR_1 3, 0, 0}!\rYou are making me all excited!\nI’ll give you a present for that.\fPlease take it.\r
 Hmm...\nAs far as I know, there are no\fPokémon like this at Johto...\rJust like Mr. Pokémon was saying\nover the phone.\rYou seem to be there when\nsomething exciting happens,\f{STRVAR_1 3, 0, 0}!\rYou are making me all excited!\nI’ll give you a present for that.\fPlease take it.\r
+Professor Elm: Before you go,\nlet me register my number.\rCall me if anything unusual happens!

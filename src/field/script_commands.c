@@ -125,10 +125,8 @@ BOOL ScrCmd_GiveTogepiEgg(SCRIPTCONTEXT *ctx) {
 
 
     PokeParty_Add(party, togepi);
-
-    sys_FreeMemoryEz(togepi);
-
     SaveMisc_SetTogepiPersonalityGender(Sav2_Misc_get(fsys->savedata), GetMonData(togepi, MON_DATA_PERSONALITY, 0), GetMonData(togepi, MON_DATA_GENDER, 0));
+    sys_FreeMemoryEz(togepi);
 
     return FALSE;
 }

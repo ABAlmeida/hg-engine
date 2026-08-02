@@ -186,6 +186,10 @@
 // Professor Elm gives a reusable Key Item that fully heals the party.
 #define IMPLEMENT_REUSABLE_HEALER
 
+// Consolidate the early-game gifts and story events into the shorter
+// Heartless Gold opening documented in OPENING_SEQUENCE_PLAN.md.
+#define IMPLEMENT_REVISED_OPENING
+
 // Owned HMs and Flash's TM can perform their field actions without being
 // taught to a compatible party Pokemon.
 #define IMPLEMENT_MACHINE_FIELD_ACTIONS
@@ -233,6 +237,14 @@
 
 #if defined(IMPLEMENT_REUSABLE_HEALER) && !defined(ITEM_POCKET_EXPANSION)
 #error "The reusable healer requires expanded item pockets"
+#endif
+
+#if defined(IMPLEMENT_REVISED_OPENING) && !defined(IMPLEMENT_REUSABLE_HEALER)
+#error "The revised opening requires Elm's reusable Healing Kit gift"
+#endif
+
+#if defined(IMPLEMENT_REVISED_OPENING) && !defined(IMPLEMENT_BAIT_ENCOUNTERS)
+#error "The revised opening requires Poke Bait and Shiny Bait"
 #endif
 
 // STATIC_HP_BAR updates the HP bar to increase/decrease at a fixed rate like later generations

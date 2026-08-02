@@ -843,6 +843,7 @@ SetupAndStartWildBattle = 0x02051020 | 1;
 BattleSetup_New_Tutorial = 0x02051AAC | 1;
 Encounter_New = 0x020506BC | 1;
 TaskManager_Call = 0x02050530 | 1;
+FieldSystem_CreateTask = 0x020504F0 | 1;
 FieldSystem_IsMainApplicationRunning = 0x0203DF7C | 1;
 Task_WaitPaletteFade = 0x020552D4 | 1;
 Task_TutorialBattle = 0x0205128C | 1;

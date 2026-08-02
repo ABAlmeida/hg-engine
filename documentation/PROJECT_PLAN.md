@@ -61,8 +61,8 @@ complete.
 | Persistent level caps | Complete; manually verified | New saves begin at level 7 and story-trainer victories raise the saved cap according to `LEVEL_CAPS.md`. |
 | Level to Cap | Complete; manually verified | The party action advances one level at a time and preserves move and evolution prompts. |
 | Bait encounters | Complete; manually verified | Poké Bait and Shiny Bait work on valid terrain; invalid use is rejected; preserved encounter types remain available. See `BAIT_ENCOUNTERS.md`. |
-| Reusable healer | Complete; manually verified | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, and cannot be used in battle. See `REUSABLE_HEALER_PLAN.md`. |
-| Revised opening sequence | Planned | Consolidate Mum's early unlocks, preserve Elm's Healing Kit, give the starting supplies together, move Silver 1, shorten the counterpart's tutorial to explain Bait without a battle, move the hatchable Egg to Mr. Pokémon, and remove the return-to-Elm requirement. See `OPENING_SEQUENCE_PLAN.md`. |
+| Reusable healer | Complete; Bag use manually verified; registered use pending | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, cannot be used in battle, and can be registered to a field-use button. See `REUSABLE_HEALER_PLAN.md`. |
+| Revised opening sequence | Implemented; initial manual pass complete; cleanup verification pending | Consolidate Mum's early unlocks, preserve Elm's Healing Kit, give the starting supplies together, move Silver 1 onto a valid New Bark path, shorten the counterpart's tutorial to explain Bait without a battle, move the hatchable Egg to Mr. Pokémon, have Oak add an Old Rod, replace the later Egg gift with Shiny Bait, and remove the return-to-Elm requirement. See `OPENING_SEQUENCE_PLAN.md`. |
 | Permanent death and wipe recovery | Complete; manually verified | Eligible fainted party Pokémon are deleted centrally after battle. Common field scripts report deaths and transactional reserve recovery after the overworld is visible; no-reserve wipes show the ending message and return to title. See `PERMANENT_DEATH_PLAN.md`. |
 | Laptop PC access | Planned; independent from permanent death | Add a reusable Laptop Key Item that opens the shared PC menu from safe field contexts. Mum initially gives it during the existing Pokégear sequence. See `LAPTOP_PLAN.md`. |
 | Forced-female protagonist | Pending | Skip gender selection, write the female profile value, continue to name selection, and retain the standard Lyra graphics without replacing Ethan's unrelated NPC assets. Existing saves do not need migration. |
@@ -110,7 +110,8 @@ The reviewed implementation design is in
 [`REUSABLE_HEALER_PLAN.md`](REUSABLE_HEALER_PLAN.md). Normal Bag use follows
 the standard Key Item flow: it closes the Bag, heals through one central
 operation, displays the success message in the field, and returns control to
-the overworld. Registration is deliberately disabled.
+the overworld. Registered-button use creates that same field task directly, so
+both entry paths share the heal and message behavior.
 
 ## Revised opening sequence
 

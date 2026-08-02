@@ -84,6 +84,14 @@ void LONG_CALL ItemMenuUseFunc_ReusableHealer(
     env->state = ITEM_MENU_STATE_EXIT_TO_FIELD_TASK;
 }
 
+BOOL LONG_CALL ItemFieldUseFunc_ReusableHealer(struct ItemFieldUseData *data)
+{
+    // Registered items are used directly from the field, outside an existing
+    // task. Create the same healer task that normal Bag use schedules.
+    FieldSystem_CreateTask(data->fieldSystem, Task_ReusableHealer, NULL);
+    return FALSE;
+}
+
 #else
 
 void LONG_CALL ReusableHealer_HealParty(struct Party *party UNUSED)
@@ -94,6 +102,11 @@ void LONG_CALL ItemMenuUseFunc_ReusableHealer(
     struct ItemMenuUseData *data UNUSED,
     const struct ItemCheckUseData *checkData UNUSED)
 {
+}
+
+BOOL LONG_CALL ItemFieldUseFunc_ReusableHealer(struct ItemFieldUseData *data UNUSED)
+{
+    return FALSE;
 }
 
 #endif

@@ -53,6 +53,7 @@ SysTask *LONG_CALL CreateSysTask(SysTaskFunc func, void *data, int priority);
 void LONG_CALL DestroySysTask(SysTask *task);
 SysTask *LONG_CALL SysTask_CreateOnVBlankQueue(SysTaskFunc func, void *data, int priority);
 void LONG_CALL TaskManager_Call(TaskManager *taskman, TaskFunc taskFunc, void *env);
+TaskManager *LONG_CALL FieldSystem_CreateTask(FieldSystem *fieldSystem, TaskFunc taskFunc, void *env);
 BOOL LONG_CALL Task_TutorialBattle(TaskManager *taskManager);
 
 void LONG_CALL FieldSystem_LoadFieldOverlay(FieldSystem *fieldSystem);

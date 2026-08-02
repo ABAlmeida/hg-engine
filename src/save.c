@@ -11,6 +11,7 @@
 #include "../include/sprite.h"
 #include "../include/task.h"
 #include "../include/constants/buttons.h"
+#include "../include/constants/pokemon_nickname.h"
 
 
 // these functions are configured to not hook from hooks directly under ALLOW_SAVE_CHANGES
@@ -35,7 +36,14 @@ void LONG_CALL InitStoredMons(struct SAVE_MISC_DATA *saveMiscData)
 
 void LONG_CALL Sav2_Misc_init_new_fields(struct SAVE_MISC_DATA *saveMiscData)
 {
+#ifdef IMPLEMENT_REVISED_OPENING
+    static const u16 sRivalName[] = { _S, _i_, _l_, _v_, _e_, _r_, _endstr };
+#endif
+
     InitStoredMons(saveMiscData);
+#ifdef IMPLEMENT_REVISED_OPENING
+    memcpy(saveMiscData->rivalName, sRivalName, sizeof(sRivalName));
+#endif
 #ifdef IMPLEMENT_LEVEL_CAP
     saveMiscData->levelCap = LEVEL_CAP_INITIAL;
 #endif

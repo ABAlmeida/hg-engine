@@ -1,0 +1,11 @@
+When you first catch a Pokémon,\nit may be weak.\rBut it will eventually grow to\nbe strong.\rIt’s important to treat Pokémon\nwith love.
+Pokémon can hold items like a Potion\nor an Antidote.\rBut they don’t appear to know how\nto use man-made items.
+Long time no see, {STRVAR_1 3, 0, 0}.\rProfessor Elm sent a reward for\nlooking after that Egg.
+Long time no see, {STRVAR_1 3, 0, 0}.\rProfessor Elm sent a reward for\nlooking after that Egg.
+Professor Elm chose this Shiny Bait\nespecially for you.\rUse it where wild Pokémon live to\nfind a rare, shining Pokémon!
+Professor Elm has been following\nyour progress.\rHe knew you were the right Trainer\nto care for that Egg.
+Professor Elm has been following\nyour progress.\rHe knew you were the right Trainer\nto care for that Egg.
+Your Bag is full.\rI’ll wait here until you have room\nfor the Shiny Bait.
+What?\nI never expected you’d say no!\fYou must be kidding, right?\rProfessor Elm really wants you to\ntake care of it...\n\n
+{STRVAR_1 3, 0, 0},\nwill you take this Egg? {YESNO 0}
+{STRVAR_1 3, 0, 0},\nwill you take this Egg? {YESNO 0}
