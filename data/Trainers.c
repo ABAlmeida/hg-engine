@@ -927,7 +927,7 @@ const TrainerData sTrainerData[] = {
             .trainerType = TRAINER_DATA_TYPE_MOVES | TRAINER_DATA_TYPE_ITEMS,
             .trainerClass = TRAINERCLASS_LEADER_BUGSY,
             .items = { ITEM_SUPER_POTION, ITEM_NONE, ITEM_NONE, ITEM_NONE },
-            .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE,
+            .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE | F_EVALUATE_ATTACKS | F_EXPERT_ATTACKS,
             .battleType = SINGLE_BATTLE,
         },
         .party = {
@@ -1136,7 +1136,7 @@ const TrainerData sTrainerData[] = {
             .trainerType = TRAINER_DATA_TYPE_NOTHING,
             .trainerClass = TRAINERCLASS_CAMPER,
             .items = { ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE },
-            .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE,
+            .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE | F_EVALUATE_ATTACKS | F_EXPERT_ATTACKS,
             .battleType = SINGLE_BATTLE,
         },
         .party = {
@@ -1208,7 +1208,7 @@ const TrainerData sTrainerData[] = {
             .trainerType = TRAINER_DATA_TYPE_MOVES,
             .trainerClass = TRAINERCLASS_ACE_TRAINER_M,
             .items = { ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE },
-            .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE,
+            .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE | F_EVALUATE_ATTACKS | F_EXPERT_ATTACKS,
             .battleType = SINGLE_BATTLE,
         },
         .party = {
