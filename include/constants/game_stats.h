@@ -5,6 +5,7 @@ typedef struct GameStats GameStats;
 
 GameStats LONG_CALL *Save_GameStats_Get(void *saveData);
 u32 LONG_CALL GameStats_Inc(GameStats *gameStats, int statIdx);
+u32 LONG_CALL GameStats_AddScore(GameStats *gameStats, int scoreEvent);
 
 #define GAME_STAT_STEPS_WALKED              0
 #define GAME_STAT_STEPS_BIKED               1

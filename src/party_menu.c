@@ -6,10 +6,12 @@
 #include "../include/party_menu.h"
 #include "../include/pokemon.h"
 #include "../include/stat_training_items.h"
+#include "../include/task.h"
 #include "../include/message.h"
 #include "../include/types.h"
 #include "../include/window.h"
 #include "../include/constants/file.h"
+#include "../include/constants/game_stats.h"
 #include "../include/constants/item.h"
 #include "../include/constants/moves.h"
 #include "../include/constants/species.h"
@@ -26,12 +28,40 @@ u32 LONG_CALL getButtonColorDepressed(int selection);
 u32 LONG_CALL getButtonColorRaised(int selection);
 void PartyMenu_ShowRotomCatalogList(struct PartyMenu *partyMenu);
 
+#if defined(IMPLEMENT_LEVEL_CAP) || defined(IMPLEMENT_INSTANT_EGG_HATCH)
+#define START_MENU_EXIT_ENVIRONMENT_OFFSET 0x380
+
+enum {
+    PARTY_MENU_MSG_LEVEL_TO_CAP = 136,
+    PARTY_MENU_MSG_HATCH = 185,
+};
+#endif
+
+#ifdef IMPLEMENT_INSTANT_EGG_HATCH
+
+#define START_MENU_STATE_OFFSET          0x26
+#define START_MENU_EXIT_TASK_FUNC_OFFSET 0x354
+
+enum {
+    START_MENU_STATE_FIELD_ACTION = 12,
+    EGG_HATCH_SCRIPT_ID = 2021,
+};
+
+extern void LONG_CALL StartScriptFromMenu(
+    TaskManager *taskManager,
+    u16 scriptId,
+    void *lastInteracted);
+extern BOOL LONG_CALL Task_StartMenu_HandleReturn_Pokemon(TaskManager *taskManager);
+
+static BOOL EggHatch_StartScript(TaskManager *taskManager);
+
+#endif
+
 #ifdef IMPLEMENT_LEVEL_CAP
 
 #define LEVEL_TO_CAP_RESUME_SENTINEL (-1)
 
 #define START_MENU_FIELD_MOVE_CHECK_DATA_OFFSET 0x370
-#define START_MENU_EXIT_ENVIRONMENT_OFFSET      0x380
 #define START_MENU_EXIT_ENVIRONMENT_2_OFFSET    0x384
 
 typedef int (*PartyMenuStateFunc)(struct PartyMenu *);
@@ -119,13 +149,21 @@ u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
     ++count;
     if (!FieldSystem_MapIsBattleTowerMultiPartnerSelectRoom(wk->args->fieldSystem))
     {
-#ifdef IMPLEMENT_LEVEL_CAP
-        showLevelToCap = Pokemon_CanLevelToCap(pp);
-        if (showLevelToCap) {
-            buf[count] = PARTY_MON_CONTEXT_MENU_LEVEL_TO_CAP;
+#ifdef IMPLEMENT_INSTANT_EGG_HATCH
+        if (isEgg) {
+            buf[count] = PARTY_MON_CONTEXT_MENU_CUSTOM_ACTION;
             ++count;
-        }
+        } else
 #endif
+        {
+#ifdef IMPLEMENT_LEVEL_CAP
+            showLevelToCap = Pokemon_CanLevelToCap(pp);
+            if (showLevelToCap) {
+                buf[count] = PARTY_MON_CONTEXT_MENU_CUSTOM_ACTION;
+                ++count;
+            }
+#endif
+        }
         buf[count] = PARTY_MON_CONTEXT_MENU_SWITCH;
         ++count;
         if (!isEgg)
@@ -220,6 +258,9 @@ void LONG_CALL sub_0207AFC4(struct PartyMenu *wk)
     u8 *buf;
     buf = sys_AllocMemory(HEAP_ID_PARTY_MENU, MAX_BUTTONS_IN_PARTY_MENU);
     u8 numItems;
+#if defined(IMPLEMENT_LEVEL_CAP) || defined(IMPLEMENT_INSTANT_EGG_HATCH)
+    int customActionIndex = -1;
+#endif
 
     switch (wk->args->context)//(partyMenu->args->context)
     {
@@ -250,13 +291,30 @@ void LONG_CALL sub_0207AFC4(struct PartyMenu *wk)
         break;
     }
 
-    PartyMenu_OpenContextMenu(wk, buf, numItems);
-#ifdef IMPLEMENT_LEVEL_CAP
+#if defined(IMPLEMENT_LEVEL_CAP) || defined(IMPLEMENT_INSTANT_EGG_HATCH)
     for (u8 i = 0; i < numItems; ++i) {
-        if (buf[i] == PARTY_MON_CONTEXT_MENU_LEVEL_TO_CAP) {
-            wk->listMenuItems[i].value = (u32)PartyMonContextMenuAction_LevelToCap;
+        if (buf[i] == PARTY_MON_CONTEXT_MENU_CUSTOM_ACTION) {
+            u32 messageId = PARTY_MENU_MSG_LEVEL_TO_CAP;
+
+#ifdef IMPLEMENT_INSTANT_EGG_HATCH
+            if (wk->monsDrawState[wk->partyMonIndex].isEgg) {
+                messageId = PARTY_MENU_MSG_HATCH;
+            }
+#endif
+            ReadMsgDataIntoString(
+                wk->msgData,
+                messageId,
+                wk->contextMenuStrings[PARTY_MON_CONTEXT_MENU_CUSTOM_ACTION]);
+            customActionIndex = i;
             break;
         }
+    }
+#endif
+    PartyMenu_OpenContextMenu(wk, buf, numItems);
+#if defined(IMPLEMENT_LEVEL_CAP) || defined(IMPLEMENT_INSTANT_EGG_HATCH)
+    if (customActionIndex >= 0) {
+        wk->listMenuItems[customActionIndex].value =
+            (u32)PartyMonContextMenuAction_Custom;
     }
 #endif
     Heap_FreeExplicit(HEAP_ID_PARTY_MENU, buf);
@@ -300,6 +358,35 @@ int PartyMenu_ItemUseFunc_LevelUpLearnMovesLoop_Case6(struct PartyMenu *wk) {
     return 0x20;
 }
 
+#if defined(IMPLEMENT_LEVEL_CAP) || defined(IMPLEMENT_INSTANT_EGG_HATCH)
+
+/**
+ * Handle the mutually exclusive Heartless Gold Party-menu commands that
+ * share the original unused context-menu slot.
+ */
+void LONG_CALL PartyMonContextMenuAction_Custom(struct PartyMenu *partyMenu, int *pState)
+{
+#ifdef IMPLEMENT_INSTANT_EGG_HATCH
+    if (partyMenu->monsDrawState[partyMenu->partyMonIndex].isEgg) {
+        partyMenu->args->selectedAction = PARTY_MENU_ACTION_RETURN_HATCH;
+        PartyMenu_DeleteContextMenuAndList(partyMenu);
+        PartyMenu_DisableMainScreenBlend_AfterYesNo();
+        *pState = PARTY_MENU_STATE_BEGIN_EXIT;
+        return;
+    }
+#endif
+
+#ifdef IMPLEMENT_LEVEL_CAP
+    ClearFrameAndWindow2(&partyMenu->windows[PARTY_MENU_WINDOW_ID_33], TRUE);
+    PartyMenu_DeleteContextMenuAndList(partyMenu);
+    LevelToCap_RestorePartySelectionUI(partyMenu);
+    sLevelToCapActive = TRUE;
+    *pState = LevelToCap_StartNextLevel(partyMenu);
+#endif
+}
+
+#endif
+
 #ifdef IMPLEMENT_LEVEL_CAP
 
 static void LevelToCap_RestorePartySelectionUI(struct PartyMenu *partyMenu)
@@ -331,21 +418,6 @@ static int LevelToCap_StartNextLevel(struct PartyMenu *partyMenu)
     partyMenu->args->itemId = ITEM_NONE;
     partyMenu->args->context = PARTY_MENU_CONTEXT_0;
     return levelUpFunc(partyMenu);
-}
-
-/**
- *  @brief handle the contextual Level to Cap party-menu action
- *
- *  @param partyMenu active party menu
- *  @param pState destination for the next PartyMenuState
- */
-void LONG_CALL PartyMonContextMenuAction_LevelToCap(struct PartyMenu *partyMenu, int *pState)
-{
-    ClearFrameAndWindow2(&partyMenu->windows[PARTY_MENU_WINDOW_ID_33], TRUE);
-    PartyMenu_DeleteContextMenuAndList(partyMenu);
-    LevelToCap_RestorePartySelectionUI(partyMenu);
-    sLevelToCapActive = TRUE;
-    *pState = LevelToCap_StartNextLevel(partyMenu);
 }
 
 /**
@@ -666,3 +738,59 @@ BOOL CanUseRotomCatalog(struct PartyPokemon *pp)
 {
     return GetMonData(pp, MON_DATA_SPECIES, NULL) == SPECIES_ROTOM;
 }
+
+#ifdef IMPLEMENT_INSTANT_EGG_HATCH
+
+static BOOL EggHatch_StartScript(TaskManager *taskManager)
+{
+    GameStats *gameStats =
+        Save_GameStats_Get(taskManager->fieldSystem->savedata);
+
+    GameStats_Inc(gameStats, GAME_STAT_EGGS_HATCHED);
+    GameStats_AddScore(gameStats, SCORE_EVENT_HATCHED_EGG);
+    StartScriptFromMenu(taskManager, EGG_HATCH_SCRIPT_ID, NULL);
+    return FALSE;
+}
+
+/**
+ * Handle the Egg-only HATCH return after the Party overlay has closed.
+ * Every other Party action is delegated to the original Start Menu callback.
+ */
+BOOL LONG_CALL EggHatch_HandlePartyMenuReturn(TaskManager *taskManager)
+{
+    u8 *startMenu = taskManager->env;
+    PartyMenuArgs **environment =
+        (PartyMenuArgs **)(startMenu + START_MENU_EXIT_ENVIRONMENT_OFFSET);
+    PartyMenuArgs *args = *environment;
+    struct PartyPokemon *mon;
+    u32 eggCycles = 0;
+
+    if (args == NULL
+        || args->selectedAction != PARTY_MENU_ACTION_RETURN_HATCH) {
+        return Task_StartMenu_HandleReturn_Pokemon(taskManager);
+    }
+
+    if (args->partySlot >= PokeParty_GetPokeCount(args->party)) {
+        args->selectedAction = PARTY_MENU_ACTION_RETURN_0;
+        return Task_StartMenu_HandleReturn_Pokemon(taskManager);
+    }
+
+    mon = Party_GetMonByIndex(args->party, args->partySlot);
+    if (!GetMonData(mon, MON_DATA_IS_EGG, NULL)) {
+        args->selectedAction = PARTY_MENU_ACTION_RETURN_0;
+        return Task_StartMenu_HandleReturn_Pokemon(taskManager);
+    }
+
+    // HGSS stores an Egg's remaining hatch cycles in the friendship field.
+    SetMonData(mon, MON_DATA_FRIENDSHIP, &eggCycles);
+    sys_FreeMemoryEz(args);
+    *environment = NULL;
+    FieldSystem_LoadFieldOverlay(taskManager->fieldSystem);
+    *(TaskFunc *)(startMenu + START_MENU_EXIT_TASK_FUNC_OFFSET) =
+        EggHatch_StartScript;
+    *(u16 *)(startMenu + START_MENU_STATE_OFFSET) =
+        START_MENU_STATE_FIELD_ACTION;
+    return FALSE;
+}
+
+#endif

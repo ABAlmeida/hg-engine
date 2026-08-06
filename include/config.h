@@ -117,6 +117,10 @@
 // #define UNCAP_CANDIES_FROM_LEVEL_CAP
 // #define ALLOW_LEVEL_CAP_EVOLVE
 
+// IMPLEMENT_INSTANT_EGG_HATCH adds HATCH to an Egg's Party-menu actions.
+// The command closes the Party menu and starts the normal HGSS hatch sequence.
+#define IMPLEMENT_INSTANT_EGG_HATCH
+
 #if defined(IMPLEMENT_LEVEL_CAP) && !defined(ALLOW_SAVE_CHANGES)
 #error "Heartless Gold level caps require expanded save support"
 #endif

@@ -183,7 +183,7 @@ This isn’t the place for that!\r
 {STRVAR_1 8, 1, 0}
 What will you do\nwith the Egg?
 Please select an Egg.
-
+HATCH
 CONFIRM
 You must use the same kind\nof Pokémon.\r
 {STRVAR_1 0, 0, 0} changed Forme!\r

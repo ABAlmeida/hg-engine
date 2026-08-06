@@ -899,6 +899,9 @@ UpdateFriendshipFainted = 0x02248558 | 1;
 
 Save_GameStats_Get = 0x0202CF54 | 1;
 GameStats_Inc = 0x0202D0FC | 1;
+GameStats_AddScore = 0x0202D1C0 | 1;
+StartScriptFromMenu = 0x0203FF0C | 1;
+Task_StartMenu_HandleReturn_Pokemon = 0x0203CA9C | 1;
 
 StringExpandPlaceholders = 0x0200CBBC | 1;
 

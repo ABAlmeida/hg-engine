@@ -143,7 +143,8 @@ typedef enum PartyMonContextMenuItem {
     PARTY_MON_CONTEXT_MENU_TAKE_MAIL,
     PARTY_MON_CONTEXT_MENU_STORE,
     PARTY_MON_CONTEXT_MENU_QUIT,
-    PARTY_MON_CONTEXT_MENU_LEVEL_TO_CAP,     // 10
+    // Heartless Gold dynamically loads LEVEL TO CAP or HATCH into this slot.
+    PARTY_MON_CONTEXT_MENU_CUSTOM_ACTION,    // 10
     PARTY_MON_CONTEXT_MENU_ENTER,
     PARTY_MON_CONTEXT_MENU_NO_ENTRY,
     PARTY_MON_CONTEXT_MENU_CONTEST_ENTER,
@@ -213,7 +214,7 @@ typedef enum PartyMenuState {
 typedef enum PartyMenuActionReturn {
     PARTY_MENU_ACTION_RETURN_0,
     PARTY_MENU_ACTION_RETURN_1,
-    PARTY_MENU_ACTION_RETURN_2,
+    PARTY_MENU_ACTION_RETURN_HATCH,
     PARTY_MENU_ACTION_RETURN_GIVE_ITEM,
     PARTY_MENU_ACTION_RETURN_4,
     PARTY_MENU_ACTION_RETURN_5,
@@ -449,6 +450,6 @@ struct PartyMenuContextMenuCursor *LONG_CALL PartyMenu_CreateContextMenuCursor(s
 void LONG_CALL PartyMenu_DisableMainScreenBlend_AfterYesNo(void);
 void LONG_CALL PartyMonContextMenuAction_RotomCatalog(struct PartyMenu *partyMenu, int *pState);
 void LONG_CALL PartyMonContextMenuAction_QuitToBag(struct PartyMenu *partyMenu, int *pState);
-void LONG_CALL PartyMonContextMenuAction_LevelToCap(struct PartyMenu *partyMenu, int *pState);
+void LONG_CALL PartyMonContextMenuAction_Custom(struct PartyMenu *partyMenu, int *pState);
 
 #endif // POKEHEARTGOLD_PARTY_MENU_H
