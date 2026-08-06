@@ -1,3 +1,22 @@
 Use it on suitable terrain to\nimmediately attract a wild Pokémon.
 Use it on suitable terrain to\nimmediately attract a shiny wild Pokémon.
 A reusable kit that fully restores the\nHP, PP, and status of all party Pokémon.
+Raises a Pokémon’s HP EVs\nby 10.
+Raises a Pokémon’s Attack EVs\nby 10.
+Raises a Pokémon’s Defense EVs\nby 10.
+Raises a Pokémon’s Speed EVs\nby 10.
+Raises a Pokémon’s Sp. Atk EVs\nby 10.
+Raises a Pokémon’s Sp. Def EVs\nby 10.
+Raises a Pokémon’s HP EVs\nby 100.
+Raises a Pokémon’s Attack EVs\nby 100.
+Raises a Pokémon’s Defense EVs\nby 100.
+Raises a Pokémon’s Speed EVs\nby 100.
+Raises a Pokémon’s Sp. Atk EVs\nby 100.
+Raises a Pokémon’s Sp. Def EVs\nby 100.
+Raises a Pokémon’s HP EVs\nto its limit.
+Raises a Pokémon’s Attack EVs\nto their limit.
+Raises a Pokémon’s Defense EVs\nto their limit.
+Raises a Pokémon’s Speed EVs\nto its limit.
+Raises a Pokémon’s Sp. Atk EVs\nto their limit.
+Raises a Pokémon’s Sp. Def EVs\nto their limit.
+Maximizes all six of a Pokémon’s\nIVs.

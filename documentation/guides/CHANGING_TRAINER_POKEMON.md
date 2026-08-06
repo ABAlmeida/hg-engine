@@ -32,18 +32,21 @@ A trainer entry contains trainer-wide data, a party, and optional battle text:
 [495] = {
     .name = "Boy",
     .data = {
-        .trainerType = TRAINER_DATA_TYPE_NOTHING,
+        .trainerType = TRAINER_DATA_TYPE_MOVES,
         .trainerClass = TRAINERCLASS_PASSERBY,
         .items = { ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE },
-        .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE,
+        .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE |
+            F_EVALUATE_ATTACKS |
+            F_EXPERT_ATTACKS,
         .battleType = SINGLE_BATTLE,
     },
     .party = {
         {
-            .ivs = 0,
+            .ivs = 255,
             .abilitySlot = TRAINER_POKEMON_ABILITY_1,
             .level = 5,
             .species = SPECIES_CHIKORITA,
+            .moves = { MOVE_TACKLE, MOVE_GROWL, MOVE_NONE, MOVE_NONE },
             .ballSeal = 0,
         },
     },
@@ -337,4 +340,3 @@ Review changed trainers for:
 - AI modules appropriate to the team rather than merely numerous;
 - messages that still fit the party order and battle type; and
 - consistency with level caps, reward mappings, and rematch behavior.
-

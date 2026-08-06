@@ -20,6 +20,7 @@
 #include "../include/save.h"
 #include "../include/script.h"
 #include "../include/sound.h"
+#include "../include/stat_training_items.h"
 #include "../include/types.h"
 
 extern u32 word_to_store_form_at;
@@ -1199,6 +1200,10 @@ u32 LONG_CALL CheckIfMonsAreEqual(struct PartyPokemon *pokemon1, struct PartyPok
 BOOL LONG_CALL CanUseItemOnMonInParty(struct Party *party, u16 itemID, s32 partyIdx, s32 moveIdx, u32 heapID)
 {
     struct PartyPokemon *mon = Party_GetMonByIndex(party, partyIdx);
+
+    if (StatTrainingItem_IsHandled(itemID)) {
+        return StatTrainingItem_CanUseOnMon(mon, itemID);
+    }
 
     if (GetItemData(itemID, ITEM_PARAM_LEVEL_UP, heapID) && GetMonData(mon, MON_DATA_LEVEL, NULL) == 100 && GetMonEvolution(party, mon, EVOCTX_LEVELUP, itemID, NULL)) {
         return TRUE;

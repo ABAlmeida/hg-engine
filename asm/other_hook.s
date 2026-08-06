@@ -289,7 +289,7 @@ bl bx_r2
 // reset partyMenuSignal to 0 to clear out its usage
 ldr r1, =partyMenuSignal
 mov r2, #0
-str r2, [r0]
+str r2, [r1]
 
 ldr r1, =0x021E5A76 | 1
 bx r1

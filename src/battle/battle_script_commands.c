@@ -51,7 +51,7 @@ BOOL btl_scr_cmd_17_playanimation(void *bw, struct BattleStruct *sp);
 BOOL btl_scr_cmd_18_playanimation2(void *bw, struct BattleStruct *sp);
 BOOL btl_scr_cmd_24_jumptocurmoveeffectscript(void *bw, struct BattleStruct *sp);
 BOOL btl_scr_cmd_27_shouldgetexp(void *bw, struct BattleStruct *sp);
-#ifdef DISABLE_BATTLE_EXPERIENCE
+#if defined(DISABLE_BATTLE_EXPERIENCE) && !defined(DISABLE_BATTLE_EV_GAIN)
 static void Battle_DistributeEffortValuesWithoutExperience(void *bw, struct BattleStruct *sp);
 #endif
 void Task_DistributeExp_Extend(void *arg0, void *work);
@@ -1440,7 +1440,9 @@ BOOL btl_scr_cmd_27_shouldgetexp(void *bw, struct BattleStruct *sp)
     if ((/*cp->client_type*/ sp->fainting_client & 1) && ((fight_type & BATTLE_TYPE_NO_EXPERIENCE) == 0)) {
 
 #ifdef DISABLE_BATTLE_EXPERIENCE
+#ifndef DISABLE_BATTLE_EV_GAIN
         Battle_DistributeEffortValuesWithoutExperience(bw, sp);
+#endif
         IncrementBattleScriptPtr(sp, adrs);
 #else
         // exp. calculation has been entirely moved to Task_DistributeExp_Extend as of the implementation of capture experience.
@@ -1509,7 +1511,7 @@ BOOL btl_scr_cmd_27_shouldgetexp(void *bw, struct BattleStruct *sp)
     return FALSE;
 }
 
-#ifdef DISABLE_BATTLE_EXPERIENCE
+#if defined(DISABLE_BATTLE_EXPERIENCE) && !defined(DISABLE_BATTLE_EV_GAIN)
 
 /**
  *  @brief distribute effort values without entering the battle experience sequence

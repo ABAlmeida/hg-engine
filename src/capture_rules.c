@@ -11,8 +11,6 @@
 
 #ifdef IMPLEMENT_CAPTURE_RULES
 
-#define POKEDEX_FLAG_BITS_PER_WORD 32
-
 enum {
     BUG_CONTEST_CAUGHT_POKEMON = 1 << 0,
 };
@@ -68,13 +66,6 @@ static BOOL CaptureRules_IsValidArea(u32 mapSection)
     return mapSection < MAPSEC_COUNT;
 }
 
-static BOOL CaptureRules_CheckPokedexFlag(const u32 *flags, u16 species)
-{
-    u32 flagIndex = species - 1;
-
-    return (flags[flagIndex / POKEDEX_FLAG_BITS_PER_WORD] & (1U << (flagIndex % POKEDEX_FLAG_BITS_PER_WORD))) != 0;
-}
-
 void CaptureRules_Init(CaptureRulesSave *captureRules)
 {
     memset(captureRules, 0, sizeof(*captureRules));
@@ -115,17 +106,15 @@ static BOOL CaptureRules_ConsumeArea(CaptureRulesSave *captureRules, u32 mapSect
 
 static BOOL CaptureRules_IsSpeciesDuplicate(struct SaveData *saveData, u16 species)
 {
-    const struct Save_DexData *pokedex;
-
-    // The vanilla caught bitset represents only the 493 National Dex species.
-    // Later IDs include Egg/placeholders and Generation 5+ values that would
-    // index beyond the 16-word array.
-    if (species == SPECIES_NONE || species > SPECIES_ARCEUS) {
+    // Egg, Bad Egg, and the placeholder IDs before Victini are not Pokédex
+    // species even though they lie below the expanded engine's maximum ID.
+    if (species == SPECIES_NONE
+        || species > MAX_MON_NUM
+        || (species >= SPECIES_EGG && species < SPECIES_VICTINI)) {
         return FALSE;
     }
 
-    pokedex = SaveData_GetDexPtr(saveData);
-    return CaptureRules_CheckPokedexFlag(pokedex->get_flag, species);
+    return Pokedex_GetCaughtFlag(SaveData_GetDexPtr(saveData), species);
 }
 
 void LONG_CALL CaptureRules_ResetEncounterState(void)
@@ -141,14 +130,27 @@ CapturePermission LONG_CALL CaptureRules_GetEncounterPermission(void)
 static void CaptureRules_EvaluateOrdinaryEncounter(struct BATTLE_PARAM *battleParam, struct PartyPokemon *wildMon)
 {
     CaptureRulesSave *captureRules;
+    BOOL isDuplicate;
     u16 species;
 
     if (battleParam == NULL || battleParam->savedata == NULL || wildMon == NULL) {
         return;
     }
 
-    if (MonIsShiny(wildMon)) {
+    species = GetMonData(wildMon, MON_DATA_SPECIES, NULL);
+    isDuplicate = CaptureRules_IsSpeciesDuplicate(battleParam->savedata, species);
+
+    // Shinies bypass the area's normal opportunity, but not the exact-species
+    // duplicate rule.
+    if (MonIsShiny(wildMon) && !isDuplicate) {
         sEncounterPermission = CAPTURE_PERMISSION_ALLOWED_SHINY;
+        return;
+    }
+
+    // Report the more specific duplicate restriction even when this area has
+    // already been consumed. Ordinary duplicates never consume an area.
+    if (isDuplicate) {
+        sEncounterPermission = CAPTURE_PERMISSION_BLOCKED_DUPLICATE;
         return;
     }
 
@@ -156,12 +158,6 @@ static void CaptureRules_EvaluateOrdinaryEncounter(struct BATTLE_PARAM *battlePa
     if (!CaptureRules_IsValidArea(battleParam->map_section)
         || CaptureRules_IsAreaConsumed(captureRules, battleParam->map_section)) {
         sEncounterPermission = CAPTURE_PERMISSION_BLOCKED_AREA;
-        return;
-    }
-
-    species = GetMonData(wildMon, MON_DATA_SPECIES, NULL);
-    if (CaptureRules_IsSpeciesDuplicate(battleParam->savedata, species)) {
-        sEncounterPermission = CAPTURE_PERMISSION_BLOCKED_DUPLICATE;
         return;
     }
 
@@ -177,34 +173,42 @@ static void CaptureRules_EvaluateSafariEncounter(
     struct PartyPokemon *wildMon)
 {
     CaptureRulesSave *captureRules;
+    BOOL isDuplicate;
     u16 species;
 
     if (saveData == NULL || wildMon == NULL) {
         return;
     }
 
-    if (MonIsShiny(wildMon)) {
+    species = GetMonData(wildMon, MON_DATA_SPECIES, NULL);
+    isDuplicate = CaptureRules_IsSpeciesDuplicate(saveData, species);
+
+    // Only non-duplicate shinies bypass Safari's saved opportunity.
+    if (MonIsShiny(wildMon) && !isDuplicate) {
         sEncounterPermission = CAPTURE_PERMISSION_ALLOWED_SHINY;
         return;
     }
 
     captureRules = CaptureRules_GetSave(saveData);
-    if (!CaptureRules_IsValidArea(mapSection)
-        || CaptureRules_IsAreaConsumed(captureRules, mapSection)) {
+    if (!CaptureRules_IsValidArea(mapSection)) {
         sEncounterPermission = CAPTURE_PERMISSION_BLOCKED_AREA;
         return;
     }
 
-    // Safari consumes its one opportunity before the duplicate check: the
-    // first non-shiny Pokemon encountered is the only standard Safari chance.
-    CaptureRules_ConsumeArea(captureRules, mapSection);
-
-    species = GetMonData(wildMon, MON_DATA_SPECIES, NULL);
-    if (CaptureRules_IsSpeciesDuplicate(saveData, species)) {
+    // A duplicate still consumes Safari's opportunity when it is unused, but
+    // always reports the more specific duplicate restriction afterward.
+    if (isDuplicate) {
+        CaptureRules_ConsumeArea(captureRules, mapSection);
         sEncounterPermission = CAPTURE_PERMISSION_BLOCKED_DUPLICATE;
         return;
     }
 
+    if (CaptureRules_IsAreaConsumed(captureRules, mapSection)) {
+        sEncounterPermission = CAPTURE_PERMISSION_BLOCKED_AREA;
+        return;
+    }
+
+    CaptureRules_ConsumeArea(captureRules, mapSection);
     sEncounterPermission = CAPTURE_PERMISSION_ALLOWED_STANDARD;
 }
 

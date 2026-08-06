@@ -1,7 +1,9 @@
 # Configuration Options
 
 ### ``armips\include\config.s`` and ``include\config.h``
- ``DISABLE_BATTLE_EXPERIENCE`` (``include/config.h`` only) skips the complete battle experience sequence for player Pokemon, including its messages, bar animations, and level-ups. Every non-empty party Pokemon with HP remaining still receives effort values. This option cannot be enabled together with ``IMPLEMENT_CAPTURE_EXPERIENCE``.
+ ``DISABLE_BATTLE_EXPERIENCE`` (``include/config.h`` only) skips the complete battle experience sequence for player Pokemon, including its messages, bar animations, and level-ups. Unless ``DISABLE_BATTLE_EV_GAIN`` is also enabled, every non-empty party Pokemon with HP remaining still receives effort values. This option cannot be enabled together with ``IMPLEMENT_CAPTURE_EXPERIENCE``.
+
+ ``DISABLE_BATTLE_EV_GAIN`` (``include/config.h`` only) prevents defeated Pokemon from awarding effort values while leaving vitamin use and EV reduction unchanged. It currently requires ``DISABLE_BATTLE_EXPERIENCE`` because the normal experience task owns vanilla battle EV distribution.
 
  ``DISALLOW_DEXIT_GEN`` (``armips/include/config.s`` only) controls whether to disallow selection of dexited moves in later generations, or disallow selection of unimplemented moves.
 
@@ -74,7 +76,7 @@
  Party-menu actions use the selected non-Egg Pokémon. HM and TM teaching
  behavior is unchanged. See ``documentation/HM_FIELD_ACTIONS_PLAN.md``.
 
- ``UPDATE_VITAMIN_EV_CAPS`` (``include/config.h`` only) updates the EV caps for vitamins from 100 to 252 like later generations.
+ ``UPDATE_VITAMIN_EV_CAPS`` (``include/config.h`` only) enables the centralized stat-training item rules: vitamins can reach 252 EVs per stat, the unsuffixed vitamins give 50 EVs, the S/L/Max tiers give 10/100/up to the legal maximum, and IV Max sets all six IVs to 31.
 
  ``DISABLE_ITEMS_IN_TRAINER_BATTLE`` (``include/config.h`` only) disables items being used while in trainer battles.
 

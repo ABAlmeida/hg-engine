@@ -43,6 +43,7 @@ GF_ASSERT_INTERNAL = 0x0202551C | 1;
 SetPokemonGet = 0x0202A434 |1;
 SetPokemonSee = 0x0202A36C |1;
 UpdatePokedexWithReceivedSpecies = 0x0202ECC0 | 1;
+Pokedex_GetCaughtFlag = 0x02029FF8 | 1;
 AllocAndReadWholeNarcMemberByIdPair = 0x02007524 | 1;
 ReadWholeNarcMemberByIdPair = 0x02007509;
 AllocAndReadFromNarcMemberByIdPair = 0x0200757C | 1;

@@ -5,6 +5,7 @@
 #include "../include/overlay.h"
 #include "../include/party_menu.h"
 #include "../include/pokemon.h"
+#include "../include/stat_training_items.h"
 #include "../include/message.h"
 #include "../include/types.h"
 #include "../include/window.h"
@@ -364,6 +365,11 @@ BOOL LONG_CALL LevelToCap_UseItemOnMonInParty(struct Party *party,
         return Pokemon_LevelToCapOneLevel(Party_GetMonByIndex(party, partySlot));
     }
 
+    if (StatTrainingItem_IsHandled(itemId)) {
+        return StatTrainingItem_UseOnMon(
+            Party_GetMonByIndex(party, partySlot), itemId, mapSection);
+    }
+
     return useItem(party, itemId, partySlot, moveSlot, mapSection, heapId);
 }
 
@@ -418,16 +424,24 @@ void LONG_CALL LevelToCap_AfterEvolution(void *startMenu, FieldSystem *fieldSyst
 
 #else
 
-// The assembly trampolines are always linked, while the hooks that install
-// them are controlled by IMPLEMENT_LEVEL_CAP in the hooks manifest.
-BOOL LONG_CALL LevelToCap_UseItemOnMonInParty(struct Party *party UNUSED,
-    u16 itemId UNUSED,
-    s32 partySlot UNUSED,
-    u8 moveSlot UNUSED,
-    u16 mapSection UNUSED,
-    u32 heapId UNUSED)
+// This shared party-item hook also owns stat-training items when level caps
+// are disabled, so it must continue to delegate every other item to the ROM.
+BOOL LONG_CALL LevelToCap_UseItemOnMonInParty(struct Party *party,
+    u16 itemId,
+    s32 partySlot,
+    u8 moveSlot,
+    u16 mapSection,
+    u32 heapId)
 {
-    return FALSE;
+    typedef BOOL (*UseItemOnMonInPartyFunc)(struct Party *, u16, s32, u8, u16, u32);
+    UseItemOnMonInPartyFunc useItem = (UseItemOnMonInPartyFunc)(0x020908AC | 1);
+
+    if (StatTrainingItem_IsHandled(itemId)) {
+        return StatTrainingItem_UseOnMon(
+            Party_GetMonByIndex(party, partySlot), itemId, mapSection);
+    }
+
+    return useItem(party, itemId, partySlot, moveSlot, mapSection, heapId);
 }
 
 int LONG_CALL LevelToCap_TryResumePartyMenu(struct PartyMenu *partyMenu UNUSED)

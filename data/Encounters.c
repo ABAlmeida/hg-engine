@@ -6,6 +6,15 @@ u32 __size = sizeof(EncounterData);
 
 const EncounterData __data[] =
 {
+#define NEW_BARK_WATER_SLOTS          \
+    {                                 \
+        { 2, 2, SPECIES_WINGULL },    \
+        { 2, 2, SPECIES_TENTACOOL },  \
+        { 2, 2, SPECIES_AZURILL },    \
+        { 2, 2, SPECIES_STARYU },     \
+        { 2, 2, SPECIES_TYMPOLE },    \
+    }
+
     [ENCDATA_T20_NEW_BARK_TOWN] = {
         .rateWalk = 0,
         .rateSurf = 15,
@@ -68,43 +77,37 @@ const EncounterData __data[] =
             SPECIES_NONE,
             SPECIES_NONE,
         },
-        .surfSlots = {
-            { 15, 25, SPECIES_TENTACOOL },
-            { 10, 20, SPECIES_TENTACOOL },
-            { 15, 25, SPECIES_TENTACRUEL },
-            { 15, 25, SPECIES_TENTACRUEL },
-            { 15, 25, SPECIES_TENTACRUEL },
-        },
+        .surfSlots = NEW_BARK_WATER_SLOTS,
         .rockSmashSlots = {
             { 0, 0, SPECIES_NONE },
             { 0, 0, SPECIES_NONE },
         },
-        .oldRodSlots = {
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_TENTACOOL },
-            { 10, 10, SPECIES_TENTACOOL },
-        },
-        .goodRodSlots = {
-            { 20, 20, SPECIES_MAGIKARP },
-            { 20, 20, SPECIES_TENTACOOL },
-            { 20, 20, SPECIES_CHINCHOU },
-            { 20, 20, SPECIES_SHELLDER },
-            { 20, 20, SPECIES_CHINCHOU },
-        },
-        .superRodSlots = {
-            { 40, 40, SPECIES_CHINCHOU },
-            { 40, 40, SPECIES_SHELLDER },
-            { 40, 40, SPECIES_TENTACRUEL },
-            { 40, 40, SPECIES_LANTURN },
-            { 40, 40, SPECIES_TENTACRUEL },
-        },
+        .oldRodSlots = NEW_BARK_WATER_SLOTS,
+        .goodRodSlots = NEW_BARK_WATER_SLOTS,
+        .superRodSlots = NEW_BARK_WATER_SLOTS,
         .landSwarm = SPECIES_NONE,
-        .surfSwarm = SPECIES_TENTACOOL,
-        .nightFish = SPECIES_SHELLDER,
-        .fishSwarm = SPECIES_MAGIKARP,
+        .surfSwarm = SPECIES_WINGULL,
+        .nightFish = SPECIES_WINGULL,
+        .fishSwarm = SPECIES_WINGULL,
     },
+
+#undef NEW_BARK_WATER_SLOTS
+
+#define ROUTE_29_LAND_SPECIES \
+    {                         \
+        SPECIES_PIDGEY,       \
+        SPECIES_SENTRET,      \
+        SPECIES_FARFETCHD,    \
+        SPECIES_RATTATA,      \
+        SPECIES_IGGLYBUFF,    \
+        SPECIES_ZIGZAGOON,    \
+        SPECIES_SEEDOT,       \
+        SPECIES_LOTAD,        \
+        SPECIES_SHINX,        \
+        SPECIES_CHATOT,       \
+        SPECIES_TIMBURR,      \
+        SPECIES_FURFROU,      \
+    }
 
     [ENCDATA_R29_ROUTE_29] = {
         .rateWalk = 25,
@@ -115,58 +118,19 @@ const EncounterData __data[] =
         .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                2, 3, 2, 3, 3, 3, 2, 2, 4, 4, 4, 4
+                4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
             },
-            .speciesMorning = {
-                SPECIES_PIDGEY,
-                SPECIES_SENTRET,
-                SPECIES_PIDGEY,
-                SPECIES_SENTRET,
-                SPECIES_PIDGEY,
-                SPECIES_PIDGEY,
-                SPECIES_SENTRET,
-                SPECIES_SENTRET,
-                SPECIES_RATTATA,
-                SPECIES_PIDGEY,
-                SPECIES_RATTATA,
-                SPECIES_PIDGEY,
-            },
-            .speciesDay = {
-                SPECIES_PIDGEY,
-                SPECIES_SENTRET,
-                SPECIES_PIDGEY,
-                SPECIES_SENTRET,
-                SPECIES_PIDGEY,
-                SPECIES_PIDGEY,
-                SPECIES_SENTRET,
-                SPECIES_SENTRET,
-                SPECIES_RATTATA,
-                SPECIES_PIDGEY,
-                SPECIES_RATTATA,
-                SPECIES_PIDGEY,
-            },
-            .speciesNight = {
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_RATTATA,
-                SPECIES_RATTATA,
-                SPECIES_RATTATA,
-                SPECIES_HOOTHOOT,
-                SPECIES_RATTATA,
-                SPECIES_HOOTHOOT,
-            },
+            .speciesMorning = ROUTE_29_LAND_SPECIES,
+            .speciesDay = ROUTE_29_LAND_SPECIES,
+            .speciesNight = ROUTE_29_LAND_SPECIES,
         },
         .hoennSoundSpecies = {
-            SPECIES_PLUSLE,
-            SPECIES_MINUN,
+            SPECIES_FARFETCHD,
+            SPECIES_RATTATA,
         },
         .sinnohSoundSpecies = {
-            SPECIES_SHINX,
-            SPECIES_SHINX,
+            SPECIES_FARFETCHD,
+            SPECIES_RATTATA,
         },
         .surfSlots = {
             { 0, 0, SPECIES_NONE },
@@ -205,6 +169,17 @@ const EncounterData __data[] =
         .nightFish = SPECIES_NONE,
         .fishSwarm = SPECIES_NONE,
     },
+
+#undef ROUTE_29_LAND_SPECIES
+
+#define CHERRYGROVE_WATER_SLOTS       \
+    {                                 \
+        { 5, 5, SPECIES_DUCKLETT },   \
+        { 5, 5, SPECIES_HORSEA },     \
+        { 5, 5, SPECIES_CRAMORANT },  \
+        { 5, 5, SPECIES_CARVANHA },   \
+        { 5, 5, SPECIES_CHINCHOU },   \
+    }
 
     [ENCDATA_T21_CHERRYGROVE_CITY] = {
         .rateWalk = 0,
@@ -268,243 +243,179 @@ const EncounterData __data[] =
             SPECIES_NONE,
             SPECIES_NONE,
         },
-        .surfSlots = {
-            { 15, 25, SPECIES_TENTACOOL },
-            { 10, 20, SPECIES_TENTACOOL },
-            { 15, 25, SPECIES_TENTACRUEL },
-            { 15, 25, SPECIES_TENTACRUEL },
-            { 15, 25, SPECIES_TENTACRUEL },
-        },
+        .surfSlots = CHERRYGROVE_WATER_SLOTS,
         .rockSmashSlots = {
             { 0, 0, SPECIES_NONE },
             { 0, 0, SPECIES_NONE },
         },
-        .oldRodSlots = {
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_KRABBY },
-            { 10, 10, SPECIES_KRABBY },
-        },
-        .goodRodSlots = {
-            { 20, 20, SPECIES_MAGIKARP },
-            { 20, 20, SPECIES_KRABBY },
-            { 20, 20, SPECIES_KRABBY },
-            { 20, 20, SPECIES_CORSOLA },
-            { 20, 20, SPECIES_KRABBY },
-        },
-        .superRodSlots = {
-            { 40, 40, SPECIES_KRABBY },
-            { 40, 40, SPECIES_CORSOLA },
-            { 40, 40, SPECIES_KRABBY },
-            { 40, 40, SPECIES_KINGLER },
-            { 40, 40, SPECIES_KRABBY },
-        },
+        .oldRodSlots = CHERRYGROVE_WATER_SLOTS,
+        .goodRodSlots = CHERRYGROVE_WATER_SLOTS,
+        .superRodSlots = CHERRYGROVE_WATER_SLOTS,
         .landSwarm = SPECIES_NONE,
-        .surfSwarm = SPECIES_TENTACOOL,
-        .nightFish = SPECIES_STARYU,
-        .fishSwarm = SPECIES_MAGIKARP,
+        .surfSwarm = SPECIES_DUCKLETT,
+        .nightFish = SPECIES_DUCKLETT,
+        .fishSwarm = SPECIES_DUCKLETT,
     },
+
+#undef CHERRYGROVE_WATER_SLOTS
+
+#define ROUTE_30_LAND_SPECIES \
+    {                         \
+        SPECIES_HOOTHOOT,     \
+        SPECIES_SPEAROW,      \
+        SPECIES_SNUBBULL,     \
+        SPECIES_STARLY,       \
+        SPECIES_BIDOOF,       \
+        SPECIES_LILLIPUP,     \
+        SPECIES_PATRAT,       \
+        SPECIES_BUNNELBY,     \
+        SPECIES_PIKIPEK,      \
+        SPECIES_YUNGOOS,      \
+        SPECIES_FOONGUS,      \
+        SPECIES_SIGILYPH,     \
+    }
 
     [ENCDATA_R30_ROUTE_30] = {
         .rateWalk = 25,
-        .rateSurf = 15,
+        .rateSurf = 0,
         .rateRockSmash = 0,
-        .rateOldRod = 25,
-        .rateGoodRod = 50,
-        .rateSuperRod = 75,
+        .rateOldRod = 0,
+        .rateGoodRod = 0,
+        .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                2, 3, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4
+                8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
             },
-            .speciesMorning = {
-                SPECIES_PIDGEY,
-                SPECIES_CATERPIE,
-                SPECIES_PIDGEY,
-                SPECIES_CATERPIE,
-                SPECIES_CATERPIE,
-                SPECIES_CATERPIE,
-                SPECIES_METAPOD,
-                SPECIES_METAPOD,
-                SPECIES_PIDGEY,
-                SPECIES_PIDGEY,
-                SPECIES_PIDGEY,
-                SPECIES_PIDGEY,
-            },
-            .speciesDay = {
-                SPECIES_PIDGEY,
-                SPECIES_CATERPIE,
-                SPECIES_PIDGEY,
-                SPECIES_CATERPIE,
-                SPECIES_PIDGEY,
-                SPECIES_PIDGEY,
-                SPECIES_METAPOD,
-                SPECIES_METAPOD,
-                SPECIES_CATERPIE,
-                SPECIES_METAPOD,
-                SPECIES_CATERPIE,
-                SPECIES_METAPOD,
-            },
-            .speciesNight = {
-                SPECIES_SPINARAK,
-                SPECIES_RATTATA,
-                SPECIES_SPINARAK,
-                SPECIES_RATTATA,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_RATTATA,
-                SPECIES_RATTATA,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-            },
+            .speciesMorning = ROUTE_30_LAND_SPECIES,
+            .speciesDay = ROUTE_30_LAND_SPECIES,
+            .speciesNight = ROUTE_30_LAND_SPECIES,
         },
         .hoennSoundSpecies = {
-            SPECIES_WHISMUR,
-            SPECIES_LINOONE,
+            SPECIES_SNUBBULL,
+            SPECIES_STARLY,
         },
         .sinnohSoundSpecies = {
-            SPECIES_BUIZEL,
-            SPECIES_BIDOOF,
+            SPECIES_SNUBBULL,
+            SPECIES_STARLY,
         },
         .surfSlots = {
-            { 15, 25, SPECIES_POLIWAG },
-            { 10, 20, SPECIES_POLIWAG },
-            { 15, 25, SPECIES_POLIWHIRL },
-            { 15, 25, SPECIES_POLIWHIRL },
-            { 32, 32, SPECIES_POLIWHIRL },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
         },
         .rockSmashSlots = {
             { 0, 0, SPECIES_NONE },
             { 0, 0, SPECIES_NONE },
         },
         .oldRodSlots = {
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_POLIWAG },
-            { 10, 10, SPECIES_POLIWAG },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
         },
         .goodRodSlots = {
-            { 20, 20, SPECIES_MAGIKARP },
-            { 20, 20, SPECIES_POLIWAG },
-            { 20, 20, SPECIES_POLIWAG },
-            { 20, 20, SPECIES_POLIWAG },
-            { 20, 20, SPECIES_POLIWAG },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
         },
         .superRodSlots = {
-            { 40, 40, SPECIES_POLIWAG },
-            { 40, 40, SPECIES_POLIWAG },
-            { 40, 40, SPECIES_MAGIKARP },
-            { 40, 40, SPECIES_POLIWAG },
-            { 40, 40, SPECIES_MAGIKARP },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
         },
-        .landSwarm = SPECIES_PIDGEY,
-        .surfSwarm = SPECIES_POLIWAG,
-        .nightFish = SPECIES_POLIWAG,
-        .fishSwarm = SPECIES_MAGIKARP,
+        .landSwarm = SPECIES_HOOTHOOT,
+        .surfSwarm = SPECIES_NONE,
+        .nightFish = SPECIES_NONE,
+        .fishSwarm = SPECIES_NONE,
     },
+
+#undef ROUTE_30_LAND_SPECIES
+
+#define ROUTE_31_LAND_SPECIES \
+    {                         \
+        SPECIES_HOPPIP,       \
+        SPECIES_SUNKERN,      \
+        SPECIES_PINECO,       \
+        SPECIES_TYROGUE,      \
+        SPECIES_TAILLOW,      \
+        SPECIES_SKITTY,       \
+        SPECIES_BUNEARY,      \
+        SPECIES_SEWADDLE,     \
+        SPECIES_PETILIL,      \
+        SPECIES_MINCCINO,     \
+        SPECIES_SCATTERBUG,   \
+        SPECIES_FLABEBE,      \
+    }
 
     [ENCDATA_R31_ROUTE_31] = {
         .rateWalk = 25,
-        .rateSurf = 15,
+        .rateSurf = 0,
         .rateRockSmash = 0,
-        .rateOldRod = 25,
-        .rateGoodRod = 50,
-        .rateSuperRod = 75,
+        .rateOldRod = 0,
+        .rateGoodRod = 0,
+        .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                3, 4, 3, 4, 3, 3, 5, 5, 5, 5, 5, 5
+                9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
             },
-            .speciesMorning = {
-                SPECIES_PIDGEY,
-                SPECIES_CATERPIE,
-                SPECIES_PIDGEY,
-                SPECIES_CATERPIE,
-                SPECIES_BELLSPROUT,
-                SPECIES_BELLSPROUT,
-                SPECIES_METAPOD,
-                SPECIES_METAPOD,
-                SPECIES_CATERPIE,
-                SPECIES_METAPOD,
-                SPECIES_CATERPIE,
-                SPECIES_METAPOD,
-            },
-            .speciesDay = {
-                SPECIES_PIDGEY,
-                SPECIES_CATERPIE,
-                SPECIES_PIDGEY,
-                SPECIES_CATERPIE,
-                SPECIES_BELLSPROUT,
-                SPECIES_BELLSPROUT,
-                SPECIES_METAPOD,
-                SPECIES_METAPOD,
-                SPECIES_CATERPIE,
-                SPECIES_METAPOD,
-                SPECIES_CATERPIE,
-                SPECIES_METAPOD,
-            },
-            .speciesNight = {
-                SPECIES_SPINARAK,
-                SPECIES_RATTATA,
-                SPECIES_SPINARAK,
-                SPECIES_RATTATA,
-                SPECIES_BELLSPROUT,
-                SPECIES_BELLSPROUT,
-                SPECIES_RATTATA,
-                SPECIES_RATTATA,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-                SPECIES_HOOTHOOT,
-            },
+            .speciesMorning = ROUTE_31_LAND_SPECIES,
+            .speciesDay = ROUTE_31_LAND_SPECIES,
+            .speciesNight = ROUTE_31_LAND_SPECIES,
         },
         .hoennSoundSpecies = {
-            SPECIES_WHISMUR,
-            SPECIES_LINOONE,
+            SPECIES_PINECO,
+            SPECIES_TYROGUE,
         },
         .sinnohSoundSpecies = {
-            SPECIES_BUIZEL,
-            SPECIES_BIDOOF,
+            SPECIES_PINECO,
+            SPECIES_TYROGUE,
         },
         .surfSlots = {
-            { 15, 25, SPECIES_POLIWAG },
-            { 10, 20, SPECIES_POLIWAG },
-            { 15, 25, SPECIES_POLIWHIRL },
-            { 15, 25, SPECIES_POLIWHIRL },
-            { 32, 32, SPECIES_POLIWHIRL },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
         },
         .rockSmashSlots = {
             { 0, 0, SPECIES_NONE },
             { 0, 0, SPECIES_NONE },
         },
         .oldRodSlots = {
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_POLIWAG },
-            { 10, 10, SPECIES_POLIWAG },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
         },
         .goodRodSlots = {
-            { 20, 20, SPECIES_MAGIKARP },
-            { 20, 20, SPECIES_POLIWAG },
-            { 20, 20, SPECIES_POLIWAG },
-            { 20, 20, SPECIES_POLIWAG },
-            { 20, 20, SPECIES_POLIWAG },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
         },
         .superRodSlots = {
-            { 40, 40, SPECIES_POLIWAG },
-            { 40, 40, SPECIES_POLIWAG },
-            { 40, 40, SPECIES_MAGIKARP },
-            { 40, 40, SPECIES_POLIWAG },
-            { 40, 40, SPECIES_MAGIKARP },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
         },
-        .landSwarm = SPECIES_PIDGEY,
-        .surfSwarm = SPECIES_POLIWAG,
-        .nightFish = SPECIES_POLIWAG,
-        .fishSwarm = SPECIES_MAGIKARP,
+        .landSwarm = SPECIES_HOPPIP,
+        .surfSwarm = SPECIES_NONE,
+        .nightFish = SPECIES_NONE,
+        .fishSwarm = SPECIES_NONE,
     },
+
+#undef ROUTE_31_LAND_SPECIES
 
     [ENCDATA_T22_VIOLET_CITY] = {
         .rateWalk = 0,
@@ -6806,6 +6717,22 @@ const EncounterData __data[] =
         .fishSwarm = SPECIES_MAGIKARP,
     },
 
+#define ROUTE_46_LAND_SPECIES \
+    {                         \
+        SPECIES_EKANS,        \
+        SPECIES_DODUO,        \
+        SPECIES_FARFETCHD,    \
+        SPECIES_WOOPER,       \
+        SPECIES_KRICKETOT,    \
+        SPECIES_DARUMAKA,     \
+        SPECIES_NIDORAN_F,    \
+        SPECIES_NIDORAN_M,    \
+        SPECIES_JOLTIK,       \
+        SPECIES_RUFFLET,      \
+        SPECIES_FLETCHLING,   \
+        SPECIES_TANGELA,      \
+    }
+
     [ENCDATA_R46_ROUTE_46] = {
         .rateWalk = 25,
         .rateSurf = 0,
@@ -6815,58 +6742,98 @@ const EncounterData __data[] =
         .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                3, 2, 3, 2, 2, 2, 2, 2, 3, 4, 3, 4
+                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
             },
-            .speciesMorning = {
-                SPECIES_GEODUDE,
-                SPECIES_SPEAROW,
-                SPECIES_GEODUDE,
-                SPECIES_SPEAROW,
-                SPECIES_RATTATA,
-                SPECIES_RATTATA,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_SPEAROW,
-                SPECIES_RATTATA,
-                SPECIES_SPEAROW,
-                SPECIES_RATTATA,
-            },
-            .speciesDay = {
-                SPECIES_GEODUDE,
-                SPECIES_SPEAROW,
-                SPECIES_GEODUDE,
-                SPECIES_SPEAROW,
-                SPECIES_RATTATA,
-                SPECIES_RATTATA,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_SPEAROW,
-                SPECIES_RATTATA,
-                SPECIES_SPEAROW,
-                SPECIES_RATTATA,
-            },
-            .speciesNight = {
-                SPECIES_GEODUDE,
-                SPECIES_RATTATA,
-                SPECIES_GEODUDE,
-                SPECIES_RATTATA,
-                SPECIES_RATTATA,
-                SPECIES_RATTATA,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_RATTATA,
-                SPECIES_GEODUDE,
-                SPECIES_RATTATA,
-            },
+            .speciesMorning = ROUTE_46_LAND_SPECIES,
+            .speciesDay = ROUTE_46_LAND_SPECIES,
+            .speciesNight = ROUTE_46_LAND_SPECIES,
         },
         .hoennSoundSpecies = {
-            SPECIES_PLUSLE,
-            SPECIES_MINUN,
+            SPECIES_FARFETCHD,
+            SPECIES_WOOPER,
         },
         .sinnohSoundSpecies = {
-            SPECIES_SHINX,
-            SPECIES_SHINX,
+            SPECIES_FARFETCHD,
+            SPECIES_WOOPER,
+        },
+        .surfSlots = {
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+        },
+        .rockSmashSlots = {
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+        },
+        .oldRodSlots = {
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+        },
+        .goodRodSlots = {
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+        },
+        .superRodSlots = {
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+            { 0, 0, SPECIES_NONE },
+        },
+        .landSwarm = SPECIES_EKANS,
+        .surfSwarm = SPECIES_NONE,
+        .nightFish = SPECIES_NONE,
+        .fishSwarm = SPECIES_NONE,
+    },
+
+#undef ROUTE_46_LAND_SPECIES
+
+#define DARK_CAVE_ROUTE_31_LAND_SPECIES \
+    {                                   \
+        SPECIES_GEODUDE,                 \
+        SPECIES_MACHOP,                  \
+        SPECIES_ONIX,                    \
+        SPECIES_PHANPY,                  \
+        SPECIES_MAKUHITA,                \
+        SPECIES_BONSLY,                  \
+        SPECIES_LUNATONE,                \
+        SPECIES_SOLROCK,                 \
+        SPECIES_ROGGENROLA,              \
+        SPECIES_WOOBAT,                  \
+        SPECIES_ARON,                    \
+        SPECIES_SIGILYPH,                \
+    }
+
+    [ENCDATA_D42R0102_DARK_CAVE_ROUTE_31_ENTRANCE] = {
+        .rateWalk = 10,
+        .rateSurf = 0,
+        .rateRockSmash = 0,
+        .rateOldRod = 0,
+        .rateGoodRod = 0,
+        .rateSuperRod = 0,
+        .landSlots = {
+            .levels = {
+                7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
+            },
+            .speciesMorning = DARK_CAVE_ROUTE_31_LAND_SPECIES,
+            .speciesDay = DARK_CAVE_ROUTE_31_LAND_SPECIES,
+            .speciesNight = DARK_CAVE_ROUTE_31_LAND_SPECIES,
+        },
+        .hoennSoundSpecies = {
+            SPECIES_ONIX,
+            SPECIES_PHANPY,
+        },
+        .sinnohSoundSpecies = {
+            SPECIES_ONIX,
+            SPECIES_PHANPY,
         },
         .surfSlots = {
             { 0, 0, SPECIES_NONE },
@@ -6906,105 +6873,7 @@ const EncounterData __data[] =
         .fishSwarm = SPECIES_NONE,
     },
 
-    [ENCDATA_D42R0102_DARK_CAVE_ROUTE_31_ENTRANCE] = {
-        .rateWalk = 10,
-        .rateSurf = 10,
-        .rateRockSmash = 50,
-        .rateOldRod = 25,
-        .rateGoodRod = 50,
-        .rateSuperRod = 75,
-        .landSlots = {
-            .levels = {
-                3, 2, 3, 2, 2, 2, 4, 4, 3, 4, 3, 4
-            },
-            .speciesMorning = {
-                SPECIES_GEODUDE,
-                SPECIES_ZUBAT,
-                SPECIES_GEODUDE,
-                SPECIES_ZUBAT,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_ZUBAT,
-                SPECIES_ZUBAT,
-                SPECIES_ZUBAT,
-                SPECIES_DUNSPARCE,
-            },
-            .speciesDay = {
-                SPECIES_GEODUDE,
-                SPECIES_ZUBAT,
-                SPECIES_GEODUDE,
-                SPECIES_ZUBAT,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_ZUBAT,
-                SPECIES_ZUBAT,
-                SPECIES_ZUBAT,
-                SPECIES_DUNSPARCE,
-            },
-            .speciesNight = {
-                SPECIES_GEODUDE,
-                SPECIES_ZUBAT,
-                SPECIES_GEODUDE,
-                SPECIES_ZUBAT,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_GEODUDE,
-                SPECIES_ZUBAT,
-                SPECIES_ZUBAT,
-                SPECIES_ZUBAT,
-                SPECIES_DUNSPARCE,
-            },
-        },
-        .hoennSoundSpecies = {
-            SPECIES_ABSOL,
-            SPECIES_MAKUHITA,
-        },
-        .sinnohSoundSpecies = {
-            SPECIES_BRONZOR,
-            SPECIES_CHINGLING,
-        },
-        .surfSlots = {
-            { 10, 20, SPECIES_MAGIKARP },
-            { 5, 15, SPECIES_MAGIKARP },
-            { 2, 10, SPECIES_MAGIKARP },
-            { 2, 10, SPECIES_MAGIKARP },
-            { 2, 10, SPECIES_MAGIKARP },
-        },
-        .rockSmashSlots = {
-            { 4, 8, SPECIES_DUNSPARCE },
-            { 8, 14, SPECIES_GEODUDE },
-        },
-        .oldRodSlots = {
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_MAGIKARP },
-            { 10, 10, SPECIES_GOLDEEN },
-            { 10, 10, SPECIES_GOLDEEN },
-        },
-        .goodRodSlots = {
-            { 20, 20, SPECIES_MAGIKARP },
-            { 20, 20, SPECIES_GOLDEEN },
-            { 20, 20, SPECIES_GOLDEEN },
-            { 20, 20, SPECIES_GOLDEEN },
-            { 20, 20, SPECIES_GOLDEEN },
-        },
-        .superRodSlots = {
-            { 40, 40, SPECIES_GOLDEEN },
-            { 40, 40, SPECIES_GOLDEEN },
-            { 40, 40, SPECIES_MAGIKARP },
-            { 40, 40, SPECIES_SEAKING },
-            { 40, 40, SPECIES_MAGIKARP },
-        },
-        .landSwarm = SPECIES_DUNSPARCE,
-        .surfSwarm = SPECIES_MAGIKARP,
-        .nightFish = SPECIES_GOLDEEN,
-        .fishSwarm = SPECIES_MAGIKARP,
-    },
+#undef DARK_CAVE_ROUTE_31_LAND_SPECIES
 
     [ENCDATA_D42R0101_DARK_CAVE_ROUTE_45_ENTRANCE] = {
         .rateWalk = 10,

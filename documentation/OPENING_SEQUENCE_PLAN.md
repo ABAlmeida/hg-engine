@@ -270,6 +270,25 @@ logic for:
 Winning continues to raise the cap to level 13 through the existing trainer-ID
 table. Do not call level-cap logic directly from the field script.
 
+All three Silver 1 trainer variants use one level-5 starter with 31 IVs in all
+six stats and no held item. Their moves are fixed to non-STAB opening moves:
+Chikorita has Tackle and Growl, Cyndaquil has Tackle, Leer, and Smokescreen,
+and Totodile has Scratch and Leer. Explicit moves prevent Razor Leaf or Water
+Gun from entering this first battle through the generated learnsets.
+After the victory dialogue, award the player one Oran Berry and one IV Max
+through consecutive uses of the standard verbose item-obtained flow. These
+immediate script rewards are the temporary source of truth until the central
+trainer reward system is implemented; migrate trainer IDs 495, 496, and 497 to
+its external reward table and remove the scripted awards in the same change to
+avoid duplicate rewards.
+
+Launch Silver 1 without the trainer battle's `can lose` parameter. That
+parameter restores and fades in the overworld after a defeat, which conflicts
+with starting a normal blackout afterward. On a loss, call the standard
+`white_out` command before releasing the field lock, matching the shared
+trainer script so permanent-death wipe recovery or the no-reserve ending owns
+the transition from the battle's black return screen.
+
 After this sequence:
 
 - `FLAG_MET_PASSERBY_BOY` and any verified companion scene state reflect a
@@ -526,7 +545,10 @@ Use a new in-game save, not a save state, and manually verify:
    registration and registered-button use;
 7. exactly 5 Potions, 20 Poké Balls, and 20 Poké Bait after the assistant;
 8. no duplicate gifts after revisiting the lab;
-9. all three Silver 1 trainer variants and the level-13 cap after a win;
+9. all three Silver 1 trainer variants using a level-5, perfect-IV starter with
+   no held item, no STAB moves, and the Super Effective, Evaluate Attacks, and
+   Expert Attacks AI modules, plus exactly one awarded Oran Berry, exactly one
+   awarded IV Max, and the level-13 cap after a win;
 10. the existing permanent-death outcome after losing Silver 1;
 11. the saved rival name `Silver` in later dialogue after save/reload;
 12. no police naming scene and no original Silver 1 encounter;

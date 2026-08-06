@@ -25,4 +25,6 @@ struct Save_DexData
     u16 lure;
 };
 
+BOOL LONG_CALL Pokedex_GetCaughtFlag(const struct Save_DexData *pokedex, u16 species);
+
 #endif

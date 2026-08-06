@@ -20,6 +20,7 @@
 #include "../../include/save.h"
 #include "../../include/script.h"
 #include "../../include/sound.h"
+#include "../../include/stat_training_items.h"
 
 int __attribute__((section (".init"))) PartyMenu_HandleUseItemOnMon_Internal(struct PartyMenu *partyMenu);
 u32 UseItemMonAttrChangeCheck(struct PartyMenu *wk, void *dat);
@@ -37,6 +38,9 @@ extern const WindowTemplate sButtonWindowTemplates[];
 
 // mirrors the button layout
 extern u32 partyMenuSignal;
+
+#define PARTY_MENU_MESSAGE_NO_EFFECT 102
+#define PARTY_MENU_MESSAGE_IV_MAX    227
 
 u16 NatureToMintItem[] = {
     [NATURE_LONELY] = ITEM_LONELY_MINT,
@@ -81,6 +85,26 @@ int __attribute__((section (".init"))) PartyMenu_HandleUseItemOnMon_Internal(str
         sys_FreeMemoryEz(itemData);
         PartyMenu_SelectMoveForPpRestoreOrPpUp(partyMenu, 1);
         return PARTY_MENU_STATE_SELECT_MOVE;
+    }
+
+    if (partyMenu->args->itemId == ITEM_IV_MAX) {
+        struct PartyPokemon *mon = Party_GetMonByIndex(
+            partyMenu->args->party, partyMenu->partyMonIndex);
+        int message = PARTY_MENU_MESSAGE_NO_EFFECT;
+
+        if (StatTrainingItem_UseOnMon(
+                mon, ITEM_IV_MAX, PartyMenu_GetCurrentMapSec(partyMenu)) == TRUE) {
+            Bag_TakeItem(partyMenu->args->bag, ITEM_IV_MAX, 1, HEAP_ID_PARTY_MENU);
+            message = PARTY_MENU_MESSAGE_IV_MAX;
+        }
+
+        // IV Max changes no form, so use the normal item-result message state.
+        // The form-change overlay requires animation data and would never finish.
+        PartyMenu_PrintMessageOnWindow34(partyMenu, message, TRUE);
+        partyMenu->partyMonIndex = 8;
+        partyMenu->itemUseCallback = PartyMenu_ItemUseFunc_WaitTextPrinterThenExit;
+        sys_FreeMemoryEz(itemData);
+        return PARTY_MENU_STATE_ITEM_USE_CB;
     }
 
     if (UseItemMonAttrChangeCheck(partyMenu, itemData) == TRUE) {

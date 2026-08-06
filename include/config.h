@@ -72,11 +72,21 @@
 // #define IMPLEMENT_CAPTURE_EXPERIENCE
 
 // DISABLE_BATTLE_EXPERIENCE prevents player Pokemon from gaining experience in battle.
-// Effort values are still awarded to every non-empty party Pokemon with HP remaining.
+// Unless DISABLE_BATTLE_EV_GAIN is also defined, effort values are still awarded
+// to every non-empty party Pokemon with HP remaining.
 #define DISABLE_BATTLE_EXPERIENCE
+
+// DISABLE_BATTLE_EV_GAIN prevents defeated Pokemon from awarding effort values.
+// This currently requires DISABLE_BATTLE_EXPERIENCE because the normal experience
+// task owns vanilla battle EV distribution. Vitamins remain unaffected.
+#define DISABLE_BATTLE_EV_GAIN
 
 #if defined(DISABLE_BATTLE_EXPERIENCE) && defined(IMPLEMENT_CAPTURE_EXPERIENCE)
 #error "Capture experience cannot be enabled when battle experience is disabled"
+#endif
+
+#if defined(DISABLE_BATTLE_EV_GAIN) && !defined(DISABLE_BATTLE_EXPERIENCE)
+#error "Battle EV gain can only be disabled while battle experience is disabled"
 #endif
 
 // IMPLEMENT_CAPTURE_RULES enables the Heartless Gold one-encounter-per-area,
@@ -197,7 +207,8 @@
 // Reusable Repels are incompatible with the Bait encounter system.
 // #define IMPLEMENT_REUSABLE_REPELS
 
-// UPDATE_VITAMIN_EV_CAPS changes the cap on the vitamins from 100 to 252 per recent generations
+// UPDATE_VITAMIN_EV_CAPS enables the 252-per-stat vitamin cap, the 50-EV
+// standard vitamins, their S/L/Max tiers, and IV Max.
 #define UPDATE_VITAMIN_EV_CAPS
 
 // DISABLE_ITEMS_IN_TRAINER_BATTLE rejects player Bag item selections in trainer battles.

@@ -168,20 +168,36 @@ compare VAR_TEMP_x4000, SPECIES_CHIKORITA
 goto_if_eq silver_uses_cyndaquil
 compare VAR_TEMP_x4000, SPECIES_CYNDAQUIL
 goto_if_eq silver_uses_totodile
-trainer_battle TRAINER_SILVER_CHIKORITA, 0, 1, 0
+// Keep the can-lose parameter clear so a loss remains on the black battle
+// return screen until the shared white-out task below takes ownership.
+trainer_battle TRAINER_SILVER_CHIKORITA, 0, 0, 0
 goto silver_battle_done
 silver_uses_cyndaquil:
-trainer_battle TRAINER_SILVER_CYNDAQUIL, 0, 1, 0
+trainer_battle TRAINER_SILVER_CYNDAQUIL, 0, 0, 0
 goto silver_battle_done
 silver_uses_totodile:
-trainer_battle TRAINER_SILVER_TOTODILE, 0, 1, 0
+trainer_battle TRAINER_SILVER_TOTODILE, 0, 0, 0
 silver_battle_done:
 check_battle_won VAR_SPECIAL_RESULT
-compare VAR_SPECIAL_RESULT, 1
-goto_if_ne silver_release
+compare VAR_SPECIAL_RESULT, 0
+goto_if_ne silver_won
+// Match the shared trainer script so permanent-death wipe handling can run.
+white_out
+releaseall
+end
+silver_won:
 callstd std_play_rival_outro_music
 buffer_rivals_name 0
 npc_msg 39
+// Silver 1 predates the central trainer-reward system. Award its configured
+// rewards here for now; migrate this trainer to trainer_rewards.csv when that
+// system is implemented so the player cannot receive them twice.
+setvar VAR_SPECIAL_x8004, ITEM_ORAN_BERRY
+setvar VAR_SPECIAL_x8005, 1
+callstd std_obtain_item_verbose
+setvar VAR_SPECIAL_x8004, ITEM_IV_MAX
+setvar VAR_SPECIAL_x8005, 1
+callstd std_obtain_item_verbose
 closemsg
 apply_movement SILVER_OBJECT_ID, silver_depart
 wait_movement
@@ -190,7 +206,6 @@ setflag FLAG_HIDE_NEW_BARK_RIVAL
 setflag FLAG_MET_PASSERBY_BOY
 setvar VAR_SCENE_NEW_BARK_TOWN_OW, 2
 setvar VAR_SCENE_PLAYERS_HOUSE_1F, 4
-silver_release:
 releaseall
 end
 

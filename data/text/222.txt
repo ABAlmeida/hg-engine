@@ -2686,3 +2686,22 @@ Canari Bread
 Poké Bait
 Shiny Bait
 Healing Kit
+HP Up S
+Protein S
+Iron S
+Carbos S
+Calcium S
+Zinc S
+HP Up L
+Protein L
+Iron L
+Carbos L
+Calcium L
+Zinc L
+HP Up Max
+Protein Max
+Iron Max
+Carbos Max
+Calcium Max
+Zinc Max
+IV Max

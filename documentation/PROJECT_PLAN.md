@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-08-01
+Last updated: 2026-08-04
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -11,8 +11,13 @@ complete.
 
 - Use expanded save data; compatibility with ordinary HeartGold saves and
   PKHeX is not a requirement.
-- Award no battle experience. Defeated opposing Pokémon still award effort
-  values.
+- Award no battle experience or effort values. Vitamins are the only way to
+  add effort values; EV-reducing items retain their normal behavior.
+- Add four vitamin strengths for each stat (10, 50, 100, and up to the legal
+  maximum) plus IV Max. Silver 1 awards one IV Max; keep the vitamin variants
+  without normal gameplay sources for now and retain the current 40-slot
+  Medicine pocket and standard Bag-full behavior. `DEBUG_CHEATS` may seed
+  temporary testing copies.
 - Store one monotonic level-cap value in the save. Configured trainer
   victories raise it through a central table; lower values are ignored.
 - Let eligible party Pokémon advance to the saved cap through `LEVEL TO CAP`,
@@ -57,7 +62,10 @@ complete.
 | Build performance | Complete | Message collation, dependency invalidation, host-tool optimization, timestamp-driven packaging, incremental targets, and optional `ccache` support are implemented. |
 | Expanded save and PC support | Complete | `ALLOW_SAVE_CHANGES` and `EXPAND_PC_BOXES` are enabled. |
 | Disable capture experience | Complete | Capture experience remains disabled. |
-| No battle experience | Complete; manually verified | Battle EXP presentation and gains are skipped while eligible party members still receive effort values. |
+| No battle experience | Complete; manually verified | Battle EXP presentation and gains are skipped. |
+| Item-only effort values | Implemented; build and manual verification pending | `DISABLE_BATTLE_EV_GAIN` prevents defeated Pokémon from awarding EVs while vitamins remain available and can reach the modern 252-per-stat cap. EV-reducing items remain unchanged. |
+| Stat-training item tiers | Implemented; build and manual verification pending | Add S, L, and Max variants for all six vitamins, make the existing unsuffixed vitamins grant 50 EVs, and add IV Max. Silver 1 awards one IV Max; vitamin-tier acquisition is deferred. See `STAT_TRAINING_ITEMS_PLAN.md`. |
+| Medicine item availability cleanup | Planned; separate content pass | Keep 14 obsolete healing/status item IDs intact but later remove their normal acquisition sources. Replacement rewards remain undecided. See `MEDICINE_ITEM_AVAILABILITY_PLAN.md`. |
 | Persistent level caps | Complete; manually verified | New saves begin at level 7 and story-trainer victories raise the saved cap according to `LEVEL_CAPS.md`. |
 | Level to Cap | Complete; manually verified | The party action advances one level at a time and preserves move and evolution prompts. |
 | Bait encounters | Complete; manually verified | Poké Bait and Shiny Bait work on valid terrain; invalid use is rejected; preserved encounter types remain available. See `BAIT_ENCOUNTERS.md`. |
@@ -76,7 +84,7 @@ complete.
 | Trainer victory rewards | Planned | Give each configured enemy trainer ID its item and quantity once, after the first victory only. Keep the authoritative trainer-to-reward mapping in generated ROM data, with rematches configurable as no reward, and persist claimed rewards independently from resettable trainer flags. Audit ordinary, sight-capable, double, rival, Gym, Elite Four, rematch, and other scripted trainer paths. |
 | In-battle player item restriction | Implemented; build and manual verification pending | `DISABLE_ITEMS_IN_TRAINER_BATTLE` rejects active player item selections in trainer battles and returns to command selection. Wild-battle Bag behavior and held items remain unchanged; revisit stricter UI or pocket filtering only if playtesting requires it. |
 | Battle Item acquisition removal | Planned | Remove or replace marts, visible and hidden pickups, gifts, prizes, and other sources of every Battle Items-pocket item. Keep the item IDs and records intact, and audit existing saves only for harmless unusable leftovers. |
-| Trainer and wild content rebalance | Pending | Build teams and encounter tables around the finalized cap curve and available roster. |
+| Trainer and wild content rebalance | In progress | Early-area land and water tables are being rebuilt around the finalized cap curve. Redesigned tables default to fixed morning/day/night content, and radio, swarm, and night-fishing replacements must not introduce species outside the reviewed area list unless explicitly planned otherwise. |
 | Trainer AI changes | Pending | First enable the strongest suitable existing trainer AI, then add a trainer-only fair-information decision layer, switching and item evaluation, doubles coordination, and bounded search. Wild and scripted AI must retain their original routes. |
 | Graphics and presentation | Pending | Replace the temporary Bait icons, redesign rival battle/overworld graphics, add challenge messages, and consider title-screen changes after core systems stabilize. |
 | Full-game regression pass | Pending | Perform milestone, save/reload, encounter, progression, and hardware/emulator checks after the remaining systems and content are integrated. |
@@ -170,15 +178,37 @@ Pokémon-driven field-move presentation is retained.
   rather than silently lost.
 - The trainer-script audit must cover the shared ordinary and sight-triggered
   paths as well as story and map scripts that launch trainer battles directly.
+- Optional trainer IDs will be identified explicitly rather than inferred from
+  map position or line-of-sight behavior. Mandatory story, rival, Gym, Elite
+  Four, and other progression battles can retain an immediate battle start
+  after their dialogue.
+- Talking to an undefeated optional trainer will first preserve that trainer's
+  normal introductory dialogue, then show a generated preview of their current
+  party species and configured first-victory reward and ask whether the player
+  wants to battle. Selecting Yes continues into the existing trainer-battle
+  flow. Selecting No closes the interaction and returns field control without
+  changing trainer flags, reward state, or rematch state.
+- Preview data must be generated at build time from the authoritative trainer
+  party data and `data/trainer_rewards.csv`; team species and reward names must
+  not be copied into a second manually maintained dialogue table. Keep the
+  generated preview in ROM data or message/script archives rather than a large
+  linked C table. Use shared messages for the supported party sizes.
+- Paired optional trainers must present both participating teams and both
+  configured rewards in one offer. Trainers configured with no reward must say
+  so rather than promising an item. Defeated trainers skip the offer and retain
+  their normal defeated dialogue; rematches retain their existing acceptance
+  flow and do not advertise a first-victory reward.
 
 ## Trainer line of sight
 
 Automatic trainer detection must be stopped before it takes control of the
 field, moves a trainer toward the player, or starts the sight-triggered trainer
 script. Merely ending that script after detection is not sufficient because it
-would still interrupt the player. Talking to an undefeated trainer must retain
-the normal pre-battle dialogue and battle flow; talking after victory must
-retain the normal defeated dialogue and rematch behavior.
+would still interrupt the player. Talking to an undefeated mandatory trainer
+must retain the normal pre-battle dialogue and battle flow. Talking to an
+undefeated optional trainer uses the preview and Yes/No offer described above.
+Talking after victory must retain the normal defeated dialogue and rematch
+behavior.
 
 ## In-battle items and Battle Item availability
 

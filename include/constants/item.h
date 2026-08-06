@@ -2696,8 +2696,27 @@
 #define ITEM_POKE_BAIT  (MAX_BASE_ITEM_NUM + 1)
 #define ITEM_SHINY_BAIT (MAX_BASE_ITEM_NUM + 2)
 #define ITEM_HEALING_KIT (MAX_BASE_ITEM_NUM + 3)
+#define ITEM_HP_UP_S       (MAX_BASE_ITEM_NUM + 4)
+#define ITEM_PROTEIN_S     (MAX_BASE_ITEM_NUM + 5)
+#define ITEM_IRON_S        (MAX_BASE_ITEM_NUM + 6)
+#define ITEM_CARBOS_S      (MAX_BASE_ITEM_NUM + 7)
+#define ITEM_CALCIUM_S     (MAX_BASE_ITEM_NUM + 8)
+#define ITEM_ZINC_S        (MAX_BASE_ITEM_NUM + 9)
+#define ITEM_HP_UP_L       (MAX_BASE_ITEM_NUM + 10)
+#define ITEM_PROTEIN_L     (MAX_BASE_ITEM_NUM + 11)
+#define ITEM_IRON_L        (MAX_BASE_ITEM_NUM + 12)
+#define ITEM_CARBOS_L      (MAX_BASE_ITEM_NUM + 13)
+#define ITEM_CALCIUM_L     (MAX_BASE_ITEM_NUM + 14)
+#define ITEM_ZINC_L        (MAX_BASE_ITEM_NUM + 15)
+#define ITEM_HP_UP_MAX     (MAX_BASE_ITEM_NUM + 16)
+#define ITEM_PROTEIN_MAX   (MAX_BASE_ITEM_NUM + 17)
+#define ITEM_IRON_MAX      (MAX_BASE_ITEM_NUM + 18)
+#define ITEM_CARBOS_MAX    (MAX_BASE_ITEM_NUM + 19)
+#define ITEM_CALCIUM_MAX   (MAX_BASE_ITEM_NUM + 20)
+#define ITEM_ZINC_MAX      (MAX_BASE_ITEM_NUM + 21)
+#define ITEM_IV_MAX        (MAX_BASE_ITEM_NUM + 22)
 
-#define MAX_TOTAL_ITEM_NUM ITEM_HEALING_KIT
+#define MAX_TOTAL_ITEM_NUM ITEM_IV_MAX
 
 
 #define NUM_MEGA_STONES (48) // includes the pixie plate, doesn't include plza megas due to overflowing bag

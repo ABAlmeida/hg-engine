@@ -63,6 +63,30 @@ BAG_DATA *Sav2_Bag_new(int heap_id) {
 void Sav2_Bag_init(BAG_DATA *bag) {
     //MI_CpuClear16(bag, sizeof(BAG_DATA));
     memset(bag, 0, sizeof(BAG_DATA));
+
+#ifdef DEBUG_CHEATS
+    enum {
+        DEBUG_CHEAT_MEDICINE_QUANTITY = 10,
+        DEBUG_CHEAT_SHINY_BAIT_QUANTITY = 20,
+        DEBUG_CHEAT_MEDICINE_COUNT = ITEM_IV_MAX - ITEM_HP_UP_S + 1,
+    };
+    u32 i;
+
+    // The custom stat-training medicines use one contiguous item-ID range.
+    // Populate the empty pocket directly because save initialization has no
+    // field heap available for the normal item-data lookup path.
+    _Static_assert(DEBUG_CHEAT_MEDICINE_COUNT == 19,
+                   "Update the debug medicine range when stat items change");
+    _Static_assert(NUM_BAG_MEDICINE >= DEBUG_CHEAT_MEDICINE_COUNT,
+                   "The Medicine pocket is too small for debug supplies");
+    for (i = 0; i < DEBUG_CHEAT_MEDICINE_COUNT; i++) {
+        bag->medicine[i].id = ITEM_HP_UP_S + i;
+        bag->medicine[i].quantity = DEBUG_CHEAT_MEDICINE_QUANTITY;
+    }
+
+    bag->items[0].id = ITEM_SHINY_BAIT;
+    bag->items[0].quantity = DEBUG_CHEAT_SHINY_BAIT_QUANTITY;
+#endif
 }
 
 void Sav2_Bag_copy(BAG_DATA *src, BAG_DATA *dst) {

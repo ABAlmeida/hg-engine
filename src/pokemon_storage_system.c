@@ -42,6 +42,15 @@ void PCStorage_InitializeBoxes(PCStorage *storage) {
         }
     }
 
+#ifdef DEBUG_CHEATS
+    enum { DEBUG_CHEAT_RAYQUAZA_LEVEL = 100 };
+
+    // Put the test Pokemon in the first ordinary Bill's PC slot so it can be
+    // withdrawn through the normal storage interface.
+    CreateBoxMonData(&storage->boxes[0].mons[0], SPECIES_RAYQUAZA,
+        DEBUG_CHEAT_RAYQUAZA_LEVEL, MAX_IVS, FALSE, 0, FALSE, 0);
+#endif
+
     for (i = 0, j = 0; i < NUM_PC_BOXES; i++) {
         storage->wallpapers[i] = j;
         j++;

@@ -196,8 +196,23 @@ The following fields do not add ordinary slots:
 ```
 
 They are replacements used when the corresponding Pokégear Radio, swarm, or
-fishing condition is active. Leave them unchanged unless the special encounter
-content is also being redesigned.
+fishing condition is active.
+
+For Heartless Gold encounter-table redesigns, the default is that these
+conditions must not introduce species outside the area's reviewed list. Point
+radio entries and active swarm/night-fishing fields at species already present
+in the corresponding ordinary table. Set fields for disabled encounter methods
+to `SPECIES_NONE`.
+
+Do not blindly set an active land, surfing, or fishing swarm field to
+`SPECIES_NONE`. `src/swarms.c` has a fixed map/type lookup and asserts that the
+selected swarm species is valid. If a redesigned area is still present in that
+lookup, neutralize its swarm with a species from the ordinary table or make a
+separately reviewed change to the lookup.
+
+This is the default content rule, not an engine limitation. A future area may
+deliberately restore unique radio, swarm, or night-fishing encounters when its
+design explicitly calls for them.
 
 ## Keep the Pokédex area display accurate
 
@@ -231,4 +246,3 @@ Review each changed area for:
 - correct morning/day/night behavior;
 - valid data for every enabled encounter method; and
 - matching Pokédex habitat information.
-

@@ -462,7 +462,8 @@ u16 GetItemIndex(u16 item, u16 type)
         if (item == ITEM_DUMMY_ID || item == ITEM_RETURN_ID) {
             break;
         }
-        if (item > MAX_TOTAL_ITEM_NUM) {
+        // Custom items have no entry in the base game's Pal Park mapping.
+        if (item > MAX_BASE_ITEM_NUM) {
             ret = 0;
         } else {
             ret = ItemDataIndex[item].agb_id;
