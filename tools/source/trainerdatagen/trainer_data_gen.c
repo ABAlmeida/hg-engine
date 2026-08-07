@@ -1,16 +1,28 @@
 #include <stdint.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../../../include/trainer_data.h"
+#include "../../../include/constants/file.h"
+#include "../../../include/constants/item.h"
 
 enum {
     RAWTEXT_PATH_LENGTH = 128,
     TRAINER_DATA_MEMBER_PATH_LENGTH = 32,
     TRAINER_TEXT_OFFSET_MEMBER_PATH_LENGTH = 48,
     TRAINER_TEXT_ENTRY_SIZE = 4,
+    TRAINER_REWARD_LINE_LENGTH = 256,
+    TRAINER_OFFER_TEXT_LENGTH = 1024,
+    TRAINER_OFFER_LINE_WIDTH = 32,
 };
+
+typedef struct TrainerReward {
+    uint16_t item;
+    uint16_t quantity;
+    int configured;
+} TrainerReward;
 
 static uint16_t EncodeNicknameChar(char c) {
     if (c >= '0' && c <= '9') {
@@ -99,6 +111,23 @@ static int GetTrainerTextEntryCount(const TrainerData *entry) {
     return count;
 }
 
+static int HasTrainerTextType(const TrainerData *entry, uint16_t type) {
+    int textCount = GetTrainerTextEntryCount(entry);
+    int i;
+
+    for (i = 0; i < textCount; i++) {
+        if (entry->text[i].type == type) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static int HasTrainerIntroText(const TrainerData *entry) {
+    return HasTrainerTextType(entry, TRMSG_INTRO) || HasTrainerTextType(entry, TRMSG_DBL_INTRO_1) ||
+           HasTrainerTextType(entry, TRMSG_DBL_INTRO_2);
+}
+
 static int GetTrainerTextOffsetCount(void) {
     int i;
 
@@ -139,6 +168,327 @@ static FILE *OpenTextForWrite(const char *path) {
         exit(EXIT_FAILURE);
     }
     return file;
+}
+
+static char *TrimWhitespace(char *text) {
+    char *end;
+
+    while (isspace((unsigned char)*text)) {
+        text++;
+    }
+    end = text + strlen(text);
+    while (end > text && isspace((unsigned char)end[-1])) {
+        end--;
+    }
+    *end = '\0';
+    return text;
+}
+
+static unsigned long ParseUnsigned(const char *text, const char *field, int lineNumber) {
+    char *end;
+    unsigned long value = strtoul(text, &end, 0);
+
+    if (text[0] == '\0' || *end != '\0') {
+        fprintf(stderr, "Invalid %s on trainer reward line %d: %s\n", field, lineNumber, text);
+        exit(EXIT_FAILURE);
+    }
+    return value;
+}
+
+static TrainerReward *LoadTrainerRewards(const char *path) {
+    TrainerReward *rewards = calloc(sTrainerDataCount, sizeof(*rewards));
+    char line[TRAINER_REWARD_LINE_LENGTH];
+    FILE *file;
+    int lineNumber = 0;
+
+    if (rewards == NULL) {
+        perror("calloc");
+        exit(EXIT_FAILURE);
+    }
+    file = fopen(path, "r");
+    if (file == NULL) {
+        perror(path);
+        free(rewards);
+        exit(EXIT_FAILURE);
+    }
+
+    while (fgets(line, sizeof(line), file) != NULL) {
+        char *comment;
+        char *trainerText;
+        char *itemText;
+        char *quantityText;
+        char *extra;
+        unsigned long trainerId;
+        unsigned long itemId;
+        unsigned long quantity;
+
+        lineNumber++;
+        if (strchr(line, '\n') == NULL && !feof(file)) {
+            fprintf(stderr, "Trainer reward line %d is too long\n", lineNumber);
+            fclose(file);
+            free(rewards);
+            exit(EXIT_FAILURE);
+        }
+        comment = strchr(line, '#');
+        if (comment != NULL) {
+            *comment = '\0';
+        }
+        trainerText = TrimWhitespace(line);
+        if (*trainerText == '\0' || strcmp(trainerText, "trainer_id,item_id,quantity") == 0) {
+            continue;
+        }
+
+        itemText = strchr(trainerText, ',');
+        if (itemText == NULL) {
+            fprintf(stderr, "Trainer reward line %d must have three columns\n", lineNumber);
+            fclose(file);
+            free(rewards);
+            exit(EXIT_FAILURE);
+        }
+        *itemText++ = '\0';
+        quantityText = strchr(itemText, ',');
+        if (quantityText == NULL) {
+            fprintf(stderr, "Trainer reward line %d must have three columns\n", lineNumber);
+            fclose(file);
+            free(rewards);
+            exit(EXIT_FAILURE);
+        }
+        *quantityText++ = '\0';
+        extra = strchr(quantityText, ',');
+        if (extra != NULL) {
+            fprintf(stderr, "Trainer reward line %d has too many columns\n", lineNumber);
+            fclose(file);
+            free(rewards);
+            exit(EXIT_FAILURE);
+        }
+
+        trainerText = TrimWhitespace(trainerText);
+        itemText = TrimWhitespace(itemText);
+        quantityText = TrimWhitespace(quantityText);
+        trainerId = ParseUnsigned(trainerText, "trainer ID", lineNumber);
+        itemId = ParseUnsigned(itemText, "item ID", lineNumber);
+        quantity = ParseUnsigned(quantityText, "quantity", lineNumber);
+
+        if (trainerId >= sTrainerDataCount) {
+            fprintf(stderr, "Trainer reward line %d has out-of-range trainer ID %lu\n", lineNumber, trainerId);
+            fclose(file);
+            free(rewards);
+            exit(EXIT_FAILURE);
+        }
+        if (rewards[trainerId].configured) {
+            fprintf(stderr, "Trainer reward line %d duplicates trainer ID %lu\n", lineNumber, trainerId);
+            fclose(file);
+            free(rewards);
+            exit(EXIT_FAILURE);
+        }
+        if ((itemId == ITEM_NONE) != (quantity == 0)) {
+            fprintf(stderr, "Trainer reward line %d must use item 0 and quantity 0 together\n", lineNumber);
+            fclose(file);
+            free(rewards);
+            exit(EXIT_FAILURE);
+        }
+        if (itemId > MAX_TOTAL_ITEM_NUM || quantity > BAG_SLOT_QUANTITY_MAX) {
+            fprintf(stderr, "Trainer reward line %d has an invalid item or quantity\n", lineNumber);
+            fclose(file);
+            free(rewards);
+            exit(EXIT_FAILURE);
+        }
+
+        rewards[trainerId].item = (uint16_t)itemId;
+        rewards[trainerId].quantity = (uint16_t)quantity;
+        rewards[trainerId].configured = 1;
+    }
+
+    fclose(file);
+    return rewards;
+}
+
+static void ReadIndexedTextFile(const char *dir, int index, char *text, size_t textSize) {
+    char path[RAWTEXT_PATH_LENGTH];
+    FILE *file;
+
+    BuildRawTextPath(path, sizeof(path), dir, index);
+    file = fopen(path, "r");
+    if (file == NULL) {
+        perror(path);
+        exit(EXIT_FAILURE);
+    }
+    if (fgets(text, (int)textSize, file) == NULL) {
+        fprintf(stderr, "Unable to read text from %s\n", path);
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+    if (strchr(text, '\n') == NULL && !feof(file)) {
+        fprintf(stderr, "Text in %s exceeds the supported length\n", path);
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+    fclose(file);
+    TrimWhitespace(text);
+}
+
+static void ReadTextArchiveLine(const char *textDir, int archiveId, int index, char *text, size_t textSize) {
+    char path[RAWTEXT_PATH_LENGTH];
+    FILE *file;
+    int current = 0;
+
+    snprintf(path, sizeof(path), "%s/%03d.txt", textDir, archiveId);
+    file = fopen(path, "r");
+    if (file == NULL) {
+        perror(path);
+        exit(EXIT_FAILURE);
+    }
+    while (current <= index && fgets(text, (int)textSize, file) != NULL) {
+        current++;
+    }
+    if (current <= index) {
+        fprintf(stderr, "Text index %d is missing from %s\n", index, path);
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+    if (strchr(text, '\n') == NULL && !feof(file)) {
+        fprintf(stderr, "Text line %d in %s exceeds the supported length\n", index, path);
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+    fclose(file);
+    TrimWhitespace(text);
+}
+
+static void StripTextControls(char *text) {
+    char *src = text;
+    char *dst = text;
+
+    while (*src != '\0') {
+        if (*src == '{') {
+            while (*src != '\0' && *src != '}') {
+                src++;
+            }
+            if (*src == '}') {
+                src++;
+            }
+        } else {
+            *dst++ = *src++;
+        }
+    }
+    *dst = '\0';
+}
+
+static void AppendText(char *dst, size_t dstSize, const char *text) {
+    size_t used = strlen(dst);
+    size_t remaining = dstSize - used;
+
+    if (strlen(text) + 1 > remaining) {
+        fprintf(stderr, "Generated trainer offer exceeds %zu bytes\n", dstSize);
+        exit(EXIT_FAILURE);
+    }
+    memcpy(dst + used, text, strlen(text) + 1);
+}
+
+static void WrapTrainerOffer(const char *sentence, char *offer, size_t offerSize) {
+    char copy[TRAINER_OFFER_TEXT_LENGTH];
+    char *word;
+    int lineLength = 0;
+    int lineOnPage = 1;
+
+    if (strlen(sentence) >= sizeof(copy)) {
+        fprintf(stderr, "Generated trainer offer sentence is too long\n");
+        exit(EXIT_FAILURE);
+    }
+    strcpy(copy, sentence);
+    offer[0] = '\0';
+
+    word = strtok(copy, " ");
+    while (word != NULL) {
+        int wordLength = (int)strlen(word);
+
+        if (lineLength != 0 && lineLength + 1 + wordLength > TRAINER_OFFER_LINE_WIDTH) {
+            AppendText(offer, offerSize, lineOnPage == 1 ? "\\n" : "\\r");
+            lineOnPage = lineOnPage == 1 ? 2 : 1;
+            lineLength = 0;
+        }
+        if (lineLength != 0) {
+            AppendText(offer, offerSize, " ");
+            lineLength++;
+        }
+        AppendText(offer, offerSize, word);
+        lineLength += wordLength;
+        word = strtok(NULL, " ");
+    }
+    AppendText(offer, offerSize, "\\rDo you want to battle?");
+}
+
+static void BuildTrainerTeamText(const TrainerData *entry, const char *speciesNameDir, char *team, size_t teamSize) {
+    int partyCount = GetTrainerPartyMonCount(entry);
+    int i;
+
+    team[0] = '\0';
+    for (i = 0; i < partyCount; i++) {
+        char speciesName[RAWTEXT_PATH_LENGTH];
+
+        ReadIndexedTextFile(speciesNameDir, entry->party[i].species, speciesName, sizeof(speciesName));
+        if (i > 0) {
+            AppendText(team, teamSize, i == partyCount - 1 ? (partyCount == 2 ? " and " : ", and ") : ", ");
+        }
+        AppendText(team, teamSize, speciesName);
+    }
+}
+
+static void BuildTrainerOfferText(const TrainerData *entry, const TrainerReward *reward, const char *speciesNameDir,
+                                  const char *itemTextDir, char *offer, size_t offerSize) {
+    char team[TRAINER_OFFER_TEXT_LENGTH / 2];
+    char sentence[TRAINER_OFFER_TEXT_LENGTH];
+    int sentenceLength;
+
+    BuildTrainerTeamText(entry, speciesNameDir, team, sizeof(team));
+    if (reward->item == ITEM_NONE) {
+        sentenceLength = snprintf(sentence, sizeof(sentence), "Can you beat my team of %s?", team);
+    } else {
+        enum ItemGeneration generation = ITEM_GENERATION(reward->item);
+        int archiveId;
+        char itemName[RAWTEXT_PATH_LENGTH];
+
+        if (generation == CUSTOM) {
+            archiveId = reward->quantity == 1 ? MSG_DATA_ITEM_NAME_ARTICLE_CUSTOM : MSG_DATA_ITEM_NAME_PLURAL_CUSTOM;
+        } else {
+            int base = reward->quantity == 1 ? MSG_DATA_ITEM_NAME_ARTICLE_GEN4 : MSG_DATA_ITEM_NAME_PLURAL_GEN4;
+            archiveId = MSG_DATA_ITEM_FILE(base, generation);
+        }
+        ReadTextArchiveLine(itemTextDir, archiveId, ITEM_MSG_OFFSET(reward->item), itemName, sizeof(itemName));
+        StripTextControls(itemName);
+        sentenceLength =
+            snprintf(sentence, sizeof(sentence), "I’ll give you %s if you can beat my team of %s.", itemName, team);
+    }
+    if (sentenceLength < 0 || (size_t)sentenceLength >= sizeof(sentence)) {
+        fprintf(stderr, "Generated trainer offer sentence was truncated\n");
+        exit(EXIT_FAILURE);
+    }
+    WrapTrainerOffer(sentence, offer, offerSize);
+}
+
+static void WriteTrainerRewardScript(const char *path, const TrainerReward *rewards) {
+    FILE *file = OpenTextForWrite(path);
+    u32 trainerId;
+
+    fputs("// Generated from data/trainer_rewards.csv. Do not edit.\n", file);
+    fputs("_hg_load_trainer_reward:\n", file);
+    fputs("\tsetvar VAR_SPECIAL_x8005, 0\n", file);
+    for (trainerId = 0; trainerId < sTrainerDataCount; trainerId++) {
+        if (rewards[trainerId].item != ITEM_NONE) {
+            fprintf(file, "\tcompare VAR_SPECIAL_x8004, %u\n", trainerId);
+            fprintf(file, "\tgoto_if_eq _hg_trainer_reward_%u\n", trainerId);
+        }
+    }
+    fputs("\treturn\n", file);
+    for (trainerId = 0; trainerId < sTrainerDataCount; trainerId++) {
+        if (rewards[trainerId].item != ITEM_NONE) {
+            fprintf(file, "_hg_trainer_reward_%u:\n", trainerId);
+            fprintf(file, "\tsetvar VAR_SPECIAL_x8004, %u\n", rewards[trainerId].item);
+            fprintf(file, "\tsetvar VAR_SPECIAL_x8005, %u\n", rewards[trainerId].quantity);
+            fputs("\treturn\n", file);
+        }
+    }
+    fclose(file);
 }
 
 static void WriteTrainerNameTextFile(const char *dir, int index, const char *name) {
@@ -352,7 +702,8 @@ static void WriteTrainerPartyMember(const char *dir, int index, const TrainerDat
     fclose(file);
 }
 
-static void WriteTrainerTextData(const char *mapDir, const char *offsetDir, const char *rawTextDir) {
+static void WriteTrainerTextData(const char *mapDir, const char *offsetDir, const char *rawTextDir,
+                                 const char *speciesNameDir, const char *itemTextDir, const TrainerReward *rewards) {
     char mapPath[TRAINER_TEXT_OFFSET_MEMBER_PATH_LENGTH];
     char offsetPath[TRAINER_TEXT_OFFSET_MEMBER_PATH_LENGTH];
     FILE *mapFile;
@@ -410,6 +761,23 @@ static void WriteTrainerTextData(const char *mapDir, const char *offsetDir, cons
             WriteTextFile(rawTextDir, textFileIndex++, entry->text[j].text);
             offset = (uint16_t)(offset + TRAINER_TEXT_ENTRY_SIZE);
         }
+        if (HasTrainerIntroText(entry)) {
+            uint8_t data[TRAINER_TEXT_ENTRY_SIZE];
+            char offer[TRAINER_OFFER_TEXT_LENGTH];
+
+            BuildTrainerOfferText(entry, &rewards[trainerId], speciesNameDir, itemTextDir, offer, sizeof(offer));
+            WriteLe16(&data[0], trainerId);
+            WriteLe16(&data[2], TRMSG_BATTLE_OFFER);
+            if (fwrite(data, sizeof(data), 1, mapFile) != 1) {
+                perror(mapPath);
+                fclose(mapFile);
+                fclose(offsetFile);
+                free(offsets);
+                exit(EXIT_FAILURE);
+            }
+            WriteTextFile(rawTextDir, textFileIndex++, offer);
+            offset = (uint16_t)(offset + TRAINER_TEXT_ENTRY_SIZE);
+        }
     }
 
     for (i = 0; i < trainerTextOffsetCount; i++) {
@@ -436,12 +804,20 @@ int main(int argc, char **argv) {
     const char *trainerTextMapDir;
     const char *trainerTextOffsetDir;
     const char *rawTextRoot;
+    const char *rewardDataPath;
+    const char *speciesNameDir;
+    const char *itemTextDir;
+    const char *rewardScriptPath;
+    TrainerReward *rewards;
     char trainerNamesDir[RAWTEXT_PATH_LENGTH];
     char trainerTextDir[RAWTEXT_PATH_LENGTH];
     int i;
 
-    if (argc != 6) {
-        fprintf(stderr, "Usage: %s <a055-dir> <a056-dir> <a057-dir> <a131-dir> <rawtext-root>\n", argv[0]);
+    if (argc != 10) {
+        fprintf(stderr,
+                "Usage: %s <a055-dir> <a056-dir> <a057-dir> <a131-dir> <rawtext-root> <rewards.csv> "
+                "<species-names-dir> <item-text-dir> <reward-script>\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
 
@@ -450,6 +826,11 @@ int main(int argc, char **argv) {
     trainerTextMapDir = argv[3];
     trainerTextOffsetDir = argv[4];
     rawTextRoot = argv[5];
+    rewardDataPath = argv[6];
+    speciesNameDir = argv[7];
+    itemTextDir = argv[8];
+    rewardScriptPath = argv[9];
+    rewards = LoadTrainerRewards(rewardDataPath);
 
     snprintf(trainerNamesDir, sizeof(trainerNamesDir), "%s/729", rawTextRoot);
     snprintf(trainerTextDir, sizeof(trainerTextDir), "%s/728", rawTextRoot);
@@ -460,6 +841,17 @@ int main(int argc, char **argv) {
         WriteTrainerNameTextFile(trainerNamesDir, i, sTrainerData[i].name);
     }
 
-    WriteTrainerTextData(trainerTextMapDir, trainerTextOffsetDir, trainerTextDir);
+    for (i = 0; i < (int)sTrainerDataCount; i++) {
+        if (rewards[i].item != ITEM_NONE &&
+            (!HasTrainerIntroText(&sTrainerData[i]) || GetTrainerPartyMonCount(&sTrainerData[i]) == 0)) {
+            fprintf(stderr, "Trainer reward %d does not target a trainer with an introductory message and party\n", i);
+            free(rewards);
+            return EXIT_FAILURE;
+        }
+    }
+
+    WriteTrainerTextData(trainerTextMapDir, trainerTextOffsetDir, trainerTextDir, speciesNameDir, itemTextDir, rewards);
+    WriteTrainerRewardScript(rewardScriptPath, rewards);
+    free(rewards);
     return EXIT_SUCCESS;
 }

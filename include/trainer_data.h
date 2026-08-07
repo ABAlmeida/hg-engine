@@ -86,6 +86,7 @@ typedef uint32_t u32;
 #define TRMSG_DBL_LOSE_2                8
 #define TRMSG_DBL_AFTER_2               9
 #define TRMSG_DBL_1POKE_2               10
+#define TRMSG_BATTLE_OFFER              11
 #define TRMSG_HIT_POKE_FIRST_TIME       13
 #define TRMSG_CURRENT_POKE_HALF         14
 #define TRMSG_LAST_POKE                 15

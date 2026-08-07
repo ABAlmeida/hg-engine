@@ -229,6 +229,14 @@ TRAINERDATA_TARGET := $(FILESYS)/a/0/5/5
 TRAINERDATA_TARGET_2 := $(FILESYS)/a/0/5/6
 TRAINERDATA_DEPENDENCIES := $(BUILD)/trainers/.generated
 TRAINERDATA_TRAINER_NAMES_DIR := $(BUILD)/rawtext/729
+TRAINER_REWARDS_SOURCE := data/trainer_rewards.csv
+TRAINER_REWARD_SCRIPT := $(BUILD)/trainer_rewards.s
+TRAINER_REWARD_ITEM_TEXTS := data/text/223.txt data/text/224.txt data/text/831.txt data/text/832.txt \
+	data/text/835.txt data/text/836.txt data/text/839.txt data/text/840.txt data/text/843.txt data/text/844.txt \
+	data/text/847.txt data/text/848.txt data/text/851.txt data/text/852.txt
+TRAINERDATA_SOURCE_DEPENDENCIES := data/Trainers.c $(TRAINER_REWARDS_SOURCE) $(TRAINER_REWARD_ITEM_TEXTS) \
+	include/trainer_data.h include/constants/file.h include/constants/item.h include/constants/trainerclass.h \
+	include/constants/pokemon.h
 
 $(TRAINERDATA_NARC): $(TRAINERDATA_DEPENDENCIES)
 	$(NARCHIVE) create $@ $(TRAINERDATA_DIR) -nf
@@ -255,14 +263,13 @@ NARC_FILES += $(TRAINERTEXT_NARC)
 REQUIRED_DIRECTORIES += $(TRAINERTEXT_DIR) $(TRAINERTEXT_DIR_2) $(BUILD)/rawtext/728
 MSGDATA_COMPILETIME_DEPENDENCIES += $(BUILD)/rawtext/728.txt
 
-$(BUILD)/trainers/.generated: data/Trainers.c include/trainer_data.h include/constants/trainerclass.h include/constants/pokemon.h $(TRAINERDATAGEN)
+$(BUILD)/trainers/.generated $(TRAINER_REWARD_SCRIPT) &: $(TRAINERDATA_SOURCE_DEPENDENCIES) $(TRAINERDATAGEN) $(MONDATA_NARC)
 	mkdir -p $(BUILD)/trainers
 	mkdir -p $(BUILD_NARC)
 	rm -rf $(TRAINERDATA_DIR) $(TRAINERDATA_DIR_2) $(TRAINERTEXT_DIR) $(TRAINERTEXT_DIR_2) $(BUILD)/rawtext/728 $(BUILD)/rawtext/729
 	mkdir -p $(TRAINERDATA_DIR) $(TRAINERDATA_DIR_2) $(TRAINERTEXT_DIR) $(TRAINERTEXT_DIR_2) $(BUILD)/rawtext/728 $(BUILD)/rawtext/729
-	$(TRAINERDATAGEN) $(TRAINERDATA_DIR) $(TRAINERDATA_DIR_2) $(TRAINERTEXT_DIR) $(TRAINERTEXT_DIR_2) $(BUILD)/rawtext
+	$(TRAINERDATAGEN) $(TRAINERDATA_DIR) $(TRAINERDATA_DIR_2) $(TRAINERTEXT_DIR) $(TRAINERTEXT_DIR_2) $(BUILD)/rawtext $(TRAINER_REWARDS_SOURCE) $(BUILD)/rawtext/237 data/text $(TRAINER_REWARD_SCRIPT)
 	touch $@
-
 #FOOTPRINTS_DIR := $(BUILD)/a069
 FOOTPRINTS_NARC := $(BUILD_NARC)/a069.narc
 FOOTPRINTS_TARGET := $(FILESYS)/a/0/6/9
@@ -673,7 +680,7 @@ SCR_SEQ_PRISTINE := $(BUILD)/pristine/2
 SCR_SEQ_EXTRACTOR := tools/extract_rom_file.py
 SCR_SEQ_DEPENDENCIES_DIR := armips/scr_seq
 SCR_SEQ_PATCHES := $(wildcard $(SCR_SEQ_DEPENDENCIES_DIR)/*.s)
-SCR_SEQ_DEPENDENCIES := $(SCR_SEQ_PATCHES) armips/include/config.s $(ARMIPS_CONFIG) asm/include/items.inc
+SCR_SEQ_DEPENDENCIES := $(SCR_SEQ_PATCHES) armips/include/config.s $(ARMIPS_CONFIG) asm/include/items.inc $(TRAINER_REWARD_SCRIPT)
 
 $(SCR_SEQ_PRISTINE): $(ROMNAME) $(SCR_SEQ_EXTRACTOR) $(VENV_ACTIVATE)
 	$(PYTHON) $(SCR_SEQ_EXTRACTOR) $(ROMNAME) a/0/1/2 $@
@@ -694,7 +701,7 @@ $(SCR_SEQ_NARC): $(SCR_SEQ_DEPENDENCIES) $(SCR_SEQ_PRISTINE)
 # pristine ROM archive above, so configuration changes remain reversible. The
 # generated directory is also cleared here to preserve member ordering.
 .PHONY: rebuild_scripts
-rebuild_scripts: $(BASE_EXTRACTION_STAMP)
+rebuild_scripts: $(BASE_EXTRACTION_STAMP) $(TRAINER_REWARD_SCRIPT)
 	rm -rf $(SCR_SEQ_DIR)
 	$(NARCHIVE) extract $(SCR_SEQ_TARGET) -o $(SCR_SEQ_DIR) -nf
 	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file; done

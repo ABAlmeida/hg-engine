@@ -273,7 +273,7 @@ $(SPECIESDATAGEN): $(wildcard tools/source/speciesdatagen/*.c) data/Species.c in
 
 TOOLS += $(SPECIESDATAGEN)
 
-$(TRAINERDATAGEN): $(wildcard tools/source/trainerdatagen/*.c) data/Trainers.c include/trainer_data.h include/constants/trainerclass.h include/constants/pokemon.h
+$(TRAINERDATAGEN): $(wildcard tools/source/trainerdatagen/*.c) data/Trainers.c include/trainer_data.h include/constants/file.h include/constants/item.h include/constants/trainerclass.h include/constants/pokemon.h
 	cd tools/source/trainerdatagen ; $(MAKE)
 
 TOOLS += $(TRAINERDATAGEN)

@@ -6,6 +6,8 @@
 .include "armips/include/soundeffects.s"
 .include "armips/include/vars.s"
 
+TRMSG_BATTLE_OFFER equ 11
+
 .create "build/a012/2_953", 0
 
 /* Trainer   0 */ scrdef scr_seq_0953_normalTrainer
@@ -779,11 +781,34 @@ scr_seq_0953_normalTrainer:
 	end
 
 _0C13:
-	encounter_music VAR_SPECIAL_x8004
 	openmsg
 	get_trainer_msg_params VAR_SPECIAL_x8000, VAR_SPECIAL_x8001, VAR_SPECIAL_x8002
 	trainer_message VAR_SPECIAL_x8004, VAR_SPECIAL_x8000
+	trainer_message VAR_SPECIAL_x8004, TRMSG_BATTLE_OFFER
+	yesno VAR_SPECIAL_RESULT
+	compare VAR_SPECIAL_RESULT, 1
+	goto_if_eq _HG_DECLINE_BATTLE
+	copyvar VAR_TEMP_x4012, VAR_SPECIAL_x8004
+	call _hg_load_trainer_reward
+	compare VAR_SPECIAL_x8005, 0
+	goto_if_eq _HG_REWARD_SPACE_OK
+	hasspaceforitem VAR_SPECIAL_x8004, VAR_SPECIAL_x8005, VAR_SPECIAL_RESULT
+	compare VAR_SPECIAL_RESULT, 0
+	goto_if_ne _HG_REWARD_SPACE_OK
+	callstd std_bag_is_full
+	closemsg
+	releaseall
+	end
+
+_HG_REWARD_SPACE_OK:
+	copyvar VAR_SPECIAL_x8004, VAR_TEMP_x4012
+	encounter_music VAR_SPECIAL_x8004
 	goto _0C2F
+	end
+
+_HG_DECLINE_BATTLE:
+	closemsg
+	releaseall
 	end
 
 _0C2F:
@@ -794,6 +819,10 @@ _0C2F:
 	compare VAR_SPECIAL_RESULT, 0
 	goto_if_eq _0D99
 	copyvar VAR_TEMP_x4012, VAR_SPECIAL_x8004
+	call _hg_load_trainer_reward
+	compare VAR_SPECIAL_x8005, 0
+	call_if_ne _HG_AWARD_TRAINER_REWARD
+	copyvar VAR_SPECIAL_x8004, VAR_TEMP_x4012
 	get_trainer_num VAR_SPECIAL_x8006
 	goto_if_defeated VAR_SPECIAL_x8006, _0C7F
 	scrcmd_317 1
@@ -882,6 +911,10 @@ _0D99:
 	white_out
 	releaseall
 	end
+
+_HG_AWARD_TRAINER_REWARD:
+	callstd std_obtain_item_verbose
+	return
 
 _0D9F:
 	compare VAR_TEMP_x4010, 255
@@ -1132,6 +1165,8 @@ _1176:
 	white_out
 	releaseall
 	end
+
+.include "build/trainer_rewards.s"
 
 .align 4
 .close

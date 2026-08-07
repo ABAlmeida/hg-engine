@@ -1,0 +1,13 @@
+trainer_id,item_id,quantity
+# Rewards are optional. Use numeric constants from include/constants/item.h.
+# A trainer omitted from this table still receives a team preview and battle
+# prompt, but its offer does not mention or award an item.
+
+# Route 30 - Youngster Joey
+8,155,1
+# Route 30 - Youngster Mikey
+47,155,1
+# Route 30 - Bug Catcher Don
+249,155,1
+# Route 31 - Bug Catcher Wade
+4,155,1

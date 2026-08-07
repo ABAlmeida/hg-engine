@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-08-04
+Last updated: 2026-08-07
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -80,11 +80,12 @@ complete.
 | Bug-Catching Contest availability | Pending after capture rules | Remove the weekday restriction so the Contest can be entered every day. Preserve other entry requirements and the existing daily participation limit unless changed separately. |
 | Generation 5-6 species engine/data foundation | Complete; supplied by hg-engine | The repository contains the expanded species IDs, personal data, evolutions, learnsets, experience data, battle and follower graphics, icons, cries, forms, and expanded Pokédex tables. This records the upstream foundation as complete for project planning; it is not a claim that every species and form has received focused in-game verification. |
 | Generation 5+ Pokémon content integration | Deferred | Select and place the expanded roster in encounters, trainers, gifts, and other acquisition sources, then balance it against progression. The current encounter and trainer content does not make the compiled species available automatically. |
-| Talk-initiated trainer battles | Planned | Disable automatic sight detection before it starts trainer movement or scripts, while preserving the existing talk interaction, defeated dialogue, rematches, and paired/double-trainer behavior. |
-| Trainer victory rewards | Planned | Give each configured enemy trainer ID its item and quantity once, after the first victory only. Keep the authoritative trainer-to-reward mapping in generated ROM data, with rematches configurable as no reward, and persist claimed rewards independently from resettable trainer flags. Audit ordinary, sight-capable, double, rival, Gym, Elite Four, rematch, and other scripted trainer paths. |
+| Talk-initiated trainer battles | Implemented; build and manual verification pending | `DISABLE_TRAINER_LINE_OF_SIGHT` prevents automatic trainer detection before it takes field control. The shared undefeated talk path displays a generated species/reward offer and asks whether to battle. Custom map scripts, automatic battles, defeated dialogue, and rematches remain unchanged. |
+| Trainer victory rewards | Shared-trainer infrastructure implemented; content and manual verification pending | `data/trainer_rewards.csv` configures one first-victory item and quantity per shared talk trainer. The existing defeated path prevents the initial reward from repeating; current rematches and custom or automatic battle scripts do not use this table. Reward mappings will be added during trainer-content work. |
 | In-battle player item restriction | Implemented; build and manual verification pending | `DISABLE_ITEMS_IN_TRAINER_BATTLE` rejects active player item selections in trainer battles and returns to command selection. Wild-battle Bag behavior and held items remain unchanged; revisit stricter UI or pocket filtering only if playtesting requires it. |
 | Battle Item acquisition removal | Planned | Remove or replace marts, visible and hidden pickups, gifts, prizes, and other sources of every Battle Items-pocket item. Keep the item IDs and records intact, and audit existing saves only for harmless unusable leftovers. |
 | Trainer and wild content rebalance | In progress | Early-area land and water tables are being rebuilt around the finalized cap curve. Redesigned tables default to fixed morning/day/night content, and radio, swarm, and night-fishing replacements must not introduce species outside the reviewed area list unless explicitly planned otherwise. |
+| Fishing encounter rates | Planned | Revisit the bite rates for each rod. Cherrygrove and the other currently redesigned water tables use 25% for the Old Rod, 50% for the Good Rod, and 75% for the Super Rod. Decide whether the new rates should be standardized across areas or configured per area before changing them. |
 | Trainer AI changes | Pending | First enable the strongest suitable existing trainer AI, then add a trainer-only fair-information decision layer, switching and item evaluation, doubles coordination, and bounded search. Wild and scripted AI must retain their original routes. |
 | Graphics and presentation | Pending | Replace the temporary Bait icons, redesign rival battle/overworld graphics, add challenge messages, and consider title-screen changes after core systems stabilize. |
 | Full-game regression pass | Pending | Perform milestone, save/reload, encounter, progression, and hardware/emulator checks after the remaining systems and content are integrated. |
@@ -152,63 +153,41 @@ Pokémon-driven field-move presentation is retained.
 
 ## Trainer interaction and victory rewards
 
-- The reward source will be a readable data file such as
-  `data/trainer_rewards.csv`, with symbolic trainer ID, item ID, and quantity
-  columns. `ITEM_NONE` with quantity zero explicitly configures a trainer ID
-  to give no reward. A build-time validator will reject unknown IDs, duplicate
-  trainer rows, and invalid item/quantity combinations.
-- The build will convert that file into a fixed-format member of
-  `ARC_CODE_ADDONS`. Runtime code will read the record for a trainer ID
-  directly; the full mapping will not occupy the fixed injected-code region.
-- Each distinct nonzero enemy trainer ID in a won battle is considered once,
-  and only if its configured reward has never been claimed. A two-trainer
-  battle can therefore award two configured first-victory rewards, while a
-  single trainer using two battler slots cannot award twice.
-- Rematch trainer IDs will be configured as no reward. Repeating a battle with
-  an already rewarded trainer ID also gives nothing, even if the underlying
-  trainer-defeated flag is later cleared or reused.
-- A save-backed claimed-reward bit indexed by trainer ID will enforce the
-  one-time rule independently from trainer flags. At the current 740 trainer
-  IDs this requires approximately 93 bytes--rounded to about 96 bytes when
-  stored as aligned words--in expanded save data. The bit is set only after
-  the item has actually been added to the Bag.
-- Reward presentation must run from a verified post-victory field-script
-  context and use the standard item-obtained and Bag-full flows. The detailed
-  implementation plan must decide how an unclaimed Bag-full reward is retained
-  rather than silently lost.
-- The trainer-script audit must cover the shared ordinary and sight-triggered
-  paths as well as story and map scripts that launch trainer battles directly.
-- Optional trainer IDs will be identified explicitly rather than inferred from
-  map position or line-of-sight behavior. Mandatory story, rival, Gym, Elite
-  Four, and other progression battles can retain an immediate battle start
-  after their dialogue.
-- Talking to an undefeated optional trainer will first preserve that trainer's
-  normal introductory dialogue, then show a generated preview of their current
-  party species and configured first-victory reward and ask whether the player
-  wants to battle. Selecting Yes continues into the existing trainer-battle
-  flow. Selecting No closes the interaction and returns field control without
-  changing trainer flags, reward state, or rematch state.
-- Preview data must be generated at build time from the authoritative trainer
-  party data and `data/trainer_rewards.csv`; team species and reward names must
-  not be copied into a second manually maintained dialogue table. Keep the
-  generated preview in ROM data or message/script archives rather than a large
-  linked C table. Use shared messages for the supported party sizes.
-- Paired optional trainers must present both participating teams and both
-  configured rewards in one offer. Trainers configured with no reward must say
-  so rather than promising an item. Defeated trainers skip the offer and retain
-  their normal defeated dialogue; rematches retain their existing acceptance
-  flow and do not advertise a first-victory reward.
+- `data/trainer_rewards.csv` is the readable source for one optional item and
+  quantity per trainer ID. Omitted trainers have no reward. The host-side
+  trainer generator rejects unknown or duplicate trainer IDs, mismatched zero
+  item/quantity pairs, invalid item IDs, and invalid quantities.
+- The generator reads the trainer's authoritative party and existing species
+  and item names, then adds a dedicated offer message to the trainer-text
+  archive. Teams and reward names are therefore not copied into manually
+  maintained dialogue or linked C tables.
+- Every undefeated trainer entering the shared normal-trainer talk script shows
+  its existing introduction followed by the generated offer and standard
+  Yes/No menu. Selecting No closes the interaction without changing trainer,
+  reward, phone, or rematch state. Talking again repeats the offer.
+- A configured reward is checked for Bag space before the battle. A full Bag
+  displays the standard response and leaves the trainer undefeated. Winning
+  awards the item before the existing trainer flag is set, so the first battle
+  cannot be repeated for another reward during normal play.
+- Existing defeated and rematch branches are unchanged and award nothing.
+  Automatic fights and battles owned by custom map scripts are intentionally
+  outside this first implementation. They can be audited later if their
+  individual control flow warrants the same offer.
+- The feature adds trainer script and message-archive data but no linked ARM
+  code, save fields, heap allocations, graphics, or VRAM use.
 
 ## Trainer line of sight
 
 Automatic trainer detection must be stopped before it takes control of the
 field, moves a trainer toward the player, or starts the sight-triggered trainer
 script. Merely ending that script after detection is not sufficient because it
-would still interrupt the player. Talking to an undefeated mandatory trainer
-must retain the normal pre-battle dialogue and battle flow. Talking to an
-undefeated optional trainer uses the preview and Yes/No offer described above.
+would still interrupt the player. Talking to an undefeated trainer through the
+shared normal-trainer script uses the preview and Yes/No offer described above.
 Talking after victory must retain the normal defeated dialogue and rematch
-behavior.
+behavior. A trainer whose own data defines a double battle remains a double
+battle. Two otherwise independent trainers are not combined merely because
+their former sight lines overlap; the player talks to and battles each one
+separately.
 
 ## In-battle items and Battle Item availability
 

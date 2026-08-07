@@ -22,11 +22,15 @@ def main() -> None:
     bait_enabled = int(is_defined(config, "IMPLEMENT_BAIT_ENCOUNTERS"))
     reusable_healer_enabled = int(is_defined(config, "IMPLEMENT_REUSABLE_HEALER"))
     revised_opening_enabled = int(is_defined(config, "IMPLEMENT_REVISED_OPENING"))
+    trainer_line_of_sight_disabled = int(
+        is_defined(config, "DISABLE_TRAINER_LINE_OF_SIGHT")
+    )
     generated = (
         "// Generated from include/config.h. Do not edit.\n"
         f"IMPLEMENT_BAIT_ENCOUNTERS equ {bait_enabled}\n"
         f"IMPLEMENT_REUSABLE_HEALER equ {reusable_healer_enabled}\n"
         f"IMPLEMENT_REVISED_OPENING equ {revised_opening_enabled}\n"
+        f"DISABLE_TRAINER_LINE_OF_SIGHT equ {trainer_line_of_sight_disabled}\n"
     )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)

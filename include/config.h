@@ -218,6 +218,11 @@
 // DISABLE_ITEMS_IN_TRAINER_BATTLE rejects player Bag item selections in trainer battles.
 #define DISABLE_ITEMS_IN_TRAINER_BATTLE
 
+// DISABLE_TRAINER_LINE_OF_SIGHT prevents field trainers from automatically
+// approaching the player. The shared first-time talk script previews their
+// team and configured reward before asking whether to battle.
+#define DISABLE_TRAINER_LINE_OF_SIGHT
+
 // REUSABLE_TMS will make TMs infinite and hide the quantity number.
 // #define REUSABLE_TMS
 
