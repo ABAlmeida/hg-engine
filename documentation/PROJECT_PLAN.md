@@ -58,8 +58,10 @@ complete.
   directly toward Violet City. See `OPENING_SEQUENCE_PLAN.md`.
 - Replace Violet City's Bellsprout-for-Onix NPC trade with a one-time choice
   between Dark, Steel, and Ice Eggs: Sandile, Tinkatink, or Swinub. Implement
-  the atomic party-space check, Egg gift, and completion flag as a reusable
-  common-script helper while keeping each NPC's menu and dialogue map-local.
+  the atomic party-space check, Egg gift, IV/ability configuration, and
+  completion flag as a reusable common-script helper while keeping each NPC's
+  menu and dialogue map-local. Each Egg has 25 in all six IVs; Sandile has
+  Moxie, Tinkatink has Mold Breaker, and Swinub has Thick Fat.
 
 ## Status
 
@@ -87,7 +89,7 @@ complete.
 | Bug-Catching Contest availability | Pending after capture rules | Remove the weekday restriction so the Contest can be entered every day. Preserve other entry requirements and the existing daily participation limit unless changed separately. |
 | Generation 5-6 species engine/data foundation | Complete; supplied by hg-engine | The repository contains the expanded species IDs, personal data, evolutions, learnsets, experience data, battle and follower graphics, icons, cries, forms, and expanded Pokédex tables. This records the upstream foundation as complete for project planning; it is not a claim that every species and form has received focused in-game verification. |
 | Generation 5+ Pokémon content integration | Deferred | Select and place the expanded roster in encounters, trainers, gifts, and other acquisition sources, then balance it against progression. The current encounter and trainer content does not make the compiled species available automatically. |
-| Reusable configured Egg gifts | Planned | Replace Violet City's existing trade with Dark/Sandile, Steel/Tinkatink, and Ice/Swinub choices. A shared script helper will accept species, met-location, and completion-flag variables, refuse a full party without consuming the gift, and set the flag only after successfully giving the Egg. |
+| Reusable configured Egg gifts | Implemented; build and manual verification pending | Violet City's existing trade now offers Dark/Sandile, Steel/Tinkatink, and Ice/Swinub Eggs with 25 in every IV and Moxie, Mold Breaker, or Thick Fat respectively. Standard script 2075 accepts species, met-location, completion-flag, and packed IV/ability variables, refuses a full party without consuming the gift, and sets the flag only after successfully configuring the Egg. |
 | Talk-initiated trainer battles | Implemented; build and manual verification pending | `DISABLE_TRAINER_LINE_OF_SIGHT` prevents automatic trainer detection before it takes field control. The shared undefeated talk path displays a generated species/reward offer and asks whether to battle. Custom map scripts, automatic battles, defeated dialogue, and rematches remain unchanged. |
 | Trainer victory rewards | Shared-trainer infrastructure implemented; content and manual verification pending | `data/trainer_rewards.csv` configures one first-victory item and quantity per shared talk trainer. The existing defeated path prevents the initial reward from repeating; current rematches and custom or automatic battle scripts do not use this table. Reward mappings will be added during trainer-content work. |
 | Summary friendship value | Implemented; build and manual verification pending | The Skills page displays the exact `0-255` friendship value for party and boxed Pokémon without adding save state or another Summary hook. Eggs retain the normal heading because the same field stores hatch cycles. |

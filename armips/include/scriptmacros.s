@@ -209,6 +209,7 @@ std_fade_heal_fade              equ 2069
 std_play_rival_outro_music      equ 2070
 std_fade_end_rival_outro_music  equ 2071
 std_permanent_death_notification equ 2074
+std_configured_egg_gift          equ 2075
 
 // Creates a new script context to run the indicated script and wait
 .macro callstd,id
@@ -6756,6 +6757,7 @@ FORM_ROCKET_DISGUISE                    equ 1024
 .equ NEW_COMMAND_PERMANENT_DEATH_RECOVERED_SLOT, 2
 .equ NEW_COMMAND_PERMANENT_DEATH_SHOULD_END, 3
 .equ NEW_COMMAND_PERMANENT_DEATH_FINISH, 4
+.equ NEW_COMMAND_CONFIGURE_GIFT_EGG, 5
 
 .macro RunNewCommand,slot,unk
 DummyTextTrap slot, unk
@@ -6779,6 +6781,16 @@ RunNewCommand NEW_COMMAND_PERMANENT_DEATH_SHOULD_END, var
 
 .macro FinishPermanentDeathNotification,endRun
 RunNewCommand NEW_COMMAND_PERMANENT_DEATH_FINISH, endRun
+.endmacro
+
+// Pack a 5-bit IV and 9-bit ability into a script variable for the configured
+// Egg helper. All six IVs receive the same value.
+.macro SetGiftEggConfig,var,iv,ability
+setvar var, ((ability << 5) | iv)
+.endmacro
+
+.macro ConfigureGiftEgg,var
+RunNewCommand NEW_COMMAND_CONFIGURE_GIFT_EGG, var
 .endmacro
 
 // Dummy

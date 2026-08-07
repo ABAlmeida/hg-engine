@@ -45,7 +45,7 @@ feature total.
 | Reusable Healing Kit | `reusable_healer.o` | 316 | Healing: 104; field task: 132; menu/field entrypoints: 72; alignment: remainder. Small and centralized. |
 | Stat-training items | `stat_training_items.o` | 540 | Effect lookup: 116; validation: 172; application: 212; handled-item check: 32; alignment: remainder. Shared vitamin handling avoids per-item functions. |
 | Summary stat/IV/EV viewer, nature colours, and friendship | `summary.o` | 1,144 | The final object is 46 bytes larger than the 1,098-byte pre-friendship object and 74 bytes smaller than the failed first implementation. It shares the Pokémon pointer and nature result and calculates nature effects instead of storing the former 150-byte table. |
-| General script commands | `script_new_cmds.o` | 136 | Dispatcher: 100; roamer command: 32; alignment: 4. Shared infrastructure rather than one feature. |
+| General script commands | `script_new_cmds.o` | Measurement pending | Previously 136 bytes. Configured Egg IV/ability handling now shares this dispatcher; measure its new object size and remaining overlay-129 headroom on the next explicitly requested build. |
 
 ## Injected features within shared objects
 
@@ -88,6 +88,7 @@ wholly to one Heartless Gold feature without a historical comparison.
 | Trainer victory rewards | Field scripts, text NARC, generated trainer data | No dedicated C object | Reward mappings and dialogue do not occupy the synthetic overlay. Existing shared script command infrastructure may still be used. |
 | Talk-initiated trainer battles | Field scripts and Armips patches | 0 synthetic-overlay bytes for script content | Direct binary patches consume/reuse bytes in their owning executable region; track their exact patched ranges separately if expanded. |
 | Revised opening sequence and gifts | Field scripts and text NARC | 0 | Dialogue and script commands increase archive size, not injected-code usage. |
+| Reusable configured Egg gifts | Field scripts, text NARC, and shared script-command code | Pending measurement | Standard script 2075 centralizes party-space checking, Egg creation, fixed-IV/ability configuration, and completion state. The menu and messages remain map-local; the compact runtime configurator consumes overlay-129 bytes that must be measured on the next requested build. |
 | Wild/trainer roster edits | Encounter/trainer NARCs | 0 | Data-only changes affect ROM archive size and runtime archive loads, not the fixed synthetic overlay. |
 | New item names/descriptions/icons | Item/message/graphics NARCs | 0 for the assets | Item behavior code is accounted for in `item.o`, `bait.o`, `reusable_healer.o`, and `stat_training_items.o`. Graphics also require heap/VRAM review when new assets are introduced. |
 | Configuration-only behavior | Existing code paths | Usually 0 incremental | Examples include fast text, National Dex configuration, and disabling trainer-battle item use when the implementation already exists upstream. Confirm with a link comparison if a conditional compiles additional code. |

@@ -1,0 +1,10 @@
+Pokémon hatched from Eggs can grow\ninto surprising forms.\rYou never know what might be\nwaiting inside.
+I look after three unusual\nPokémon Eggs.\rWhich type would you like?
+Dark
+Steel
+Ice
+Cancel
+Come back if you decide you want\none of these Eggs.
+Your party is full.\rMake room for the Egg, then come\nback and talk to me.
+{STRVAR_1 3, 0, 0} received an Egg!\rPlease take good care of the\nPokémon inside!
+How is the Pokémon from that Egg\ndoing?

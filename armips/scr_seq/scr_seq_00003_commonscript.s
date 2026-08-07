@@ -89,6 +89,7 @@ scrdef scr_seq_0003_071
 scrdef scr_seq_0003_072_repels
 scrdef scr_seq_0003_073_autobattle_testing
 scrdef scr_seq_0003_074_permanent_death_notification
+scrdef scr_seq_0003_075_configured_egg_gift
 scrdef_end
 
 scr_seq_0003_002:
@@ -1786,6 +1787,26 @@ _permanent_death_end_run:
     closemsg
     FinishPermanentDeathNotification 1
     releaseall
+    end
+
+// Reusable one-time Egg gift. The caller supplies species, gift-location
+// offset, completion flag, and packed IV/ability configuration in x8004-x8007.
+// RESULT is 1 only after the configured Egg has been added and its flag set; a
+// full party returns 0 without consuming the gift.
+scr_seq_0003_075_configured_egg_gift:
+    get_party_count VAR_SPECIAL_RESULT
+    compare VAR_SPECIAL_RESULT, 6
+    goto_if_ge _configured_egg_gift_party_full
+    give_egg VAR_SPECIAL_x8004, VAR_SPECIAL_x8005
+    ConfigureGiftEgg VAR_SPECIAL_x8007
+    setflagvar VAR_SPECIAL_x8006
+    setvar VAR_SPECIAL_RESULT, 1
+    endstd
+    end
+
+_configured_egg_gift_party_full:
+    setvar VAR_SPECIAL_RESULT, 0
+    endstd
     end
 
 
