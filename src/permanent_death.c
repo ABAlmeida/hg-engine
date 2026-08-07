@@ -2,12 +2,12 @@
 
 #include "../include/battle.h"
 #include "../include/config.h"
-#include "../include/constants/file.h"
 #include "../include/pokemon.h"
 #include "../include/pokemon_storage_system.h"
 #include "../include/save.h"
 #include "../include/script.h"
 #include "../include/task.h"
+#include "../include/constants/file.h"
 
 #ifdef IMPLEMENT_PERMANENT_DEATH
 
@@ -17,8 +17,8 @@
 
 enum {
     PERMANENT_DEATH_NO_PARTY_SLOT = 0xFF,
-    PERMANENT_DEATH_NOTIFICATION_SCRIPT = 2074,
     PERMANENT_DEATH_BLACKOUT_MESSAGE = 7,
+    PERMANENT_DEATH_NOTIFICATION_SCRIPT = 2074,
 };
 
 typedef struct BlackoutEnvironmentPrefix {
@@ -32,7 +32,9 @@ _Static_assert(
     offsetof(BlackoutEnvironmentPrefix, fieldSystem) == 4,
     "Blackout environment field-system offset changed");
 
-extern void LONG_CALL BattleSetup_CommitToSave(struct BattleSetup *setup, FieldSystem *fieldSystem);
+extern void LONG_CALL BattleSetup_CommitToSave(
+    struct BattleSetup *setup,
+    FieldSystem *fieldSystem);
 extern void LONG_CALL Blackout_PrintMessage(void *environment, s32 messageId, u8 x, u8 y);
 extern void LONG_CALL Blackout_StartDeathWarp(TaskManager *taskManager, const void *deathWarp);
 extern void LONG_CALL BeginNormalPaletteFade(
@@ -47,20 +49,11 @@ extern void LONG_CALL CallTask_RestoreOverworld(TaskManager *taskManager);
 extern BOOL LONG_CALL FieldSystem_IsMainApplicationRunning(FieldSystem *fieldSystem);
 extern BOOL LONG_CALL Task_WaitPaletteFade(TaskManager *taskManager);
 
+// These values cross battle, field, and script lifetimes and therefore remain
+// in overlay 129. Field-task ownership stays in the field extension itself.
 static u8 sNotificationPending;
 static u8 sPendingRecoveredPartySlot = PERMANENT_DEATH_NO_PARTY_SLOT;
 static SysTask *sNotificationDispatchTask;
-
-static void PermanentDeath_ClearPendingNotification(void)
-{
-    if (sNotificationDispatchTask != NULL) {
-        DestroySysTask(sNotificationDispatchTask);
-        sNotificationDispatchTask = NULL;
-    }
-
-    sNotificationPending = FALSE;
-    sPendingRecoveredPartySlot = PERMANENT_DEATH_NO_PARTY_SLOT;
-}
 
 static BOOL PermanentDeath_PartyHasUsablePokemon(struct Party *party)
 {
@@ -158,15 +151,39 @@ BOOL PermanentDeath_ShouldEndRun(SaveData *saveData)
         && !PermanentDeath_PartyHasUsablePokemon(SaveData_GetPlayerPartyPtr(saveData));
 }
 
-void PermanentDeath_FinishNotification(BOOL endRun)
+static void PermanentDeath_TaskWaitForFieldIdle(SysTask *task, void *data)
 {
-    PermanentDeath_ClearPendingNotification();
+    FieldSystem *fieldSystem = data;
 
-    if (endRun) {
-        // A system reset is safe from an active HGSS field command and avoids
-        // depending on the current script, task, and overlays to unwind.
-        OS_ResetSystem(0);
+    if (!PermanentDeath_HasPendingNotification()) {
+        sNotificationDispatchTask = NULL;
+        DestroySysTask(task);
+        return;
     }
+
+    // A trainer or scripted encounter still owns the field TaskManager after
+    // the battle fade. Wait until that script has finished setting flags and
+    // releasing the field before starting a new map-scene script.
+    if (fieldSystem->taskman != NULL
+        || !FieldSystem_IsMainApplicationRunning(fieldSystem)) {
+        return;
+    }
+
+    sNotificationDispatchTask = NULL;
+    DestroySysTask(task);
+    EventSet_Script(fieldSystem, PERMANENT_DEATH_NOTIFICATION_SCRIPT, NULL);
+}
+
+void PermanentDeath_ScheduleNotification(FieldSystem *fieldSystem)
+{
+    if (!PermanentDeath_HasPendingNotification()
+        || sNotificationDispatchTask != NULL) {
+        return;
+    }
+
+    sNotificationDispatchTask =
+        CreateSysTask(PermanentDeath_TaskWaitForFieldIdle, fieldSystem, 0);
+    GF_ASSERT(sNotificationDispatchTask != NULL);
 }
 
 void LONG_CALL PermanentDeath_BlackoutWarpOrSkip(
@@ -207,41 +224,6 @@ void LONG_CALL PermanentDeath_BlackoutRestoreOrEnd(TaskManager *taskManager)
     PermanentDeath_FinishNotification(TRUE);
 }
 
-static void PermanentDeath_TaskWaitForFieldIdle(SysTask *task, void *data)
-{
-    FieldSystem *fieldSystem = data;
-
-    if (!PermanentDeath_HasPendingNotification()) {
-        sNotificationDispatchTask = NULL;
-        DestroySysTask(task);
-        return;
-    }
-
-    // A trainer or scripted encounter still owns the field TaskManager after
-    // the battle fade. Wait until that script has finished setting flags and
-    // releasing the field before starting a new map-scene script.
-    if (fieldSystem->taskman != NULL
-        || !FieldSystem_IsMainApplicationRunning(fieldSystem)) {
-        return;
-    }
-
-    sNotificationDispatchTask = NULL;
-    DestroySysTask(task);
-    EventSet_Script(fieldSystem, PERMANENT_DEATH_NOTIFICATION_SCRIPT, NULL);
-}
-
-void PermanentDeath_ScheduleNotification(FieldSystem *fieldSystem)
-{
-    if (!PermanentDeath_HasPendingNotification()
-        || sNotificationDispatchTask != NULL) {
-        return;
-    }
-
-    sNotificationDispatchTask =
-        CreateSysTask(PermanentDeath_TaskWaitForFieldIdle, fieldSystem, 0);
-    GF_ASSERT(sNotificationDispatchTask != NULL);
-}
-
 static BOOL PermanentDeath_TaskScheduleNotificationAfterFade(TaskManager *taskManager)
 {
     if (taskManager->state == 0) {
@@ -258,8 +240,8 @@ void LONG_CALL PermanentDeath_CallTaskFadeFromBlack(TaskManager *taskManager)
 {
     FieldSystem *fieldSystem = taskManager->fieldSystem;
 
-    // Preserve the original wrapper's requirement that the field application
-    // has finished loading before its palette becomes visible.
+    // This ARM9 hook executes before overlay 131 is guaranteed to be loaded.
+    // Its entry point and deferred callback must therefore remain resident.
     if (!FieldSystem_IsMainApplicationRunning(fieldSystem)) {
         GF_ASSERT(0);
         return;
@@ -272,6 +254,18 @@ void LONG_CALL PermanentDeath_CallTaskFadeFromBlack(TaskManager *taskManager)
             ? PermanentDeath_TaskScheduleNotificationAfterFade
             : Task_WaitPaletteFade,
         NULL);
+}
+
+void PermanentDeath_FinishNotification(BOOL endRun)
+{
+    sNotificationPending = FALSE;
+    sPendingRecoveredPartySlot = PERMANENT_DEATH_NO_PARTY_SLOT;
+
+    if (endRun) {
+        // A system reset is safe from an active HGSS field command and avoids
+        // depending on the current script, task, and overlays to unwind.
+        OS_ResetSystem(0);
+    }
 }
 
 void LONG_CALL PermanentDeath_PostBattleCommitHook(

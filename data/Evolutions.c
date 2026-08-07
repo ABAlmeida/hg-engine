@@ -9466,7 +9466,7 @@ const EvolutionTable __data[MAX_SPECIES_INCLUDING_FORMS + 1] =
 
     [SPECIES_BISHARP] = {
         .entries = {
-            { EVO_FORM_ARGUMENT, 3, SPECIES_KINGAMBIT },
+            { EVO_LEVEL, 62, SPECIES_KINGAMBIT },
             { EVO_NONE, 0, SPECIES_NONE },
             { EVO_NONE, 0, SPECIES_NONE },
             { EVO_NONE, 0, SPECIES_NONE },

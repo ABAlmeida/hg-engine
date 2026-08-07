@@ -13,11 +13,18 @@ linked top-level `src/*.c` and `asm/*.s` objects all consume this same region.
 The last successful link before the Summary friendship work used 32,559 bytes
 and left 113 bytes free. The first friendship implementation increased
 `summary.o` by 120 bytes and therefore overflowed the region by 7 bytes. The
-implementation has since been refactored to calculate nature once per Summary
-refresh instead of once per displayed stat. The 150-byte nature-effect table
-was also replaced with the equivalent 5-by-5 nature calculation. Its final
-size and linker headroom must be recorded after the next user-requested
-successful build.
+refactored implementation calculates nature once per Summary refresh and
+replaces the 150-byte nature-effect table with the equivalent 5-by-5 nature
+calculation. Its final object is 1,144 bytes, 46 bytes larger than the
+pre-friendship object.
+
+Challenge capture and permanent-death code was subsequently split by runtime
+lifetime. The first 2026-08-07 build reduced overlay-129 allocation to 31,295
+bytes, but manual startup testing proved that moving direct ARM9 hook entries
+into overlay 131 was unsafe. Permanent-death handling is resident again, while
+capture code remains safely divided between its field, battle, and shared-state
+lifetimes. The corrected 2026-08-07 build uses 31,699 of 32,672 bytes, leaving
+973 bytes free and safely reclaiming 912 bytes from the 32,611-byte baseline.
 
 Object totals below are **gross current object sizes**, not always the
 incremental cost of a Heartless Gold feature. Files inherited from hg-engine or
@@ -32,13 +39,12 @@ feature total.
 | --- | --- | ---: | --- |
 | Level caps | `level_cap.o` | 188 | `SetNewLevelCap`: 48; victory-table application: 76; battle-finish hook: 60. The trainer/cap table is packaged data and does not consume this region. Already compact. |
 | Poké Bait and Shiny Bait | `bait.o` | 377 | Tile/use validation: 168; item-use task: 52; menu use: 116; mode queries: 32; state: 1 plus alignment. A shared encounter task avoids duplicated normal/shiny implementations. |
-| Challenge capture rules | `capture_rules.o` | 929 | Ordinary encounter generation: 372; special-battle initialization: 236; Bug Contest command: 188; duplicate/area helpers and state: 133. The ordinary encounter path is the principal optimization target. |
+| Challenge capture rules | `capture_rules.o` | 53 | Overlay 129 now retains only initialization and the one-byte permission that must survive the field-to-battle transition. The relocated field component is 632 bytes and the battle component is 324 bytes. This reclaimed 876 directly attributable overlay-129 bytes. |
 | HM use without teaching | `machine_field_actions.o` | 474 | Script lookup/use command: 248; usability check: 84; ownership check: 56; move table: 54; accessors: 28. Table-driven design is already maintainable; optimize only with measurements. |
-| Permanent death and wipe handling | `permanent_death.o` | 990 | Party retirement: 296; notification scheduling/field-idle tasks: 228; blackout handling: 160; pending-state helpers and commit hook: 162; state/alignment: remainder. Party retirement and asynchronous notification are the largest candidates. |
+| Permanent death and wipe handling | `permanent_death.o` | 957 | All state, party retirement/recovery, notification scheduling, deferred callbacks, and direct ARM9 hook entries remain resident. The independently linked field extension cannot safely supply unresolved or early-lifetime ARM9 targets. The rejected split's 554-byte root measurement is retained only in the historical snapshot below. |
 | Reusable Healing Kit | `reusable_healer.o` | 316 | Healing: 104; field task: 132; menu/field entrypoints: 72; alignment: remainder. Small and centralized. |
 | Stat-training items | `stat_training_items.o` | 540 | Effect lookup: 116; validation: 172; application: 212; handled-item check: 32; alignment: remainder. Shared vitamin handling avoids per-item functions. |
-| Summary stat/IV/EV viewer and nature colours | `summary.o` before friendship | 1,098 | Gross shared Summary object. Existing data refresh: 220; stat-screen state changes: 182; nature table: 150; nature stat calculation: 88; colour printing and page rendering make up the remainder. The repeated nature lookup and 150-byte table have now been replaced by one lookup per refresh and the equivalent 5-by-5 calculation; final savings are pending a build. |
-| Summary friendship display, first implementation | Increment to `summary.o` | 120 | Caused the 7-byte overflow. Replaced by a design that shares the already-required Pokémon pointer and nature result. Final incremental cost is pending the next build. |
+| Summary stat/IV/EV viewer, nature colours, and friendship | `summary.o` | 1,144 | The final object is 46 bytes larger than the 1,098-byte pre-friendship object and 74 bytes smaller than the failed first implementation. It shares the Pokémon pointer and nature result and calculates nature effects instead of storing the former 150-byte table. |
 | General script commands | `script_new_cmds.o` | 136 | Dispatcher: 100; roamer command: 32; alignment: 4. Shared infrastructure rather than one feature. |
 
 ## Injected features within shared objects
@@ -72,7 +78,7 @@ wholly to one Heartless Gold feature without a historical comparison.
 | `bag.o` | 1,980 | General Bag implementation, registration changes, machine labels, sorting, and field helpers. Attribute savings to individual changes only through commit-to-commit measurement. |
 | `other_hook.o` | 1,540 | Shared assembly trampolines for many unrelated systems. Most symbols lack reliable ELF size metadata, so audit hook ranges from source and linked disassembly before attributing bytes. |
 | `summary.o` with failed friendship version | 1,218 | Includes 1,068 bytes of code and 150 bytes of nature data. This is the artifact from the failed link, not an accepted budget baseline. |
-| `capture_rules.o` | 929 | Largest single clearly isolated Heartless Gold feature object after permanent death. |
+| `capture_rules.o` | 53 | Lifetime-critical capture state only. The field and battle components are tracked separately above and do not consume overlay 129. |
 
 ## Features stored outside the injected overlay
 
@@ -110,7 +116,7 @@ implementation rather than after the linker is full.
 | Level cap and capture tracking | Expanded save data | Stored in the expanded save structures. Record exact field and enclosing-structure deltas when those layouts next change. |
 | Bait encounter state | BSS | 1 byte in `bait.o`, plus linker alignment. |
 | Capture permission state | BSS | 1 byte in `capture_rules.o`, plus linker alignment. Persistent capture history belongs to save data rather than BSS. |
-| Permanent-death notifications | BSS/data | 11 explicitly reported bytes across pending state and task pointers before alignment. Party changes themselves reuse existing party/PC storage. |
+| Permanent-death notifications | BSS/data | Two bytes remain in overlay 129 for cross-lifetime notification/recovery state. The field extension owns its four-byte active-task pointer. Party changes themselves reuse existing party/PC storage. |
 | Summary friendship display | Heap/stack/save | No new save state or allocation. It reads the existing friendship field during Summary rendering. |
 | Text and script features | ROM archive and load heap | Archive growth should be measured independently when it becomes material; it does not reduce synthetic-overlay headroom. |
 
@@ -131,4 +137,19 @@ After a user-requested successful code or ROM build:
 | --- | ---: | ---: | ---: | --- |
 | Before Summary friendship | 32,559 | 32,672 | 113 | Successful historical build |
 | First Summary friendship implementation | 32,679 | 32,672 | -7 | Link failed |
-| Shared-nature/formula friendship implementation | Pending | 32,672 | Pending | Requires next user-requested build |
+| Shared-nature/formula friendship implementation, before feature relocation | 32,611 | 32,672 | 61 | Successful build artifact used as relocation baseline |
+| Unsafe first capture/permanent-death lifetime split | 31,295 | 32,672 | 1,377 | Built on 2026-08-07, but startup testing failed because ARM9 hook targets were placed in an extension that was not loaded yet. Historical measurement only. |
+| Safe capture-only lifetime split | 31,699 | 32,672 | 973 | Successful `quick-rom` build on 2026-08-07. Permanent-death code remains resident; capture field and battle logic remain relocated. |
+
+### Extension-overlay impact of the safe split
+
+| Region | Before | After | Increase | Capacity |
+| --- | ---: | ---: | ---: | ---: |
+| Battle extension (overlay 130) | 71,868 | 72,192 | 324 | 81,920 |
+| Field extension (overlay 131) | 20,230 | 20,870 | 640 | 98,304 |
+
+The safe extension increase is 964 bytes. It consists of the ordinary and
+Bug-Contest capture paths in the field extension and Safari initialization in
+the battle extension. Both extensions retain substantial headroom and are
+entered only from code whose owning overlay is loaded. Permanent-death code is
+not included in either extension.

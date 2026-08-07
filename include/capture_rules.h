@@ -33,6 +33,7 @@ typedef struct SCRIPTCONTEXT SCRIPTCONTEXT;
 
 void CaptureRules_Init(CaptureRulesSave *captureRules);
 void LONG_CALL CaptureRules_ResetEncounterState(void);
+void LONG_CALL CaptureRules_SetEncounterPermission(CapturePermission permission);
 CapturePermission LONG_CALL CaptureRules_GetEncounterPermission(void);
 void LONG_CALL CaptureRules_GenerateOrdinaryEncounter(
     u16 species,
