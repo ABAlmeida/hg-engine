@@ -214,6 +214,5 @@ void  LONG_CALL Summary_ChangeStatScreenState(struct SummaryState *summary, u8 m
 
 void  LONG_CALL Summary_PrintStatStringAccountForStat(struct SummaryState *summary, u32 windowId, u32 msgId, u32 stat, u32 justify);
 void  LONG_CALL Summary_PrintStringGeneric(struct SummaryState *summary, u32 windowId, u32 msgId, u32 color, u32 justify);
-void LONG_CALL Summary_ColorizeStatScreen(struct SummaryState *summary, u32 mode);
 
 #endif // __UI_SUMMARY_H

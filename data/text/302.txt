@@ -206,3 +206,4 @@ Sp. Def↓
 Speed↓
 EV
 IV
+Friendship {STRVAR_1 52, 0, 0}

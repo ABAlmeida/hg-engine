@@ -64,61 +64,102 @@ static void UpdatePokemonData(struct SummaryState *summary, u8 mode)
 #define GREEN          (COLOR(9, 10, 0))
 #define WHITE          (COLOR(0xE, 0xF, 0))
 
-static s8 sNatureStatEffects[25][6] = {
-    // atk, def, spatk, spdef, speed
-    {  0,  0,  0,  0,  0,  0  },    // Hardy
-    {  0,  1, -1,  0,  0,  0  },    // Lonely
-    {  0,  1,  0,  0,  0, -1  },    // Brave
-    {  0,  1,  0, -1,  0,  0  },    // Adamant
-    {  0,  1,  0,  0, -1,  0  },    // Naughty
-    {  0, -1,  1,  0,  0,  0  },    // Bold
-    {  0,  0,  0,  0,  0,  0  },    // Docile
-    {  0,  0,  1,  0,  0, -1  },    // Relaxed
-    {  0,  0,  1, -1,  0,  0  },    // Impish
-    {  0,  0,  1,  0, -1,  0  },    // Lax
-    {  0, -1,  0,  0,  0,  1  },    // Timid
-    {  0,  0, -1,  0,  0,  1  },    // Hasty
-    {  0,  0,  0,  0,  0,  0  },    // Serious
-    {  0,  0,  0, -1,  0,  1  },    // Jolly
-    {  0,  0,  0,  0, -1,  1  },    // Naive
-    {  0, -1,  0,  1,  0,  0  },    // Modest
-    {  0,  0, -1,  1,  0,  0  },    // Mild
-    {  0,  0,  0,  1,  0, -1  },    // Quiet
-    {  0,  0,  0,  0,  0,  0  },    // Bashful
-    {  0,  0,  0,  1, -1,  0  },    // Rash
-    {  0, -1,  0,  0,  1,  0  },    // Calm
-    {  0,  0, -1,  0,  1,  0  },    // Gentle
-    {  0,  0,  0,  0,  1, -1  },    // Sassy
-    {  0,  0,  0, -1,  1,  0  },    // Careful
-    {  0,  0,  0,  0,  0,  0  },    // Quirky
-};
+// The original Skills-page renderer reserves definition window 2 for its heading.
+#define SUMMARY_WINDOW_SKILLS_HEADER 2
+#define SUMMARY_MSG_SKILLS           109
+#define SUMMARY_MSG_FRIENDSHIP       208
 
-static void PrintStatNumberWithColor(struct SummaryState *summary, u8 windowIdx, u32 justify)
+static s32 Summary_GetNatureStatEffect(u32 nature, u8 windowIdx)
 {
-    u32 nature = GetBoxMonNatureCountMints(Summary_GetPokemonData(summary));
+    u32 stat;
+    u32 raisedStat;
+    u32 loweredStat;
+
+    if (windowIdx == 0) {
+        return 0;
+    }
+
+    // Nature ordering is Attack, Defense, Speed, Sp. Atk, Sp. Def. The
+    // Summary windows display Speed last, so translate the window index.
+    stat = windowIdx - 1;
+    if (stat >= 2) {
+        stat = stat == 4 ? 2 : stat + 1;
+    }
+
+    raisedStat = nature / 5;
+    loweredStat = nature % 5;
+    if (raisedStat == loweredStat) {
+        return 0;
+    }
+    if (stat == raisedStat) {
+        return 1;
+    }
+    if (stat == loweredStat) {
+        return -1;
+    }
+    return 0;
+}
+
+static void Summary_PrintFriendship(struct SummaryState *summary, struct BoxPokemon *pokemon)
+{
+    GF_BGL_BMPWIN *window = &summary->defnWindows[SUMMARY_WINDOW_SKILLS_HEADER];
+
+    FillWindowPixelBuffer(window, 0);
+
+    // Eggs store remaining hatch cycles in the friendship field.
+    if (summary->pokemonData.isEgg) {
+        Summary_PrintStringGeneric(
+            summary,
+            SUMMARY_WINDOW_SKILLS_HEADER,
+            SUMMARY_MSG_SKILLS,
+            WHITE,
+            JUSTIFY_LEFT
+        );
+    } else {
+        // PartyPokemon begins with BoxPokemon, so this accessor supports both
+        // party and PC summary sources without allocating a temporary mon.
+        u32 friendship = GetBoxMonData(pokemon, MON_DATA_FRIENDSHIP, NULL);
+
+        Summary_NumberToString(summary, SUMMARY_MSG_FRIENDSHIP, friendship, 3, 0);
+        Summary_PrintString(summary, window, WHITE, JUSTIFY_LEFT);
+    }
+
+    CopyWindowToVram(window);
+}
+
+static void PrintStatNumberWithColor(struct SummaryState *summary, u8 windowIdx, u32 justify, u32 nature)
+{
     u32 color = BLACK;
-    if (sNatureStatEffects[nature][windowIdx] > 0) {
+    s32 effect = Summary_GetNatureStatEffect(nature, windowIdx);
+
+    if (effect > 0) {
         color = RED;
-    } else if (sNatureStatEffects[nature][windowIdx] < 0) {
+    } else if (effect < 0) {
         color = BLUE;
     }
 
     Summary_PrintString(summary, &summary->addlWindows[windowIdx], color, justify);
 }
 
-void Summary_ColorizeStatScreen(struct SummaryState *summary, u32 mode)
+static void Summary_ColorizeStatScreen(
+    struct SummaryState *summary,
+    u32 mode,
+    struct BoxPokemon *pokemon,
+    u32 nature
+)
 {
-    u32 nature = GetBoxMonNatureCountMints(Summary_GetPokemonData(summary));
+    Summary_PrintFriendship(summary, pokemon);
+
     Summary_NumberToString(summary, 120, summary->pokemonData.attack, 3, 0);
-    PrintStatNumberWithColor(summary, 1, JUSTIFY_RIGHT);
+    PrintStatNumberWithColor(summary, 1, JUSTIFY_RIGHT, nature);
     Summary_NumberToString(summary, 121, summary->pokemonData.defense, 3, 0);
-    PrintStatNumberWithColor(summary, 2, JUSTIFY_RIGHT);
+    PrintStatNumberWithColor(summary, 2, JUSTIFY_RIGHT, nature);
     Summary_NumberToString(summary, 122, summary->pokemonData.spAttack, 3, 0);
-    PrintStatNumberWithColor(summary, 3, JUSTIFY_RIGHT);
+    PrintStatNumberWithColor(summary, 3, JUSTIFY_RIGHT, nature);
     Summary_NumberToString(summary, 123, summary->pokemonData.spDefense, 3, 0);
-    PrintStatNumberWithColor(summary, 4, JUSTIFY_RIGHT);
+    PrintStatNumberWithColor(summary, 4, JUSTIFY_RIGHT, nature);
     Summary_NumberToString(summary, 124, summary->pokemonData.speed, 3, 0);
-    PrintStatNumberWithColor(summary, 5, JUSTIFY_RIGHT);
+    PrintStatNumberWithColor(summary, 5, JUSTIFY_RIGHT, nature);
 
     for (int i = 0; i < 6; i++) {
         FillWindowPixelBuffer(&summary->defnWindows[0xF+i], 0);
@@ -126,10 +167,12 @@ void Summary_ColorizeStatScreen(struct SummaryState *summary, u32 mode)
         {
             u32 msgId = 110;
             u32 color = WHITE;
-            if (sNatureStatEffects[nature][i] > 0) {
+            s32 effect = Summary_GetNatureStatEffect(nature, i);
+
+            if (effect > 0) {
                 msgId = 196-1; // Stat+
                 color = RED_INVERT;
-            } else if (sNatureStatEffects[nature][i] < 0) {
+            } else if (effect < 0) {
                 msgId = 201-1; // Stat-
                 color = BLUE_INVERT;
             }
@@ -149,21 +192,28 @@ void Summary_ColorizeStatScreen(struct SummaryState *summary, u32 mode)
 
 void Summary_ColorizeStatScreen_Wrap(struct SummaryState *summary)
 {
-    Summary_ColorizeStatScreen(summary, 0);
+    struct BoxPokemon *pokemon = Summary_GetPokemonData(summary);
+
+    Summary_ColorizeStatScreen(summary, 0, pokemon, GetBoxMonNatureCountMints(pokemon));
 }
 
 void Summary_ChangeStatScreenState(struct SummaryState *summary, u8 mode)
 {
+    struct BoxPokemon *pokemon;
+    u32 nature;
+
     for (int i = 0; i < 6; i++) {
         FillWindowPixelBuffer(&summary->addlWindows[i], 0);
     }
 
     UpdatePokemonData(summary, mode);
+    pokemon = Summary_GetPokemonData(summary);
+    nature = GetBoxMonNatureCountMints(pokemon);
 
     if (mode) {
         // Print IVs or EVs
         Summary_NumberToString(summary, 119, summary->pokemonData.hp, 3, 1);
-        PrintStatNumberWithColor(summary, 0, JUSTIFY_CENTER);
+        PrintStatNumberWithColor(summary, 0, JUSTIFY_CENTER, nature);
     } else {
         // Print cur and max
         u8 xsize = summary->addlWindows[0].sizx * 8;
@@ -178,7 +228,7 @@ void Summary_ChangeStatScreenState(struct SummaryState *summary, u8 mode)
         );
     }
 
-    Summary_ColorizeStatScreen(summary, mode);
+    Summary_ColorizeStatScreen(summary, mode, pokemon, nature);
 
     for (int i = 0; i < 6; i++) {
         CopyWindowToVram(&summary->addlWindows[i]);
@@ -210,7 +260,7 @@ u16 ModifyStatByNature(u32 nature, u16 n, u8 statIndex) {
         statIndex--;
     }
 
-    switch (sNatureStatEffects[nature][statIndex]) {
+    switch (Summary_GetNatureStatEffect(nature, statIndex)) {
     case 1:
         // NOTE: will overflow for n > 595 because the intermediate value is cast to u16 before the division.
         retVal = n * 110;

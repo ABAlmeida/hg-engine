@@ -43,6 +43,9 @@ complete.
   ID, according to a source-controlled table stored in ROM data rather than
   linked C data. Rematch IDs and other trainers can be configured with no
   reward.
+- Show each non-Egg Pokémon's exact friendship value on the Summary Skills
+  page. Eggs retain the normal heading because their friendship field stores
+  remaining hatch cycles.
 - Disable active player item use in trainer battles through hg-engine's
   existing `DISABLE_ITEMS_IN_TRAINER_BATTLE` behavior. Item selections are
   rejected and return to command selection. Wild-battle Bag behavior and held
@@ -82,6 +85,7 @@ complete.
 | Generation 5+ Pokémon content integration | Deferred | Select and place the expanded roster in encounters, trainers, gifts, and other acquisition sources, then balance it against progression. The current encounter and trainer content does not make the compiled species available automatically. |
 | Talk-initiated trainer battles | Implemented; build and manual verification pending | `DISABLE_TRAINER_LINE_OF_SIGHT` prevents automatic trainer detection before it takes field control. The shared undefeated talk path displays a generated species/reward offer and asks whether to battle. Custom map scripts, automatic battles, defeated dialogue, and rematches remain unchanged. |
 | Trainer victory rewards | Shared-trainer infrastructure implemented; content and manual verification pending | `data/trainer_rewards.csv` configures one first-victory item and quantity per shared talk trainer. The existing defeated path prevents the initial reward from repeating; current rematches and custom or automatic battle scripts do not use this table. Reward mappings will be added during trainer-content work. |
+| Summary friendship value | Implemented; build and manual verification pending | The Skills page displays the exact `0-255` friendship value for party and boxed Pokémon without adding save state or another Summary hook. Eggs retain the normal heading because the same field stores hatch cycles. |
 | In-battle player item restriction | Implemented; build and manual verification pending | `DISABLE_ITEMS_IN_TRAINER_BATTLE` rejects active player item selections in trainer battles and returns to command selection. Wild-battle Bag behavior and held items remain unchanged; revisit stricter UI or pocket filtering only if playtesting requires it. |
 | Battle Item acquisition removal | Planned | Remove or replace marts, visible and hidden pickups, gifts, prizes, and other sources of every Battle Items-pocket item. Keep the item IDs and records intact, and audit existing saves only for harmless unusable leftovers. |
 | Trainer and wild content rebalance | In progress | Early-area land and water tables are being rebuilt around the finalized cap curve. Redesigned tables default to fixed morning/day/night content, and radio, swarm, and night-fishing replacements must not introduce species outside the reviewed area list unless explicitly planned otherwise. |
@@ -96,6 +100,13 @@ The authoritative cap table, trainer IDs, save behavior, and exclusions are in
 [`LEVEL_CAPS.md`](LEVEL_CAPS.md). Every requested milestone remains an
 independent table entry, including Pryce, Clair, and the Kanto leaders whose
 current rewards do not change the cap.
+
+## Code budget
+
+Injected-code, packaged-data, save, heap, stack, and VRAM costs are tracked in
+[`CODE_BUDGET.md`](CODE_BUDGET.md). Update its link snapshot and affected
+feature rows after each user-requested successful build that changes runtime
+code or memory use.
 
 ## Bait acquisition and behavior
 
