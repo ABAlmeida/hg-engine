@@ -176,11 +176,17 @@ Their fixed probabilities are:
 | Method | Slot probabilities |
 | --- | --- |
 | Surfing | 60%, 30%, 5%, 4%, 1% |
-| Old/Good/Super Rod | 40%, 30%, 15%, 10%, 5% |
+| Fishing Rod | 40%, 30%, 15%, 10%, 5% |
 | Rock Smash | 80%, 20% |
 
 The game selects a level within the slot's inclusive minimum/maximum range.
 Use the same number for both values when a slot should have a fixed level.
+
+Heartless Gold presents `ITEM_OLD_ROD` as the Fishing Rod and makes the Good
+and Super Rods unobtainable. For an active fishing table, set `rateOldRod` to
+90 and populate `oldRodSlots`; leave `rateOldRod` at 0 where fishing is
+disabled. `rateGoodRod`, `rateSuperRod`, and their slots remain in the archive
+layout for compatibility but are not reachable through normal acquisition.
 
 ## Radio and swarm fields
 

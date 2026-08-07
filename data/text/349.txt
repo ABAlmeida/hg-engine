@@ -1,0 +1,4 @@
+I’m the Fishing Guru’s younger brother.\rYou seem to like fishing.\nAm I right, or am I right?\fPeople say I have keen eyes! {YESNO 0}
+Use that Shiny Bait carefully.\rYou never know what rare Pokémon\nmight appear.
+Huh?\nMy own eyes deceived me?
+How are things?\nLand the big one?

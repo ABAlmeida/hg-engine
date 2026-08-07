@@ -443,7 +443,7 @@ None
 {COLOR 255}Town Maps{COLOR 0}
 {COLOR 255}Vs. Seekers{COLOR 0}
 {COLOR 255}Coin Cases{COLOR 0}
-{COLOR 255}Old Rods{COLOR 0}
+{COLOR 255}Fishing Rods{COLOR 0}
 {COLOR 255}Good Rods{COLOR 0}
 {COLOR 255}Super Rods{COLOR 0}
 {COLOR 255}Sprayducks{COLOR 0}

@@ -293,7 +293,8 @@ end
 .org 0x8B
 goto mr_pokemon_gives_real_egg
 
-// Give Oak's Old Rod before replaying his original departure movement.
+// Give Oak's Fishing Rod before replaying his original departure movement.
+// The item keeps the vanilla Old Rod ID for save and engine compatibility.
 .org 0x34F
 goto oak_gives_old_rod
 

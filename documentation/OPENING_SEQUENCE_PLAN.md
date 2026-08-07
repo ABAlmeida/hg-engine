@@ -5,7 +5,7 @@ Last updated: 2026-08-01
 ## Status
 
 Implemented in source. The main progression has passed an initial manual test;
-the dialogue, New Bark object cleanup, revised Silver path, Old Rod gift, and
+the dialogue, New Bark object cleanup, revised Silver path, Fishing Rod gift, and
 registered Healing Kit cleanup still need focused manual verification.
 
 ## Decisions
@@ -32,7 +32,8 @@ registered Healing Kit cleanup still need focused manual verification.
   duplicate Egg with exactly one Shiny Bait. Rewrite both Elm's preceding
   phone call and the assistant's dialogue to describe the new reward.
 - Preserve Professor Oak's Pokédex sequence at Mr. Pokémon's house.
-- Professor Oak also gives the Old Rod before leaving Mr. Pokémon's house.
+- Professor Oak also gives the Fishing Rod before leaving Mr. Pokémon's
+  house. Its internal item ID remains `ITEM_OLD_ROD` for compatibility.
 - On leaving Mr. Pokémon's house, Elm calls to say that he has the data he
   needs and asks the player to hatch and care for the Egg. The player does not
   return to Elm.
@@ -59,7 +60,8 @@ registered Healing Kit cleanup still need focused manual verification.
    Marill tutorial. It explains Bait and Balls but does not start a tutorial
    battle.
 8. Cherrygrove is already in its post-guide-tour state.
-9. Mr. Pokémon gives the hatchable Egg. Oak gives the Pokédex and Old Rod.
+9. Mr. Pokémon gives the hatchable Egg. Oak gives the Pokédex and Fishing
+   Rod.
 10. Elm calls when the player leaves, asks them to hatch and care for the Egg,
     and releases them from the return objective.
 11. Route 30's northern path is open and normal Violet City progression begins.
@@ -558,8 +560,8 @@ Use a new in-game save, not a save state, and manually verify:
     consumption from the shortened demonstration;
 16. tutorial cleanup and one-time behavior after leaving and re-entering;
 17. no Cherrygrove guide tour and the guide's correct post-tour placement;
-18. Mr. Pokémon's hatchable Togepi Egg and Oak's Pokédex, phone, and Old Rod
-    gifts, with no later duplicate Old Rod gift;
+18. Mr. Pokémon's hatchable Togepi Egg and Oak's Pokédex, phone, and Fishing
+    Rod gifts, with no later duplicate Fishing Rod gift;
 19. absence of an obsolete Mystery Egg key item;
 20. the new Elm call completing without a lock, fade, or phone-task hang;
 21. no return-to-Elm objective, police scene, or later Violet duplicate Egg;
