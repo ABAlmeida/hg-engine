@@ -50,6 +50,11 @@ a completion signal that a stat item does not provide. IV Max is handled before
 result message, and exits through
 `PartyMenu_ItemUseFunc_WaitTextPrinterThenExit`.
 
+The Max vitamins use the same presentation path. Their item-data EV amount is
+zero because the signed archive field cannot represent 252; the central stat
+handler supplies the real amount. Returning them to the vanilla vitamin
+callback is unsafe because that callback expects a positive archive amount.
+
 Consume the item only after mutation succeeds. A no-effect result must consume
 nothing. Recalculate party stats once after all EV or IV fields are written.
 

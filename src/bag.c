@@ -38,6 +38,16 @@ const u8 sPocketCountBytes[8] = {
     NUM_BAG_KEY_ITEMS,
 };
 
+#ifdef DEBUG_CHEATS
+static const u16 sDebugRegularVitamins[] = {
+    ITEM_HP_UP,
+    ITEM_PROTEIN,
+    ITEM_IRON,
+    ITEM_CARBOS,
+    ITEM_CALCIUM,
+    ITEM_ZINC,
+};
+#endif
 
 void SortPocket(ITEM_SLOT *slots, u32 count);
 void SortTMHMPocket(ITEM_SLOT *slots, u32 count);
@@ -68,20 +78,30 @@ void Sav2_Bag_init(BAG_DATA *bag) {
     enum {
         DEBUG_CHEAT_MEDICINE_QUANTITY = 10,
         DEBUG_CHEAT_SHINY_BAIT_QUANTITY = 20,
-        DEBUG_CHEAT_MEDICINE_COUNT = ITEM_IV_MAX - ITEM_HP_UP_S + 1,
+        DEBUG_CHEAT_REGULAR_MEDICINE_COUNT = 6,
+        DEBUG_CHEAT_CUSTOM_MEDICINE_COUNT = ITEM_IV_MAX - ITEM_HP_UP_S + 1,
+        DEBUG_CHEAT_MEDICINE_COUNT =
+            DEBUG_CHEAT_REGULAR_MEDICINE_COUNT + DEBUG_CHEAT_CUSTOM_MEDICINE_COUNT,
     };
     u32 i;
 
-    // The custom stat-training medicines use one contiguous item-ID range.
     // Populate the empty pocket directly because save initialization has no
-    // field heap available for the normal item-data lookup path.
-    _Static_assert(DEBUG_CHEAT_MEDICINE_COUNT == 19,
+    // field heap available for the normal item-data lookup path. The original
+    // vitamins are not contiguous with the custom stat-training item range.
+    _Static_assert(NELEMS(sDebugRegularVitamins) == DEBUG_CHEAT_REGULAR_MEDICINE_COUNT,
+                   "Update the debug regular-vitamin list when vitamins change");
+    _Static_assert(DEBUG_CHEAT_CUSTOM_MEDICINE_COUNT == 19,
                    "Update the debug medicine range when stat items change");
     _Static_assert(NUM_BAG_MEDICINE >= DEBUG_CHEAT_MEDICINE_COUNT,
                    "The Medicine pocket is too small for debug supplies");
-    for (i = 0; i < DEBUG_CHEAT_MEDICINE_COUNT; i++) {
-        bag->medicine[i].id = ITEM_HP_UP_S + i;
+    for (i = 0; i < DEBUG_CHEAT_REGULAR_MEDICINE_COUNT; i++) {
+        bag->medicine[i].id = sDebugRegularVitamins[i];
         bag->medicine[i].quantity = DEBUG_CHEAT_MEDICINE_QUANTITY;
+    }
+    for (i = 0; i < DEBUG_CHEAT_CUSTOM_MEDICINE_COUNT; i++) {
+        bag->medicine[DEBUG_CHEAT_REGULAR_MEDICINE_COUNT + i].id = ITEM_HP_UP_S + i;
+        bag->medicine[DEBUG_CHEAT_REGULAR_MEDICINE_COUNT + i].quantity =
+            DEBUG_CHEAT_MEDICINE_QUANTITY;
     }
 
     bag->items[0].id = ITEM_SHINY_BAIT;

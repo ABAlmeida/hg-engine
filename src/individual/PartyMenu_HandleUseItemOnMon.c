@@ -41,6 +41,7 @@ extern u32 partyMenuSignal;
 
 #define PARTY_MENU_MESSAGE_NO_EFFECT 102
 #define PARTY_MENU_MESSAGE_IV_MAX    227
+#define PARTY_MENU_MESSAGE_EV_MAX    228
 
 u16 NatureToMintItem[] = {
     [NATURE_LONELY] = ITEM_LONELY_MINT,
@@ -87,19 +88,25 @@ int __attribute__((section (".init"))) PartyMenu_HandleUseItemOnMon_Internal(str
         return PARTY_MENU_STATE_SELECT_MOVE;
     }
 
-    if (partyMenu->args->itemId == ITEM_IV_MAX) {
+    if (partyMenu->args->itemId == ITEM_IV_MAX
+        || (partyMenu->args->itemId >= ITEM_HP_UP_MAX
+            && partyMenu->args->itemId <= ITEM_ZINC_MAX)) {
         struct PartyPokemon *mon = Party_GetMonByIndex(
             partyMenu->args->party, partyMenu->partyMonIndex);
+        u16 itemId = partyMenu->args->itemId;
         int message = PARTY_MENU_MESSAGE_NO_EFFECT;
 
         if (StatTrainingItem_UseOnMon(
-                mon, ITEM_IV_MAX, PartyMenu_GetCurrentMapSec(partyMenu)) == TRUE) {
-            Bag_TakeItem(partyMenu->args->bag, ITEM_IV_MAX, 1, HEAP_ID_PARTY_MENU);
-            message = PARTY_MENU_MESSAGE_IV_MAX;
+                mon, itemId, PartyMenu_GetCurrentMapSec(partyMenu)) == TRUE) {
+            Bag_TakeItem(partyMenu->args->bag, itemId, 1, HEAP_ID_PARTY_MENU);
+            message = itemId == ITEM_IV_MAX
+                ? PARTY_MENU_MESSAGE_IV_MAX
+                : PARTY_MENU_MESSAGE_EV_MAX;
         }
 
-        // IV Max changes no form, so use the normal item-result message state.
-        // The form-change overlay requires animation data and would never finish.
+        // These items bypass vanilla presentation: IV Max is not a form change,
+        // and Max vitamins encode 252 centrally because the item-data amount
+        // cannot represent it. Both use the normal item-result message state.
         PartyMenu_PrintMessageOnWindow34(partyMenu, message, TRUE);
         partyMenu->partyMonIndex = 8;
         partyMenu->itemUseCallback = PartyMenu_ItemUseFunc_WaitTextPrinterThenExit;

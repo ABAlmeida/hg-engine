@@ -226,3 +226,4 @@ Light Bulb
 Microwave Oven
 Washing Machine
 Its IVs were maximized!\r
+That EV was raised to its limit!\r
