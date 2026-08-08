@@ -168,6 +168,10 @@
 // this will change existing mons too!  if you want to change the odds of wild mons only, you will have to add a certain amount of pid rerolls to the AddWildPartyPokemon routine
 #define SHINY_ODDS 8
 
+// Prevent randomly generated and scripted wild Pokemon from being shiny.
+// Shiny Bait remains the sole wild-encounter path that forces a shiny result.
+#define SHINY_BAIT_ONLY_WILD_SHINIES
+
 // FRIENDSHIP_EVOLUTION_THRESHOLD defines the amount of friendship needed to evolve mons with friendship-related evolutions
 // modern generations have this value at 160, older ones at 220.  still max out at 255
 #define FRIENDSHIP_EVOLUTION_THRESHOLD 160

@@ -420,6 +420,10 @@ void MakeTrainerPokemonParty(struct BATTLE_PARAM *bp, int num, int heapID)
 
 extern u32 space_for_setmondata;
 
+// Changes the shiny value without touching the personality bits that control
+// gender, ability slot, or encrypted substructure order.
+#define NON_SHINY_PERSONALITY_XOR 0x1000U
+
 /**
  *  @brief add a PartyPokemon to the "wild battler"'s party
  *
@@ -442,7 +446,9 @@ BOOL LONG_CALL AddWildPartyPokemon(int inTarget, EncounterInfo *encounterInfo, s
 
     species = GetMonData(encounterPartyPokemon, MON_DATA_SPECIES, NULL);
 
-    if (Bait_ShouldForceShiny()) {
+    BOOL forceShiny = Bait_ShouldForceShiny();
+
+    if (forceShiny) {
         u32 otId = GetMonData(encounterPartyPokemon, MON_DATA_OTID, NULL);
         u32 personality = GetMonData(encounterPartyPokemon, MON_DATA_PERSONALITY, NULL);
 
@@ -451,6 +457,16 @@ BOOL LONG_CALL AddWildPartyPokemon(int inTarget, EncounterInfo *encounterInfo, s
         RecalcPartyPokemonStats(encounterPartyPokemon);
         ResetPartyPokemonAbility(encounterPartyPokemon);
     }
+
+#ifdef SHINY_BAIT_ONLY_WILD_SHINIES
+    if (!forceShiny && MonIsShiny(encounterPartyPokemon)) {
+        u32 personality = GetMonData(encounterPartyPokemon, MON_DATA_PERSONALITY, NULL);
+
+        personality ^= NON_SHINY_PERSONALITY_XOR;
+        SetMonData(encounterPartyPokemon, MON_DATA_PERSONALITY, &personality);
+        RecalcPartyPokemonStats(encounterPartyPokemon);
+    }
+#endif
 
     if (space_for_setmondata != 0) {
         change_form = 1;
