@@ -55,7 +55,7 @@
 
 // DEBUG_CHEATS adds testing supplies to the Bag and a level-100 Rayquaza to
 // Bill's PC when a new save is initialized.
-// #define DEBUG_CHEATS
+#define DEBUG_CHEATS
 
 // DEBUG_PRINT_HEAP_OVERFLOW_MESSAGES will cause any crash from a heap overflow to display error information
 //#define DEBUG_PRINT_HEAP_OVERFLOW_MESSAGES

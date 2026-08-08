@@ -35,7 +35,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 149 }, // Ruins of Alph NW
     { ITEM_NUGGET, 1, 0, 0, 150 }, // Ruins of Alph SW
     { ITEM_GREAT_BALL, 1, 0, 0, 151 }, // Union Cave 1F E
-    { ITEM_PARALYZE_HEAL, 1, 0, 0, 152 }, // Union Cave 1F S
+    { ITEM_CHERI_BERRY, 1, 0, 0, 152 }, // Union Cave 1F S
     { ITEM_BIG_PEARL, 1, 0, 0, 154 }, // Union Cave 1F W
     { ITEM_X_SPEED, 1, 0, 0, 153 }, // Union Cave B1F S
     { ITEM_REVIVE, 1, 0, 0, 155 }, // Union Cave B1F E
@@ -48,7 +48,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_GREAT_BALL, 1, 0, 0, 27 }, // Slowpoke Well Entrance
     { ITEM_SUPER_POTION, 1, 0, 0, 28 }, // Slowpoke Well B1F Rock
     { ITEM_FULL_HEAL, 1, 0, 0, 29 }, // Slowpoke Well B1F Ladder
-    { ITEM_ANTIDOTE, 1, 0, 0, 30 }, // Ilex Forest W
+    { ITEM_PECHA_BERRY, 1, 0, 0, 30 }, // Ilex Forest W
     { ITEM_SUPER_POTION, 1, 0, 0, 31 }, // Ilex Forest
     { ITEM_FULL_HEAL, 1, 0, 0, 32 }, // Ilex Forest
     { ITEM_ETHER, 1, 0, 0, 33 }, // Ilex Forest
@@ -60,13 +60,13 @@ const HiddenItemData sHiddenItemParam[] = {
     { BAIT_REPLACE_RARE_CANDY, 1, 0, 0, 7 }, // R34 Centre
     { ITEM_SUPER_POTION, 1, 0, 0, 8 }, // R34 E
     { ITEM_SUPER_POTION, 1, 0, 0, 9 }, // Goldenrod
-    { ITEM_PARALYZE_HEAL, 1, 0, 0, 52 }, // Goldenrod Dept Store Basement W
+    { ITEM_CHERI_BERRY, 1, 0, 0, 52 }, // Goldenrod Dept Store Basement W
     { ITEM_SUPER_POTION, 1, 0, 0, 53 }, // Goldenrod Dept Store Basement Centre
-    { ITEM_ANTIDOTE, 1, 0, 0, 67 }, // Goldenrod Dept Store Basement SE
+    { ITEM_PECHA_BERRY, 1, 0, 0, 67 }, // Goldenrod Dept Store Basement SE
     { ITEM_MAX_POTION, 1, 0, 0, 68 }, // Goldenrod Tunnel Basement
     { ITEM_REVIVE, 1, 0, 0, 69 }, // Goldenrod Tunnel Basement
     { ITEM_NUGGET, 1, 0, 0, 10 }, // R35 NW
-    { ITEM_AWAKENING, 1, 0, 0, 11 }, // R36 W
+    { ITEM_CHESTO_BERRY, 1, 0, 0, 11 }, // R36 W
     { ITEM_FULL_HEAL, 1, 0, 0, 34 }, // National Park
     { ITEM_FULL_HEAL, 1, 0, 0, 35 }, // National Park
     { ITEM_PP_UP, 1, 0, 0, 159 }, // Pokeathlon Dome NE
@@ -77,7 +77,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_ULTRA_BALL, 1, 0, 0, 133 }, // Ecruteak W
     { ITEM_ETHER, 1, 0, 0, 19 }, // Burned Tower Entrance N
     { ITEM_ULTRA_BALL, 1, 0, 0, 20 }, // Burned Tower Entrance SW
-    { ITEM_ANTIDOTE, 1, 0, 0, 65 }, // Burned Tower Basement NW
+    { ITEM_PECHA_BERRY, 1, 0, 0, 65 }, // Burned Tower Basement NW
     { ITEM_REVIVE, 1, 0, 0, 21 }, // Burned Tower Basement S
     { ITEM_TINY_MUSHROOM, 1, 0, 0, 125 }, // Bellchime Trail
     { ITEM_BIG_MUSHROOM, 1, 0, 0, 126 }, // Bellchime Trail
@@ -140,7 +140,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_MAX_POTION, 1, 0, 0, 102 }, // Lake of Rage NE
     { ITEM_ELIXIR, 1, 0, 0, 100 }, // R44
     { ITEM_MAX_POTION, 1, 0, 0, 70 }, // Ice Path 1F W
-    { ITEM_ICE_HEAL, 1, 0, 0, 72 }, // Ice Path 1F N
+    { ITEM_ASPEAR_BERRY, 1, 0, 0, 72 }, // Ice Path 1F N
     { ITEM_REVIVE, 1, 0, 0, 228 }, // Ice Path B1F
     { ITEM_CARBOS, 1, 0, 0, 71 }, // Ice Path B2F
     { ITEM_REVIVE, 1, 0, 0, 81 }, // Dragons Den NW
@@ -210,7 +210,7 @@ const HiddenItemData sHiddenItemParam[] = {
     { ITEM_IRON, 1, 0, 0, 166 }, // Cinnabar
     { ITEM_STAR_PIECE, 1, 0, 0, 167 }, // Cinnabar
     { ITEM_ESCAPE_ROPE, 1, 0, 0, 88 }, // Seafoam Islands
-    { ITEM_ICE_HEAL, 1, 0, 0, 89 }, // Seafoam Islands
+    { ITEM_ASPEAR_BERRY, 1, 0, 0, 89 }, // Seafoam Islands
     { ITEM_PEARL, 1, 0, 0, 90 }, // Seafoam Islands
     { ITEM_PEARL, 1, 0, 0, 91 }, // Seafoam Islands
     { ITEM_MAX_REVIVE, 1, 0, 0, 92 }, // Seafoam Islands

@@ -45,6 +45,7 @@ feature total.
 | Reusable Healing Kit | `reusable_healer.o` | 316 | Healing: 104; field task: 132; menu/field entrypoints: 72; alignment: remainder. Small and centralized. |
 | Stat-training items | `stat_training_items.o` | 540 | Effect lookup: 116; validation: 172; application: 212; handled-item check: 32; alignment: remainder. Shared vitamin handling avoids per-item functions. |
 | Summary stat/IV/EV viewer, nature colours, and friendship | `summary.o` | 1,144 | The final object is 46 bytes larger than the 1,098-byte pre-friendship object and 74 bytes smaller than the failed first implementation. It shares the Pokémon pointer and nature result and calculates nature effects instead of storing the former 150-byte table. |
+| Goldenrod Berry Shop inventory | `mart.o` data table | Measurement pending; nominal payload grows by 126 bytes | The former five-entry, 10-byte herbal table becomes a 68-entry, 136-byte Berry table including its terminator. This uses the existing mart path and avoids a larger custom shop/price hook; confirm the linked delta and remaining headroom on the next explicitly requested build. |
 | General script commands | `script_new_cmds.o` | Measurement pending | Previously 136 bytes. Configured Egg IV/ability handling now shares this dispatcher; measure its new object size and remaining overlay-129 headroom on the next explicitly requested build. |
 
 ## Injected features within shared objects
@@ -94,7 +95,7 @@ wholly to one Heartless Gold feature without a historical comparison.
 | Configuration-only behavior | Existing code paths | Usually 0 incremental | Examples include fast text, National Dex configuration, and disabling trainer-battle item use when the implementation already exists upstream. Confirm with a link comparison if a conditional compiles additional code. |
 | Instant text and always-available National Dex | In-place/configured engine behavior | No dedicated synthetic-overlay object | Their patches belong to the original executable regions rather than the fixed synthetic overlay. |
 | Disable trainer line of sight | In-place ARM9 patch | 0 synthetic-overlay bytes | The patch replaces original instructions and does not allocate from overlay 129. Keep its address/range documented because its cost is fragility rather than overlay space. |
-| HM, opening, Bait, Healing Kit, and reward acquisition edits | Scripts and data tables | 0 for script/data content | Their runtime behavior may call injected functions already accounted for above. |
+| HM, opening, Bait, Healing Kit, reward, and medicine acquisition edits | Scripts, data tables, and in-place patches | 0 synthetic-overlay bytes | Their runtime behavior may call injected functions already accounted for above. Medicine replacements alter packaged tables or overwrite existing two-byte item IDs rather than adding linked code. |
 
 ## Planned features
 

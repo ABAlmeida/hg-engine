@@ -20,6 +20,7 @@
 .include "armips/asm/pokedex.s" // code for pokedex expansion, including expanding the save
 .include "armips/asm/overworlds.s" // code for overworlds, specifically repointing gOWTagToFileNum and making dimorphism a byte instead of a halfword.
 .include "armips/asm/bait.s" // disables passive encounters and updates compiled Bait acquisition tables
+.include "armips/asm/medicine_item_replacements.s" // updates compiled medicine acquisition tables
 .include "armips/asm/trainer_line_of_sight.s" // requires talking to field trainers to start their scripts
 
 .include "armips/asm/no_partner_double_battles.s" // allows no partner double battles
