@@ -45,10 +45,10 @@ def align_directives(content):
     return '\n'.join(formatted_lines)
 
 def run():
-    file = "../asm/include/items.inc"
+    file = "../include/constants/item.h"
     with open(file, "r") as infile:
         data = infile.read()
-    with open("fixed/items.inc", "w") as outfile:
+    with open("fixed/item.h", "w") as outfile:
         outfile.write(align_directives(data))
         
 if __name__ == "__main__":

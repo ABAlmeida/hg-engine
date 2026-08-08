@@ -4,8 +4,8 @@
 .include "armips/include/flags.s"
 .include "armips/include/vars.s"
 .include "armips/include/soundeffects.s"
-.include "asm/include/abilities.inc"
-.include "asm/include/species.inc"
+.include "build/generated/armips_abilities.s"
+.include "build/generated/armips_species.s"
 
 // GiveEgg receives the offset within the existing gift-location group.
 // METLOC_JOHTO is 2004 in HGSS, so its verified MAPLOC value is 4.

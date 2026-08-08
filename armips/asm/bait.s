@@ -1,7 +1,7 @@
 .nds
 .thumb
 
-// Included by armips/global.s after config.s and items.inc.
+// Included by armips/global.s after config.s and the generated item constants.
 
 .if IMPLEMENT_BAIT_ENCOUNTERS
 

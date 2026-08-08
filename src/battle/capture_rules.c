@@ -52,7 +52,7 @@ static BOOL CaptureRules_ConsumeArea(CaptureRulesSave *captureRules, u32 mapSect
 static BOOL CaptureRules_IsSpeciesDuplicate(struct SaveData *saveData, u16 species)
 {
     if (species == SPECIES_NONE
-        || species > MAX_MON_NUM
+        || species > SPECIES_MAX_MON_NUM
         || (species >= SPECIES_EGG && species < SPECIES_VICTINI)) {
         return FALSE;
     }

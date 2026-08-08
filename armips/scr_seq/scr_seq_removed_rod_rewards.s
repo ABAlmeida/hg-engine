@@ -6,7 +6,7 @@
 .include "armips/include/scriptmacros.s"
 .include "armips/include/soundeffects.s"
 .include "armips/include/vars.s"
-.include "asm/include/items.inc"
+.include "build/generated/armips_items.s"
 
 .if IMPLEMENT_BAIT_ENCOUNTERS
 

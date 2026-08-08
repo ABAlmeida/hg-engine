@@ -70,7 +70,8 @@ instruction.
 
 ## Content and static-review checklist
 
-- Mirror new IDs in `include/constants/item.h` and `asm/include/items.inc`.
+- Define new IDs only in `include/constants/item.h`. The build generates
+  Armips-compatible definitions in `build/generated/armips_items.s`.
 - Add item data, name, description, article, icon, and palette in matching ID
   order. Reused graphics still need members for the new item IDs.
 - Protect base-game-only lookup tables from custom IDs.

@@ -60,7 +60,7 @@ def dumptrainers(outputFile: str):
 .include "armips/include/macros.s"
 
 .include "asm/include/abilities.inc"
-.include "asm/include/items.inc"
+.include "build/generated/armips_items.s"
 .include "asm/include/moves.inc"
 .include "asm/include/species.inc"
 

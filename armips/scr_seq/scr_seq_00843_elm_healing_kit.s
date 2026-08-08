@@ -5,7 +5,7 @@
 .include "armips/include/flags.s"
 .include "armips/include/vars.s"
 .include "armips/include/soundeffects.s"
-.include "asm/include/items.inc"
+.include "build/generated/armips_items.s"
 
 ELM_ASSISTANT_TABLE_ENTRY equ 0x0C
 ELM_ASSISTANT_OBJECT_ID   equ 2

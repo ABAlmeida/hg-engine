@@ -47,25 +47,18 @@ ifeq ($(MSYS2), 0)
 # environment (normally /ucrt64). Fall back to /mingw64 for legacy shells.
 MSYS2_MINGW_PREFIX = $(if $(MINGW_PREFIX),$(MINGW_PREFIX),/mingw64)
 PREFIX = $(MSYS2_MINGW_PREFIX)/bin/arm-none-eabi-
-AS = $(PREFIX)as
-CC = $(PREFIX)gcc
-LD = $(PREFIX)ld
-OBJCOPY = $(PREFIX)objcopy
 else
 PREFIX = arm-none-eabi-
-AS = $(PREFIX)as
-CC = $(PREFIX)gcc
-LD = $(PREFIX)ld
-OBJCOPY = $(PREFIX)objcopy
 endif
 else
 # support legacy devkitpro instructions
-PREFIX = bin/arm-none-eabi-
-AS = $(DEVKITARM)/$(PREFIX)as
-CC = $(DEVKITARM)/$(PREFIX)gcc
-LD = $(DEVKITARM)/$(PREFIX)ld
-OBJCOPY = $(DEVKITARM)/$(PREFIX)objcopy
+PREFIX = $(DEVKITARM)/bin/arm-none-eabi-
 endif
+
+AS = $(PREFIX)gcc -x assembler-with-cpp
+CC = $(PREFIX)gcc
+LD = $(PREFIX)ld
+OBJCOPY = $(PREFIX)objcopy
 
 # Use ccache automatically when it is installed. Builds fall back to the
 # compiler directly when ccache is unavailable.
@@ -139,12 +132,12 @@ SDATTOOL := $(PYTHON) tools/SDATTool.py
 
 # Compiler/Assembler/Linker settings
 LDFLAGS = rom.ld -T $(C_SUBDIR)/linker.ld
-ASFLAGS = -mthumb
-CFLAGS = -mthumb -mno-thumb-interwork -mcpu=arm7tdmi -mtune=arm7tdmi -mno-long-calls -march=armv4t -Wall -Wextra -Wno-builtin-declaration-mismatch -Wno-sequence-point -Wno-address-of-packed-member -Os -fira-loop-pressure -fipa-pta
+ASFLAGS =  -I$(shell pwd)/asm/include -I$(shell pwd)/include -mthumb -mcpu=arm946e-s -mtune=arm946e-s
+CFLAGS =  -I$(shell pwd)/include -mthumb -mno-thumb-interwork -mcpu=arm946e-s -mtune=arm946e-s -mno-long-calls -Wall -Wextra -Wno-builtin-declaration-mismatch -Wno-sequence-point -Wno-address-of-packed-member -Os -fira-loop-pressure -fipa-pta
 ARMIPS_FLAGS = -equ DEBUG_BATTLE_SCENARIOS 0
 
 ifeq ($(AUTO_TEST),Y)
-    CFLAGS += -DDEBUG_BATTLE_SCENARIOS -DDEBUG_AUTO_CONTINUE_GAME
+    CFLAGS += -DDEBUG_BATTLE_SCENARIOS -DDEBUG_AUTO_CONTINUE_GAME -Werror
     ARMIPS_FLAGS = -equ DEBUG_BATTLE_SCENARIOS 1
 endif
 
@@ -159,6 +152,11 @@ FILESYS := $(BASE)/root
 BASE_EXTRACTION_STAMP := $(BASE)/.extracted
 ARMIPS_CONFIG := $(BUILD)/armips_config.s
 ARMIPS_CONFIG_GENERATOR := tools/generate_armips_config.py
+ARMIPS_ITEM_CONSTANTS := $(BUILD)/generated/armips_items.s
+ARMIPS_ITEM_CONSTANTS_GENERATOR := tools/generate_armips_item_constants.py
+ARMIPS_SPECIES_CONSTANTS := $(BUILD)/generated/armips_species.s
+ARMIPS_ABILITY_CONSTANTS := $(BUILD)/generated/armips_abilities.s
+ARMIPS_PREFIXED_CONSTANTS_GENERATOR := tools/generate_armips_prefixed_constants.py
 
 LINK = $(BUILD)/linked.o
 OUTPUT = $(BUILD)/output.bin
@@ -179,6 +177,18 @@ REQUIRED_DIRECTORIES += $(BASE) $(BUILD) $(BUILD_NARC)
 $(ARMIPS_CONFIG): include/config.h $(ARMIPS_CONFIG_GENERATOR) $(VENV_ACTIVATE)
 	@mkdir -p $(dir $@)
 	$(PYTHON) $(ARMIPS_CONFIG_GENERATOR) $< $@
+
+$(ARMIPS_ITEM_CONSTANTS): include/constants/item.h $(ARMIPS_ITEM_CONSTANTS_GENERATOR) $(VENV_ACTIVATE)
+	@mkdir -p $(dir $@)
+	$(PYTHON) $(ARMIPS_ITEM_CONSTANTS_GENERATOR) $< $@
+
+$(ARMIPS_SPECIES_CONSTANTS): include/constants/species.h $(ARMIPS_PREFIXED_CONSTANTS_GENERATOR) $(VENV_ACTIVATE)
+	@mkdir -p $(dir $@)
+	$(PYTHON) $(ARMIPS_PREFIXED_CONSTANTS_GENERATOR) $< $@ SPECIES_ SPECIES_MAX_MON_NUM NUM_OF_FAKEMONS
+
+$(ARMIPS_ABILITY_CONSTANTS): include/constants/ability.h $(ARMIPS_PREFIXED_CONSTANTS_GENERATOR) $(VENV_ACTIVATE)
+	@mkdir -p $(dir $@)
+	$(PYTHON) $(ARMIPS_PREFIXED_CONSTANTS_GENERATOR) $< $@ ABILITY_ ABILITY_SPICY_SPRAY
 
 
 ## includes
@@ -595,7 +605,7 @@ move_narc $(DATA_INSTALL_STAMP): $(NARC_FILES) $(BASE_EXTRACTION_STAMP)
 PATCH_STAMP := $(BUILD)/.base_patched
 CODE_NARC_STAMP := $(BUILD)/.code_narc_installed
 ARMIPS_INPUTS := $(shell find armips -type f)
-PATCH_INPUTS := scripts/make.py hooks armhooks bytereplacement repoints routinepointers $(ARMIPS_INPUTS) $(ARMIPS_CONFIG)
+PATCH_INPUTS := scripts/make.py hooks armhooks bytereplacement repoints routinepointers $(ARMIPS_INPUTS) $(ARMIPS_CONFIG) $(ARMIPS_ITEM_CONSTANTS) $(ARMIPS_SPECIES_CONSTANTS) $(ARMIPS_ABILITY_CONSTANTS)
 
 # Many archive generators extract an existing file from base/root. Ensure the
 # source ROM has been extracted before any of them can run in parallel.

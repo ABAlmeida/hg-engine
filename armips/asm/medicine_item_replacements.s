@@ -1,6 +1,6 @@
 .nds
 
-// Included by armips/global.s after items.inc.
+// Included by armips/global.s after the generated item constants.
 
 .macro assert_medicine_item_patch,file,offset,original,replacement
     .if readu16(file, offset) != original && readu16(file, offset) != replacement

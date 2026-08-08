@@ -48,7 +48,7 @@ static u8 LevelCap_GetRewardForTrainer(u16 trainerId)
 
 void LONG_CALL LevelCap_ApplyTrainerVictory(const BattleSetup *setup)
 {
-    u32 excludedBattleTypes = BATTLE_TYPE_WIRELESS | BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DEBUG;
+    u32 excludedBattleTypes = BATTLE_TYPE_LINK | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_DEBUG;
     u8 newCap;
 
     if (!(setup->battleType & BATTLE_TYPE_TRAINER) || (setup->battleType & excludedBattleTypes)) {

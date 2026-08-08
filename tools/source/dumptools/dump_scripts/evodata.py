@@ -19,7 +19,7 @@ def dump_evodata(narc):
 	evodata_armip += ".thumb\n\n"
 	evodata_armip += ".include \"armips/include/macros.s\"\n"
 	evodata_armip += ".include \"armips/include/constants.s\"\n\n"
-	evodata_armip += ".include \"asm/include/items.inc\"\n"
+	evodata_armip += ".include \"build/generated/armips_items.s\"\n"
 	evodata_armip += ".include \"asm/include/moves.inc\"\n"
 	evodata_armip += ".include \"asm/include/species.inc\"\n\n"
 	evodata_armip += "// the evolution data of each mon\n\n\n"

@@ -1,6 +1,6 @@
 .nds
 
-.include "asm/include/items.inc"
+.include "build/generated/armips_items.s"
 
 // Member 141 is the shared visible-item-ball reward table. Preserve each
 // item's existing quantity, collection flag, and standard pickup flow by

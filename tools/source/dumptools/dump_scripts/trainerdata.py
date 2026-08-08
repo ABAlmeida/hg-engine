@@ -371,7 +371,7 @@ def dump_trainerdata(trdata_narc, trpok_narc, is_expanded):
     trainerdata_armips += ".include \"armips/include/constants.s\"\n"
     trainerdata_armips += ".include \"armips/include/macros.s\"\n\n"
     trainerdata_armips += ".include \"asm/include/abilities.inc\"\n"
-    trainerdata_armips += ".include \"asm/include/items.inc\"\n"
+    trainerdata_armips += ".include \"build/generated/armips_items.s\"\n"
     trainerdata_armips += ".include \"asm/include/moves.inc\"\n"
     trainerdata_armips += ".include \"asm/include/species.inc\"\n\n\n"
 

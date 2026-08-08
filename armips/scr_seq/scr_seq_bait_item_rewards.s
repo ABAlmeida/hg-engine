@@ -2,7 +2,7 @@
 
 .include "build/armips_config.s"
 .include "armips/include/config.s"
-.include "asm/include/items.inc"
+.include "build/generated/armips_items.s"
 
 .if IMPLEMENT_BAIT_ENCOUNTERS
 

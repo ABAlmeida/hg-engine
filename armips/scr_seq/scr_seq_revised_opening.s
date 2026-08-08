@@ -5,8 +5,8 @@
 .include "armips/include/flags.s"
 .include "armips/include/vars.s"
 .include "armips/include/soundeffects.s"
-.include "asm/include/items.inc"
-.include "asm/include/species.inc"
+.include "build/generated/armips_items.s"
+.include "build/generated/armips_species.s"
 
 SCRIPT_OPCODE_CATCHING_TUTORIAL equ 251
 SCRIPT_OPCODE_GOTO              equ 22

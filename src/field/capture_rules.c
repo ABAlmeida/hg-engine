@@ -97,7 +97,7 @@ static BOOL CaptureRules_IsSpeciesDuplicate(struct SaveData *saveData, u16 speci
     // Egg, Bad Egg, and the placeholder IDs before Victini are not Pokedex
     // species even though they lie below the expanded engine's maximum ID.
     if (species == SPECIES_NONE
-        || species > MAX_MON_NUM
+        || species > SPECIES_MAX_MON_NUM
         || (species >= SPECIES_EGG && species < SPECIES_VICTINI)) {
         return FALSE;
     }

@@ -21,8 +21,10 @@ unchanged; only their embedded item-ID operands are replaced.
 
 ## Verified identifiers
 
-- Original and replacement IDs come from `asm/include/items.inc`. The current
-  replacement manifest is kept next to the guarded offsets in
+- Original and replacement IDs come from `include/constants/item.h`, the
+  project's canonical item-ID source. The build generates Armips-compatible
+  definitions in `build/generated/armips_items.s`. The current replacement
+  manifest is kept next to the guarded offsets in
   `armips/scr_seq/scr_seq_medicine_item_replacements.s`.
 - The mappings are Antidote to Pecha, Paralyze Heal to Cheri, Awakening to
   Chesto, Burn Heal to Rawst, Ice Heal to Aspear, Heal Powder to Lum,
