@@ -31,7 +31,7 @@ Where do you think you’re going,\n{STRVAR_1 3, 0, 0}?\r
 Where do you think you’re going,\n{STRVAR_1 3, 0, 0}?\r
 Lyra: Hmm... My Pokémon may be\nputting on some weight lately...
 Ethan: Hmm... My Pokémon may be\nputting on some weight lately...
-MARILL: Murfu.\r
+SLAKOTH: Yaaawn...\r
 New Bark Town\nWinds of a New Beginning
 {STRVAR_1 3, 0, 0}’s House
 Elm Pokémon Lab

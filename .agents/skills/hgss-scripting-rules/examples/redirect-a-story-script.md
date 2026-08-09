@@ -40,6 +40,13 @@ shows both objects, including when the field reloads after battle. Hiding them
 only in the battle scene therefore causes both a visible pop-in and a post-
 battle reappearance.
 
+Member 842 has very little appended space. The Silver approach list fills
+`0x1828` through `0x183F`, and `silver_depart` begins at `0x1840`. A former
+`.org 0x1840` setup stub overwrote the departure's first movement action even
+though the source labels looked separate. The no-op setup now points to the
+existing `end` terminating the Silver victory routine. Reusing a verified
+terminator avoids both the overlapping write and an unnecessary extra command.
+
 ## Minimal pattern
 
 ```asm
@@ -57,6 +64,10 @@ end
 The stored pointer is relative to the byte immediately after its own table
 entry. Accept an already-patched pointer as well when the patch must support
 `make rebuild_scripts`.
+
+After assembly, verify that each appended movement sequence still exists in
+the output and that no later `.org` writes inside its byte range. Source order
+alone does not prevent Armips from seeking backward and replacing prior data.
 
 ## Control-flow and manual verification
 

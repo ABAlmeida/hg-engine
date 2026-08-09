@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-08-08
+Last updated: 2026-08-09
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -56,12 +56,23 @@ complete.
   occurs outside Elm's lab, the counterpart teaches Bait without a simulated
   battle, and Mr. Pokemon gives the hatchable Egg before progression continues
   directly toward Violet City. See `OPENING_SEQUENCE_PLAN.md`.
+- Replace the counterpart's recurring Marill companion with Slakoth. Before
+  giving the Vs. Recorder in the Route 31-Violet gatehouse, Lyra or Ethan must
+  be defeated in a gender-selected three-Pokemon battle. Losing follows the
+  normal blackout flow and does not complete the scene or award the item.
 - Replace Violet City's Bellsprout-for-Onix NPC trade with a one-time choice
   between Dark, Steel, and Ice Eggs: Sandile, Tinkatink, or Swinub. Implement
   the atomic party-space check, Egg gift, IV/ability configuration, and
   completion flag as a reusable common-script helper while keeping each NPC's
   menu and dialogue map-local. Each Egg has 25 in all six IVs; Sandile has
   Moxie, Tinkatink has Mold Breaker, and Swinub has Thick Fat.
+- Use `F_TRAINER_EXPERT_AI` everywhere the exact Super Effective, Evaluate
+  Attacks, and Expert Attacks combination is intended. Treat that alias as the
+  opt-in profile for a strong fair-information AI, so future profile changes
+  automatically reach every expert trainer. The AI may learn only information
+  revealed during battle and may predict unrevealed level-up moves and normal
+  abilities, but never unrevealed party species, held items, TM/HM moves, or
+  hidden abilities. See `TRAINER_AI_PLAN.md`.
 
 ## Status
 
@@ -80,6 +91,7 @@ complete.
 | Bait encounters | Complete; manually verified | Poké Bait and Shiny Bait work on valid terrain; invalid use is rejected; preserved encounter types remain available. Non–Shiny Bait wild encounters are forced non-shiny so Shiny Bait is the sole wild shiny source. See `BAIT_ENCOUNTERS.md`. |
 | Reusable healer | Complete; manually verified | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, cannot be used in battle, and can be registered to a field-use button. See `REUSABLE_HEALER_PLAN.md`. |
 | Revised opening sequence | Implemented; initial manual pass complete; cleanup verification pending | Consolidate Mum's early unlocks, preserve Elm's Healing Kit, give the starting supplies together, move Silver 1 onto a valid New Bark path, shorten the counterpart's tutorial to explain Bait without a battle, move the hatchable Egg to Mr. Pokémon, have Oak add the Fishing Rod, replace the later Egg gift with Shiny Bait, and remove the return-to-Elm requirement. See `OPENING_SEQUENCE_PLAN.md`. |
+| First counterpart battle and Slakoth companion | Implemented; build and manual verification pending | Replace the counterpart's shared companion graphics and surviving scripted cries with Slakoth. The Route 31-Violet gatehouse now requires a victory over Lyra or Ethan before the existing Vs. Recorder gift and completion state can proceed. |
 | Permanent death and wipe recovery | Complete; manually verified | Eligible fainted party Pokémon are deleted centrally after battle. Common field scripts report deaths and transactional reserve recovery after the overworld is visible; no-reserve wipes show the ending message and return to title. See `PERMANENT_DEATH_PLAN.md`. |
 | Laptop PC access | Planned; independent from permanent death | Add a reusable Laptop Key Item that opens the shared PC menu from safe field contexts. Mum initially gives it during the existing Pokégear sequence. See `LAPTOP_PLAN.md`. |
 | Forced-female protagonist | Pending | Skip gender selection, write the female profile value, continue to name selection, and retain the standard Lyra graphics without replacing Ethan's unrelated NPC assets. Existing saves do not need migration. |
@@ -97,7 +109,7 @@ complete.
 | Battle Item acquisition removal | Planned | Remove or replace marts, visible and hidden pickups, gifts, prizes, and other sources of every Battle Items-pocket item. Keep the item IDs and records intact, and audit existing saves only for harmless unusable leftovers. |
 | Trainer and wild content rebalance | In progress | Early-area land and water tables are being rebuilt around the finalized cap curve. Redesigned tables default to fixed morning/day/night content, and radio, swarm, and night-fishing replacements must not introduce species outside the reviewed area list unless explicitly planned otherwise. |
 | Fishing Rod consolidation | Complete; manually verified | The Old Rod is presented as the Fishing Rod and every active ordinary encounter table gives it a 90% bite rate. The Good Rod and Super Rod IDs/data remain for compatibility but their only acquisition gifts now award one Shiny Bait instead. Olivine reuses its original completion flag; Route 12 uses verified-unused persistent variable `0x416F` so its consumable replacement remains one-time. |
-| Trainer AI changes | Pending | First enable the strongest suitable existing trainer AI, then add a trainer-only fair-information decision layer, switching and item evaluation, doubles coordination, and bounded search. Wild and scripted AI must retain their original routes. |
+| Trainer AI changes | Planned; implementation not started | Standardize exact three-module trainers on `F_TRAINER_EXPERT_AI`, reconstruct and audit the inherited HGSS decision paths, add battle-scoped revealed-information memory, productive support and switching logic, conservative natural-learnset predictions, opponent action modelling, win-condition-aware bounded search, and later doubles coordination. Never inspect the player's current input or unrevealed party, item, TM/HM move, or hidden ability. See `TRAINER_AI_PLAN.md`. |
 | Graphics and presentation | Pending | Replace the temporary Bait icons, redesign rival battle/overworld graphics, add challenge messages, and consider title-screen changes after core systems stabilize. |
 | Full-game regression pass | Pending | Perform milestone, save/reload, encounter, progression, and hardware/emulator checks after the remaining systems and content are integrated. |
 

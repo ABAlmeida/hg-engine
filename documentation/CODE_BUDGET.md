@@ -89,6 +89,7 @@ wholly to one Heartless Gold feature without a historical comparison.
 | Trainer victory rewards | Field scripts, text NARC, generated trainer data | No dedicated C object | Reward mappings and dialogue do not occupy the synthetic overlay. Existing shared script command infrastructure may still be used. |
 | Talk-initiated trainer battles | Field scripts and Armips patches | 0 synthetic-overlay bytes for script content | Direct binary patches consume/reuse bytes in their owning executable region; track their exact patched ranges separately if expanded. |
 | Revised opening sequence and gifts | Field scripts and text NARC | 0 | Dialogue and script commands increase archive size, not injected-code usage. |
+| Counterpart gatehouse battle and Slakoth companion | Trainer/script/text NARCs plus a size-neutral overworld-table replacement | 0 | The mandatory battle and dialogue live in packaged data. Repointing static sprite tag 1032 from Marill to Slakoth replaces an existing table value and does not grow the synthetic overlay. |
 | Reusable configured Egg gifts | Field scripts, text NARC, and shared script-command code | Pending measurement | Standard script 2075 centralizes party-space checking, Egg creation, fixed-IV/ability configuration, and completion state. The menu and messages remain map-local; the compact runtime configurator consumes overlay-129 bytes that must be measured on the next requested build. |
 | Wild/trainer roster edits | Encounter/trainer NARCs | 0 | Data-only changes affect ROM archive size and runtime archive loads, not the fixed synthetic overlay. |
 | New item names/descriptions/icons | Item/message/graphics NARCs | 0 for the assets | Item behavior code is accounted for in `item.o`, `bait.o`, `reusable_healer.o`, and `stat_training_items.o`. Graphics also require heap/VRAM review when new assets are introduced. |
@@ -105,7 +106,7 @@ implementation rather than after the linker is full.
 | Planned feature | Expected budget | Current guidance |
 | --- | --- | --- |
 | Laptop PC access | Injected field/item entry code plus existing PC overlay | Prefer the existing PC launcher and one narrow field task. Measure before adding custom UI or duplicate PC state. |
-| Smarter trainer switching AI | Prefer reclaimed/in-place overlay 10 code | Extend the existing switch evaluator and AI modules. Avoid a large new overlay-129 decision engine. |
+| Fair-information expert trainer AI | Battle extension (overlay 130), with verified in-place overlay 10 changes only where necessary | Use `F_TRAINER_EXPERT_AI` as the single opt-in profile. Stage revealed-information tracking, productive switching, natural-learnset prediction, and bounded singles evaluation; current planning estimate is roughly 5-10 KB of code plus 100-250 bytes of battle-lifetime state. Measure every phase and avoid overlay 129. See `TRAINER_AI_PLAN.md`. |
 | Forced-female protagonist | Script/in-place configuration | Should not require synthetic-overlay code if implemented through the existing intro flow. |
 | Bug-Catching Contest daily availability | Field scripts/data | Prefer changing the verified schedule checks without new C code. |
 | Battle Item acquisition removal | Content data/scripts | No synthetic-overlay code expected. Keep item IDs stable. |

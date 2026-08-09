@@ -1,0 +1,8 @@
+You must be an adventuring Trainer.\nDid you challenge the Pokémon Gym yet?
+
+Lyra: I knew it was you, {STRVAR_1 3, 0, 0}!\rYou made it past me.\fBefore I give you something neat,\nshow me how strong you’ve become!\r
+Ethan: I knew it was you, {STRVAR_1 3, 0, 0}!\rYou made it past me.\fBefore I give you something neat,\nshow me how strong you’ve become!\r
+That was a great battle!\rYou earned this Vs. Recorder.\fIt can record your Pokémon battles.\rI have to go now!\fI will not let you pass me again!\r
+That was a great battle!\rYou earned this Vs. Recorder.\fIt can record your Pokémon battles.\rI have to go now!\fI will not let you pass me again!\r
+Let’s go, SLAKOTH!\r
+Come on, SLAKOTH!\r

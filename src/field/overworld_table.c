@@ -348,7 +348,7 @@ struct OVERWORLD_TAG gOWTagToFileNum[] = // skip down a bit to see the parts tha
         { .tag = 1029, .gfx = MON_OVERWORLD_GFX_START + SPECIES_MEWTWO, .callback_params = OVERWORLD_SIZE_SMALL },
         { .tag = 1030, .gfx = MON_OVERWORLD_GFX_START + SPECIES_BAYLEEF, .callback_params = OVERWORLD_SIZE_SMALL },
         { .tag = 1031, .gfx = MON_OVERWORLD_GFX_START + SPECIES_AMPHAROS, .callback_params = OVERWORLD_SIZE_SMALL },
-        { .tag = 1032, .gfx = MON_OVERWORLD_GFX_START + SPECIES_MARILL, .callback_params = OVERWORLD_SIZE_SMALL },
+        { .tag = 1032, .gfx = MON_OVERWORLD_GFX_START + SPECIES_SLAKOTH, .callback_params = OVERWORLD_SIZE_SMALL },
         { .tag = 1033, .gfx = MON_OVERWORLD_GFX_START + SPECIES_AIPOM, .callback_params = OVERWORLD_SIZE_SMALL },
         { .tag = 1034, .gfx = MON_OVERWORLD_GFX_START + SPECIES_MURKROW, .callback_params = OVERWORLD_SIZE_SMALL },
         { .tag = 1035, .gfx = MON_OVERWORLD_GFX_START + SPECIES_MILTANK, .callback_params = OVERWORLD_SIZE_SMALL },

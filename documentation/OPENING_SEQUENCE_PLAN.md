@@ -1,6 +1,6 @@
 # Revised Opening Sequence Plan
 
-Last updated: 2026-08-01
+Last updated: 2026-08-09
 
 ## Status
 
@@ -15,6 +15,8 @@ registered Healing Kit cleanup still need focused manual verification.
 - Preserve the normal HGSS counterpart selection. Lyra demonstrates catching
   for a male player; Ethan does so for a female player. Revisit this only if
   the separate forced-protagonist plan is retained.
+- Replace the counterpart's recurring Marill companion with Slakoth while
+  preserving the existing object movements and scene flags.
 - The rival is always named `Silver`. Do not display the rival naming screen.
 - Professor Elm continues to give the Healing Kit during the starter sequence.
 - Elm's assistant gives 5 Potions, 20 standard Poké Balls, and 20 Poké Bait in
@@ -38,12 +40,16 @@ registered Healing Kit cleanup still need focused manual verification.
   needs and asks the player to hatch and care for the Egg. The player does not
   return to Elm.
 - Keep the catching tutorial on the first outbound journey. Retain the
-  counterpart and Marill's first overworld grass animation, replace its
+  counterpart and Slakoth's first overworld grass animation, replace its
   explanation with Poké Bait instructions, and skip the simulated capture
   battle.
 - Do not give additional Poké Balls from the shortened tutorial.
 - After Mr. Pokémon's sequence, the northern Route 30 path is immediately
   available and the player can continue toward Violet City.
+- In the Route 31-Violet gatehouse, require the player to defeat the matching
+  counterpart before the existing Vs. Recorder gift. Lyra battles a male
+  player and Ethan battles a female player. A loss uses normal blackout
+  handling and leaves the scene incomplete so the battle must be retried.
 
 ## Intended progression
 
@@ -57,7 +63,7 @@ registered Healing Kit cleanup still need focused manual verification.
 5. The assistant gives 5 Potions, 20 Poké Balls, and 20 Poké Bait.
 6. When the player leaves the lab, Silver approaches and starts Silver 1.
 7. The first trip through Route 29 triggers the shortened counterpart and
-   Marill tutorial. It explains Bait and Balls but does not start a tutorial
+   Slakoth tutorial. It explains Bait and Balls but does not start a tutorial
    battle.
 8. Cherrygrove is already in its post-guide-tour state.
 9. Mr. Pokémon gives the hatchable Egg. Oak gives the Pokédex and Fishing
@@ -67,6 +73,9 @@ registered Healing Kit cleanup still need focused manual verification.
 11. Route 30's northern path is open and normal Violet City progression begins.
 12. After Falkner, Elm directs the player to his assistant in Violet City's
     Poké Mart. The assistant gives one Shiny Bait instead of another Egg.
+13. Before entering Violet City, the counterpart challenges the player in the
+    Route 31 gatehouse. Victory awards the Vs. Recorder and completes the
+    scene; defeat does neither.
 
 ## Non-goals
 
@@ -90,7 +99,7 @@ relevant script blocks and event data with DSPRE. The audit must cover:
 - Elm's lab starter, Healing Kit, phone registration, assistant gift, police,
   and Mystery Egg return branches;
 - New Bark Town's Silver objects and lab-exit triggers;
-- Route 29's counterpart, Marill, catching-tutorial trigger, movements, and
+- Route 29's counterpart, Slakoth, catching-tutorial trigger, movements, and
   completion cleanup;
 - Cherrygrove's guide, Running Shoes, Map, outdoor object, and indoor object;
 - the original Silver 1 encounter and its cleanup near Cherrygrove;
@@ -164,7 +173,7 @@ The consolidated branch must:
 5. run the existing Mum savings choice and preserve its yes/no behavior;
 6. finish with `VAR_SCENE_PLAYERS_HOUSE_1F` set to 1, as in the original
    automatic routine, so New Bark's existing header can launch the normal
-   initial Lyra/Ethan and Marill scene after the player leaves the house;
+   initial Lyra/Ethan and Slakoth scene after the player leaves the house;
 7. remain one-time when the player changes maps, saves, or reloads.
 
 Do not advance the player-house scene directly to its terminal value during
@@ -243,7 +252,7 @@ estimating it as free.
 ## 7. Move Silver 1 to New Bark Town
 
 Reuse the existing New Bark rival object. Hide the original New Bark
-counterpart and Marill objects before starting the replacement scene, matching
+counterpart and Slakoth objects before starting the replacement scene, matching
 the cleanup performed by the displaced vanilla post-starter scene.
 
 Keep Silver at his original window position `(682, 391)`. He runs south three
@@ -253,7 +262,7 @@ the battle. Afterward he runs south two tiles and west seven tiles to the
 verified Route 29 boundary at `(676, 396)`. This avoids both the lab footprint
 and mailbox while keeping his starting position and departure direction visible.
 
-Set the New Bark counterpart and Marill hide flags inside Elm's lab after the
+Set the New Bark counterpart and Slakoth hide flags inside Elm's lab after the
 assistant's successful supply gift, before the exterior map loads. The outdoor
 scene repeats the cleanup defensively. Redirect New Bark's vanilla stage-1 map
 setup to an empty routine, because that setup explicitly clears the same flags
@@ -311,7 +320,8 @@ outbound journey after Silver 1. Preserve normal counterpart selection:
 
 - Lyra for a male player;
 - Ethan for a female player; and
-- the existing Marill object and movements for both paths.
+- the existing companion object and movements for both paths, rendered as
+  Slakoth through its shared static sprite tag.
 
 Replace the catching explanation with dialogue that tells the player to:
 
@@ -320,7 +330,7 @@ Replace the catching explanation with dialogue that tells the player to:
 3. throw a Poké Ball during the encounter.
 
 Retain the first verified overworld movement in which the counterpart and
-Marill move or jump into the grass. Branch around the `catching_tutorial`
+Slakoth move or jump into the grass. Branch around the `catching_tutorial`
 command before opcode 251 starts `SetupAndStartTutorialBattle()`. Rejoin only
 at a verified post-task continuation that does not expect tutorial-battle
 state.
@@ -330,7 +340,7 @@ The shortened branch must still:
 - wait for all retained movements;
 - complete its messages cleanly;
 - update the original one-time tutorial state;
-- hide or reposition the counterpart and Marill correctly;
+- hide or reposition the counterpart and Slakoth correctly;
 - release the field lock; and
 - leave Route 29 traversal available.
 
@@ -506,7 +516,7 @@ or task ownership is correct.
 6. Add the assistant's three exact item stacks and remove the later tutorial
    Ball reward.
 7. Move Silver 1 to New Bark and retire the original battle and naming flow.
-8. Move and shorten the counterpart/Marill tutorial without starting opcode
+8. Move and shorten the counterpart/Slakoth tutorial without starting opcode
    251's tutorial battle.
 9. Advance Cherrygrove to its established post-tour state.
 10. Move the hatchable Egg to Mr. Pokémon, resolve the Egg-helper lifetime
@@ -541,7 +551,7 @@ Use a new in-game save, not a save state, and manually verify:
 1. Mum's complete automatic downstairs cutscene for both savings choices;
 2. menu features, Pokégear, Map, and Running Shoes before visiting Elm;
 3. no duplicate Mum conversation after map changes and save/reload;
-4. the normal initial New Bark Lyra/Ethan and Marill scene after leaving home;
+4. the normal initial New Bark Lyra/Ethan and Slakoth scene after leaving home;
 5. all three starters and both nickname choices;
 6. exactly one Healing Kit and one Elm phone registration, plus Healing Kit
    registration and registered-button use;
@@ -555,7 +565,7 @@ Use a new in-game save, not a save state, and manually verify:
 11. the saved rival name `Silver` in later dialogue after save/reload;
 12. no police naming scene and no original Silver 1 encounter;
 13. the correct Lyra/Ethan counterpart for each player gender;
-14. the retained counterpart/Marill grass animation and new Bait explanation;
+14. the retained counterpart/Slakoth grass animation and new Bait explanation;
 15. no tutorial battle, Ball gift, item consumption, Pokédex update, or area
     consumption from the shortened demonstration;
 16. tutorial cleanup and one-time behavior after leaving and re-entering;

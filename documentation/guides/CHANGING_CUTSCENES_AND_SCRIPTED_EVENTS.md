@@ -328,11 +328,14 @@ Guard fixed offsets before writing them:
 The assertion accepts both the pristine and already-patched forms so deliberate
 script rebuilds remain idempotent, while rejecting an unexpected archive.
 
-The Silver replacement begins at `0x174C`, and `revised_new_bark_setup` is
-fixed at `0x1840`. That makes the existing appended region tight. Adding
-commands or movement steps without checking the assembled end can overlap the
-setup routine. Dialogue-only edits in message bank 542 do not consume this
-script space.
+The Silver replacement begins at `0x174C`, and the appended region is tight.
+The approach list occupies `0x1828` through `0x183F`, so placing another
+routine at `0x1840` would overwrite the first action in `silver_depart`.
+`revised_new_bark_setup` therefore aliases the existing `end` at the end of
+the Silver victory routine instead of owning another fixed-offset terminator.
+When adding commands or movement steps, inspect the assembled layout as well
+as the source labels; a later `.org` can silently overwrite earlier output.
+Dialogue-only edits in message bank 542 do not consume this script space.
 
 For a large rewrite, first design a verified relocation strategy and prove the
 new region is unused. Do not guess that bytes which look empty are safe.

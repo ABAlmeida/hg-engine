@@ -10,6 +10,8 @@
 
 SCRIPT_OPCODE_CATCHING_TUTORIAL equ 251
 SCRIPT_OPCODE_GOTO              equ 22
+SCRIPT_OPCODE_GENDER_MSGBOX     equ 132
+SCRIPT_OPCODE_PLAY_CRY          equ 76
 SCRIPT_OPCODE_CLOSEMSG          equ 53
 SCRIPT_OPCODE_SETVAR            equ 41
 SCRIPT_OPCODE_SETFLAG           equ 30
@@ -30,6 +32,8 @@ VIOLET_ASSISTANT_OBJECT_ID equ 4
 TRAINER_SILVER_CHIKORITA equ 495
 TRAINER_SILVER_CYNDAQUIL equ 496
 TRAINER_SILVER_TOTODILE  equ 497
+TRAINER_LYRA_GATEHOUSE   equ 738
+TRAINER_ETHAN_GATEHOUSE  equ 739
 
 .if IMPLEMENT_REVISED_OPENING
 
@@ -39,6 +43,7 @@ TRAINER_SILVER_TOTODILE  equ 497
 .if readu32("build/a012/2_845", 0) != 0x1A && readu32("build/a012/2_845", 0) != (mums_complete_opening - 4)
     .error "Revised opening found an unexpected Mum script table entry"
 .endif
+
 .org 0
 .word mums_complete_opening - 4
 
@@ -71,25 +76,14 @@ setflag FLAG_GOT_OPTIONS_BUTTON
 play_fanfare SEQ_SE_PL_KIRAKIRA
 wait_fanfare
 npc_msg 5
-
-buffer_players_name 0
 npc_msg 7
 npc_msg 8
 setflag FLAG_GOT_POKEGEAR
-play_fanfare SEQ_ME_ITEM
+play_fanfare SEQ_SE_PL_KIRAKIRA
 wait_fanfare
 npc_msg 9
 npc_msg 10
-touchscreen_menu_hide
-getmenuchoice VAR_SPECIAL_RESULT
-touchscreen_menu_show
-compare VAR_SPECIAL_RESULT, 0
-goto_if_ne mum_pokegear_no
 npc_msg 11
-goto mum_pokegear_done
-mum_pokegear_no:
-npc_msg 12
-mum_pokegear_done:
 npc_msg 13
 
 register_pokegear_card 1
@@ -97,7 +91,7 @@ play_fanfare SEQ_ME_POKEGEAR_REGIST
 wait_fanfare
 npc_msg 39
 give_running_shoes
-play_fanfare SEQ_ME_ITEM
+play_fanfare SEQ_SE_PL_KIRAKIRA
 wait_fanfare
 npc_msg 40
 
@@ -136,6 +130,7 @@ end
 .if readu32("build/a012/2_842", 0x20) != 0xEC8 && readu32("build/a012/2_842", 0x20) != (silver_one_after_lab - 0x24)
     .error "Revised opening found an unexpected New Bark script table entry"
 .endif
+
 .if readu32("build/a012/2_842", NEW_BARK_SETUP_TABLE_ENTRY) != 0x6D && readu32("build/a012/2_842", NEW_BARK_SETUP_TABLE_ENTRY) != (revised_new_bark_setup - (NEW_BARK_SETUP_TABLE_ENTRY + 4))
     .error "Revised opening found an unexpected New Bark setup script"
 .endif
@@ -207,6 +202,9 @@ setflag FLAG_MET_PASSERBY_BOY
 setvar VAR_SCENE_NEW_BARK_TOWN_OW, 2
 setvar VAR_SCENE_PLAYERS_HOUSE_1F, 4
 releaseall
+// The stage-1 New Bark setup is intentionally a no-op. Reuse this existing
+// terminator so it cannot overwrite the tightly packed movement lists below.
+revised_new_bark_setup:
 end
 
 .align 4
@@ -220,16 +218,11 @@ step_end
 
 .align 4
 silver_depart:
-step 17, 2 // Reach the horizontal path to Route 29.
-step 18, 7 // Run west to New Bark's Route 29 exit.
+step 17, 2 // South twice.
+step 18, 2 // West twice.
+step 17, 3 // Reach the horizontal path to Route 29.
+step 18, 5 // Run west to New Bark's Route 29 exit.
 step_end
-
-// Vanilla setup stage 1 explicitly shows the counterpart and Marill for the
-// displaced post-starter scene. The revised opening has no such scene, so
-// preserve the hide flags already set inside Elm's lab.
-.org 0x1840
-revised_new_bark_setup:
-end
 .close
 
 // Route 29: retain the counterpart and Marill grass animation, but replace
@@ -399,3 +392,96 @@ end
 .close
 
 .endif
+
+// Every story object representing the counterpart's companion uses static
+// sprite tag 1032. Its graphics now resolve to Slakoth, so keep the four
+// surviving companion cries consistent with that shared visual mapping.
+.open "build/a012/2_093", 0
+.if readu16("build/a012/2_093", 0x64) != SCRIPT_OPCODE_PLAY_CRY
+    .error "Slakoth companion found an unexpected D37 cry command"
+.endif
+.if readu16("build/a012/2_093", 0x66) != SPECIES_MARILL && readu16("build/a012/2_093", 0x66) != SPECIES_SLAKOTH
+    .error "Slakoth companion found an unexpected D37 cry species"
+.endif
+.org 0x66
+.halfword SPECIES_SLAKOTH
+.close
+
+.open "build/a012/2_225", 0
+.if readu16("build/a012/2_225", 0x1B6) != SCRIPT_OPCODE_PLAY_CRY
+    .error "Slakoth companion found an unexpected Route 29 cry command"
+.endif
+.if readu16("build/a012/2_225", 0x1B8) != SPECIES_MARILL && readu16("build/a012/2_225", 0x1B8) != SPECIES_SLAKOTH
+    .error "Slakoth companion found an unexpected Route 29 cry species"
+.endif
+.org 0x1B8
+.halfword SPECIES_SLAKOTH
+.close
+
+.open "build/a012/2_842", 0
+.if readu16("build/a012/2_842", 0x16C4) != SCRIPT_OPCODE_PLAY_CRY
+    .error "Slakoth companion found an unexpected New Bark cry command"
+.endif
+.if readu16("build/a012/2_842", 0x16C6) != SPECIES_MARILL && readu16("build/a012/2_842", 0x16C6) != SPECIES_SLAKOTH
+    .error "Slakoth companion found an unexpected New Bark cry species"
+.endif
+.org 0x16C6
+.halfword SPECIES_SLAKOTH
+.close
+
+.open "build/a012/2_849", 0
+.if readu16("build/a012/2_849", 0x1AC) != SCRIPT_OPCODE_PLAY_CRY
+    .error "Slakoth companion found an unexpected Elm lab cry command"
+.endif
+.if readu16("build/a012/2_849", 0x1AE) != SPECIES_MARILL && readu16("build/a012/2_849", 0x1AE) != SPECIES_SLAKOTH
+    .error "Slakoth companion found an unexpected Elm lab cry species"
+.endif
+.org 0x1AE
+.halfword SPECIES_SLAKOTH
+.close
+
+// Route 31 gatehouse: make the counterpart battle mandatory before awarding
+// the Vs. Recorder. Player gender 0 uses Lyra; gender 1 uses Ethan, matching
+// the existing GenderMsgBox order in this scene.
+.open "build/a012/2_231", 0
+.if readu16("build/a012/2_231", 0x13D) == SCRIPT_OPCODE_GENDER_MSGBOX
+    .if readu8("build/a012/2_231", 0x13F) != 2 || readu8("build/a012/2_231", 0x140) != 3
+        .error "Gatehouse battle found unexpected counterpart messages"
+    .endif
+.elseif readu16("build/a012/2_231", 0x13D) == SCRIPT_OPCODE_GOTO
+    .if readu32("build/a012/2_231", 0x13F) != (gatehouse_friend_battle - 0x143)
+        .error "Gatehouse battle found an unexpected existing branch"
+    .endif
+.else
+    .error "Gatehouse battle found an unexpected Vs. Recorder scene"
+.endif
+.org 0x13D
+goto gatehouse_friend_battle
+
+.org 0x4A0
+gatehouse_friend_battle:
+gender_msgbox 2, 3
+closemsg
+get_player_gender VAR_SPECIAL_RESULT
+compare VAR_SPECIAL_RESULT, 0
+goto_if_eq gatehouse_battle_lyra
+trainer_battle TRAINER_ETHAN_GATEHOUSE, 0, 0, 0
+goto gatehouse_battle_finished
+gatehouse_battle_lyra:
+trainer_battle TRAINER_LYRA_GATEHOUSE, 0, 0, 0
+gatehouse_battle_finished:
+check_battle_won VAR_SPECIAL_RESULT
+compare VAR_SPECIAL_RESULT, 0
+goto_if_ne gatehouse_battle_won
+// This is a mandatory battle. A loss follows normal blackout handling and
+// leaves the scene variable unchanged, so the player must return and win.
+white_out
+releaseall
+end
+gatehouse_battle_won:
+GiveItemNoCheck ITEM_VS_RECORDER, 1
+gender_msgbox 4, 5
+// Resume at the original CloseMsg; the gift and message bytes displaced by
+// the six-byte branch above have both been replayed here.
+goto 0x155
+.close

@@ -876,7 +876,7 @@ const TrainerData sTrainerData[] = {
                 .ivs = 206,
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 12,
-                .species = SPECIES_JUMPLUFF,
+                .species = SPECIES_SKIPLOOM,
                 .item = ITEM_NONE,
                 .ballSeal = 0,
             },
@@ -899,8 +899,16 @@ const TrainerData sTrainerData[] = {
             {
                 .ivs = 206,
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
-                .level = 13,
+                .level = 12,
                 .species = SPECIES_NOIBAT,
+                .item = ITEM_NONE,
+                .ballSeal = 0,
+            },
+            {
+                .ivs = 206,
+                .abilitySlot = TRAINER_POKEMON_ABILITY_1,
+                .level = 13,
+                .species = SPECIES_AERODACTYL,
                 .item = ITEM_ORAN_BERRY,
                 .ballSeal = 0,
             },
@@ -31289,9 +31297,117 @@ const TrainerData sTrainerData[] = {
         },
     },
 
+    [738] = {
+        .name = "Lyra",
+        .data = {
+            .trainerType = TRAINER_DATA_TYPE_MOVES | TRAINER_DATA_TYPE_ITEMS | TRAINER_DATA_TYPE_ABILITY,
+            .trainerClass = TRAINERCLASS_PKMN_TRAINER_LYRA,
+            .items = { ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE },
+            .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE | F_EVALUATE_ATTACKS | F_EXPERT_ATTACKS,
+            .battleType = SINGLE_BATTLE,
+        },
+        .party = {
+            {
+                .ivs = 255,
+                .abilitySlot = TRAINER_POKEMON_ABILITY_1,
+                .level = 13,
+                .species = SPECIES_WHIMSICOTT,
+                .item = ITEM_NONE,
+                .moves = { MOVE_TAILWIND, MOVE_POISON_POWDER, MOVE_LEECH_SEED, MOVE_LIGHT_SCREEN },
+                .ability = ABILITY_PRANKSTER,
+                .ballSeal = 0,
+            },
+            {
+                .ivs = 255,
+                .abilitySlot = TRAINER_POKEMON_ABILITY_1,
+                .level = 13,
+                .species = MON_WITH_FORM(SPECIES_ROTOM, 2),
+                .item = ITEM_NONE,
+                .moves = { MOVE_DOUBLE_TEAM, MOVE_ASTONISH, MOVE_THUNDER_SHOCK, MOVE_CONFUSE_RAY },
+                .ability = ABILITY_LEVITATE,
+                .ballSeal = 0,
+            },
+            {
+                .ivs = 255,
+                .abilitySlot = TRAINER_POKEMON_ABILITY_1,
+                .level = 11,
+                .species = SPECIES_SLAKOTH,
+                .item = ITEM_FLAME_ORB,
+                .moves = { MOVE_FACADE, MOVE_YAWN, MOVE_ENCORE, MOVE_SUBSTITUTE },
+                .ability = ABILITY_GUTS,
+                .ballSeal = 0,
+            },
+        },
+        .text = {
+            {
+                .type = TRMSG_LOSE,
+                .text = "That was a great battle!\n",
+            },
+            {
+                .type = TRMSG_WIN,
+                .text = "Come back when you’re ready to try again!\n",
+            },
+        },
+    },
+
+    [739] = {
+        .name = "Ethan",
+        .data = {
+            .trainerType = TRAINER_DATA_TYPE_MOVES | TRAINER_DATA_TYPE_ITEMS | TRAINER_DATA_TYPE_ABILITY,
+            .trainerClass = TRAINERCLASS_PKMN_TRAINER_ETHAN,
+            .items = { ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE },
+            .aiFlags = F_PRIORITIZE_SUPER_EFFECTIVE | F_EVALUATE_ATTACKS | F_EXPERT_ATTACKS,
+            .battleType = SINGLE_BATTLE,
+        },
+        .party = {
+            {
+                .ivs = 255,
+                .abilitySlot = TRAINER_POKEMON_ABILITY_1,
+                .level = 13,
+                .species = SPECIES_WHIMSICOTT,
+                .item = ITEM_NONE,
+                .moves = { MOVE_TAILWIND, MOVE_POISON_POWDER, MOVE_LEECH_SEED, MOVE_LIGHT_SCREEN },
+                .ability = ABILITY_PRANKSTER,
+                .ballSeal = 0,
+            },
+            {
+                .ivs = 255,
+                .abilitySlot = TRAINER_POKEMON_ABILITY_1,
+                .level = 13,
+                .species = MON_WITH_FORM(SPECIES_ROTOM, 2),
+                .item = ITEM_NONE,
+                .moves = { MOVE_DOUBLE_TEAM, MOVE_ASTONISH, MOVE_THUNDER_SHOCK, MOVE_CONFUSE_RAY },
+                .ability = ABILITY_LEVITATE,
+                .ballSeal = 0,
+            },
+            {
+                .ivs = 255,
+                .abilitySlot = TRAINER_POKEMON_ABILITY_1,
+                .level = 11,
+                .species = SPECIES_SLAKOTH,
+                .item = ITEM_FLAME_ORB,
+                .moves = { MOVE_FACADE, MOVE_YAWN, MOVE_ENCORE, MOVE_SUBSTITUTE },
+                .ability = ABILITY_GUTS,
+                .ballSeal = 0,
+            },
+        },
+        .text = {
+            {
+                .type = TRMSG_LOSE,
+                .text = "That was a great battle!\n",
+            },
+            {
+                .type = TRMSG_WIN,
+                .text = "Come back when you’re ready to try again!\n",
+            },
+        },
+    },
+
 };
 
 const u16 sTrainerTextOrder[] = {
+    738,
+    739,
     495,
     496,
     497,
