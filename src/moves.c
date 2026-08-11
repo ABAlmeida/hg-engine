@@ -256,7 +256,7 @@ u32 LONG_CALL GetMoveData(u16 id, u32 field)
         ret = bm->effect;
         break;
     case MOVE_DATA_PSS_SPLIT:
-        ret = bm->effect;
+        ret = bm->split;
         break;
     case MOVE_DATA_BASE_POWER:
         ret = bm->power;

@@ -225,6 +225,11 @@
 // DISABLE_ITEMS_IN_TRAINER_BATTLE rejects player Bag item selections in trainer battles.
 #define DISABLE_ITEMS_IN_TRAINER_BATTLE
 
+// IMPLEMENT_FAIR_TRAINER_AI gives trainers using F_TRAINER_EXPERT_AI the
+// public-information strategic command and move picker. Trainers without that
+// profile continue to use the original HGSS AI.
+#define IMPLEMENT_FAIR_TRAINER_AI
+
 // DISABLE_TRAINER_LINE_OF_SIGHT prevents field trainers from automatically
 // approaching the player. The shared first-time talk script previews their
 // team and configured reward before asking whether to battle.

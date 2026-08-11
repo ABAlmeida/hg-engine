@@ -13,6 +13,9 @@
 #include "constants/weather_numbers.h"
 #include "constants/battle_message_constants.h"
 #include "constants/file.h"
+#ifdef IMPLEMENT_FAIR_TRAINER_AI
+#include "trainer_ai.h"
+#endif
 
 // this file's function declarations
 //u32 MoveHitUTurnHeldItemEffectCheck(void *bw, struct BattleStruct *sp, int *seq_no);
@@ -556,6 +559,10 @@ BOOL LONG_CALL TryUseHeldItem(void *bw, struct BattleStruct *ctx, int battlerId)
         if (ret == TRUE) {
             ctx->battlerIdTemp = battlerId;
             ctx->item_work = GetBattleMonItem(ctx, battlerId);
+#ifdef IMPLEMENT_FAIR_TRAINER_AI
+            // An activating held item is now public knowledge.
+            FairTrainerAI_ObserveHeldItem(bw, ctx, battlerId, ctx->item_work);
+#endif
             LoadBattleSubSeqScript(ctx, ARC_BATTLE_SUB_SEQ, script);
             ctx->next_server_seq_no = ctx->server_seq_no;
             ctx->server_seq_no = 22;

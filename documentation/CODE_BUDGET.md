@@ -48,6 +48,12 @@ feature total.
 | Goldenrod Berry Shop inventory | `mart.o` data table | Measurement pending; nominal payload grows by 126 bytes | The former five-entry, 10-byte herbal table becomes a 68-entry, 136-byte Berry table including its terminator. This uses the existing mart path and avoids a larger custom shop/price hook; confirm the linked delta and remaining headroom on the next explicitly requested build. |
 | General script commands | `script_new_cmds.o` | Measurement pending | Previously 136 bytes. Configured Egg IV/ability handling now shares this dispatcher; measure its new object size and remaining overlay-129 headroom on the next explicitly requested build. |
 
+## Battle-extension feature costs
+
+| Feature | Measured cost | Notes and possible savings |
+| --- | ---: | --- |
+| Fair-information expert trainer AI | 8,172 linked bytes | The current requested build uses 77,668 bytes of overlay 130 against the 69,496-byte configuration-off baseline. `trainer_ai.o` contains 7,832 bytes of code and 288 bytes of BSS. This includes contextual reserve actions, team support, entry commitment, and the corrected long-call fallback to the original HGSS AI. It adds no heap, save, archive, graphics, or VRAM cost. |
+
 ## Injected features within shared objects
 
 These measurements are sums of named functions in the current objects. They
@@ -106,7 +112,7 @@ implementation rather than after the linker is full.
 | Planned feature | Expected budget | Current guidance |
 | --- | --- | --- |
 | Laptop PC access | Injected field/item entry code plus existing PC overlay | Prefer the existing PC launcher and one narrow field task. Measure before adding custom UI or duplicate PC state. |
-| Fair-information expert trainer AI | Battle extension (overlay 130), with verified in-place overlay 10 changes only where necessary | Use `F_TRAINER_EXPERT_AI` as the single opt-in profile. Stage revealed-information tracking, productive switching, natural-learnset prediction, and bounded singles evaluation; current planning estimate is roughly 5-10 KB of code plus 100-250 bytes of battle-lifetime state. Measure every phase and avoid overlay 129. See `TRAINER_AI_PLAN.md`. |
+| Coordinated doubles trainer AI | Deferred; likely battle extension plus verified overlay 10 integration | No current implementation or reserved-byte commitment. Re-estimate only after the singles-oriented expert layer is complete and measured. See `TRAINER_AI_DOUBLES_PLAN.md`. |
 | Forced-female protagonist | Script/in-place configuration | Should not require synthetic-overlay code if implemented through the existing intro flow. |
 | Bug-Catching Contest daily availability | Field scripts/data | Prefer changing the verified schedule checks without new C code. |
 | Battle Item acquisition removal | Content data/scripts | No synthetic-overlay code expected. Keep item IDs stable. |
@@ -121,6 +127,7 @@ implementation rather than after the linker is full.
 | Capture permission state | BSS | 1 byte in `capture_rules.o`, plus linker alignment. Persistent capture history belongs to save data rather than BSS. |
 | Permanent-death notifications | BSS/data | Two bytes remain in overlay 129 for cross-lifetime notification/recovery state. The field extension owns its four-byte active-task pointer. Party changes themselves reuse existing party/PC storage. |
 | Summary friendship display | Heap/stack/save | No new save state or allocation. It reads the existing friendship field during Summary rendering. |
+| Fair-information expert trainer AI | Battle-extension BSS and stack | 280 bytes of BSS for six revealed-party records, cached per-battler decisions, and switch hysteresis. No heap allocation or save data. Loading a newly revealed species' learnset uses a bounded 136-byte stack buffer once per reveal; normal decisions use a fixed nine-action array covering four moves and up to five legal switches. |
 | Text and script features | ROM archive and load heap | Archive growth should be measured independently when it becomes material; it does not reduce synthetic-overlay headroom. |
 
 ## Required update procedure
@@ -143,6 +150,14 @@ After a user-requested successful code or ROM build:
 | Shared-nature/formula friendship implementation, before feature relocation | 32,611 | 32,672 | 61 | Successful build artifact used as relocation baseline |
 | Unsafe first capture/permanent-death lifetime split | 31,295 | 32,672 | 1,377 | Built on 2026-08-07, but startup testing failed because ARM9 hook targets were placed in an extension that was not loaded yet. Historical measurement only. |
 | Safe capture-only lifetime split | 31,699 | 32,672 | 973 | Successful `quick-rom` build on 2026-08-07. Permanent-death code remains resident; capture field and battle logic remain relocated. |
+
+### Fair trainer-AI battle-extension comparison
+
+| Configuration | Used | Capacity | Free | Result |
+| --- | ---: | ---: | ---: | --- |
+| Current code with `IMPLEMENT_FAIR_TRAINER_AI` disabled | 69,496 | 81,920 | 12,424 | Successful controlled `make code` link on 2026-08-09. |
+| Current contextual code with `IMPLEMENT_FAIR_TRAINER_AI` enabled | 77,196 | 81,920 | 4,724 | Successful `quick-rom` build on 2026-08-09; increase is 7,700 bytes. |
+| Current source after reusable-support, entry-commitment, and legacy-fallback corrections | 77,668 | 81,920 | 4,252 | Successful `quick-rom` build on 2026-08-09. `trainer_ai.o` contains 7,832 bytes of code and 288 bytes of BSS; both original HGSS AI calls use odd Thumb addresses through `BLX`. |
 
 ### Extension-overlay impact of the safe split
 

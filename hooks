@@ -1,6 +1,13 @@
 #include "include/config.h"
 #include "include/debug.h"
 
+#ifdef IMPLEMENT_FAIR_TRAINER_AI
+# Replace the two verified overlay-12 calls into the HGSS overlay-10 AI.
+# The hook installer validates that each source instruction is a Thumb BL.
+0012 FairTrainerAI_PickCommand 0225E10E bl
+0012 FairTrainerAI_PickMove 0225E43E bl
+#endif
+
 #ifdef IMPLEMENT_PERMANENT_DEATH
 
 # The saved-party commit wrapper ends at 0x02050738. Use the eight-byte r2
