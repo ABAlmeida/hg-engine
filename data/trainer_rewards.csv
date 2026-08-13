@@ -3,13 +3,13 @@ trainer_id,item_id,quantity
 # A trainer omitted from this table still receives a team preview and battle
 # prompt, but its offer does not mention or award an item.
 
-# Route 30 - Youngster Joey
+# Route 30 - Youngster Joey: Protein S
 8,2689,1
-# Route 30 - Youngster Mikey
+# Route 30 - Youngster Mikey: HP Up S
 47,2688,1
-# Route 30 - Bug Catcher Don
+# Route 30 - Bug Catcher Don: Iron S
 249,2690,1
-# Route 31 - Bug Catcher Wade
+# Route 31 - Bug Catcher Wade: Carbos S
 4,2691,1
 
 # Sprout Tower - Sage Nico: Zinc S

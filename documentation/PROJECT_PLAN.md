@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-08-09
+Last updated: 2026-08-13
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -14,10 +14,12 @@ complete.
 - Award no battle experience or effort values. Vitamins are the only way to
   add effort values; EV-reducing items retain their normal behavior.
 - Add four vitamin strengths for each stat (10, 50, 100, and up to the legal
-  maximum) plus IV Max. Silver 1 awards one IV Max; keep the vitamin variants
-  without normal gameplay sources for now and retain the current 40-slot
-  Medicine pocket and standard Bag-full behavior. `DEBUG_CHEATS` may seed
-  temporary testing copies.
+  maximum) plus IV Max. Silver 1 awards one IV Max; trainers on Routes 30 and
+  31 and in Sprout Tower distribute all six S vitamins. Keep the L and Max
+  vitamin variants without normal gameplay sources for now and retain the
+  current 40-slot Medicine pocket and standard Bag-full behavior.
+  `DEBUG_CHEATS` may seed temporary testing copies. Track sources in
+  `VITAMIN_AVAILABILITY.md`.
 - Store one monotonic level-cap value in the save. Configured trainer
   victories raise it through a central table; lower values are ignored.
 - Let eligible party Pokémon advance to the saved cap through `LEVEL TO CAP`,
@@ -84,7 +86,7 @@ complete.
 | Disable capture experience | Complete | Capture experience remains disabled. |
 | No battle experience | Complete; manually verified | Battle EXP presentation and gains are skipped. |
 | Item-only effort values | Complete; manually verified | `DISABLE_BATTLE_EV_GAIN` prevents defeated Pokémon from awarding EVs while vitamins remain available and can reach the modern 252-per-stat cap. EV-reducing items remain unchanged. |
-| Stat-training item tiers | Complete; manually verified | S, regular, L, and Max variants provide the configured EV amounts for all six stats, and IV Max maximizes all six IVs. Silver 1 awards one IV Max; normal acquisition sources for the vitamin variants remain deferred. See `STAT_TRAINING_ITEMS_PLAN.md`. |
+| Stat-training item tiers | Complete; manually verified | S, regular, L, and Max variants provide the configured EV amounts for all six stats, and IV Max maximizes all six IVs. Silver 1 awards one IV Max; early first-victory trainer rewards distribute all six S vitamins. L- and Max-tier acquisition remains deferred. See `STAT_TRAINING_ITEMS_PLAN.md` and `VITAMIN_AVAILABILITY.md`. |
 | Medicine item availability cleanup | In progress; direct Berry mappings pending build and manual verification | Keep 14 obsolete healing/status item IDs intact while removing their normal acquisition sources. The Goldenrod herbal shop now stocks all effect-bearing Berries, with every Berry's global base price increased tenfold. Straightforward Berry replacements now cover marts, visible and hidden pickups, and Pickup; the four revival items still require a separate content decision. See `MEDICINE_ITEM_AVAILABILITY_PLAN.md`. |
 | Persistent level caps | Complete; manually verified | New saves begin at level 7 and story-trainer victories raise the saved cap according to `LEVEL_CAPS.md`. |
 | Level to Cap | Complete; manually verified | The party action advances one level at a time and preserves move and evolution prompts. |

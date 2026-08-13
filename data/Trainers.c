@@ -31341,11 +31341,11 @@ const TrainerData sTrainerData[] = {
         .text = {
             {
                 .type = TRMSG_LOSE,
-                .text = "That was a great battle!\n",
+                .text = "That was a great battle!\\n",
             },
             {
                 .type = TRMSG_WIN,
-                .text = "Come back when you’re ready to try again!\n",
+                .text = "Come back when you’re ready to try again!\\n",
             },
         },
     },
@@ -31394,11 +31394,11 @@ const TrainerData sTrainerData[] = {
         .text = {
             {
                 .type = TRMSG_LOSE,
-                .text = "That was a great battle!\n",
+                .text = "That was a great battle!\\n",
             },
             {
                 .type = TRMSG_WIN,
-                .text = "Come back when you’re ready to try again!\n",
+                .text = "Come back when you’re ready to try again!\\n",
             },
         },
     },

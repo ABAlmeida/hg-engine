@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain Trainer Reward Trackers"
+  short_description: "Keep trainer reward availability documents synchronized"
+  default_prompt: "Use $maintain-trainer-reward-trackers to update and verify the Heartless Gold trainer reward availability documents."

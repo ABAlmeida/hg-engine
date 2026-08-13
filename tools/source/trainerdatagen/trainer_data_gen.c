@@ -507,6 +507,10 @@ static void WriteTextFile(const char *dir, int index, const char *text) {
     FILE *file;
 
     BuildRawTextPath(path, sizeof(path), dir, index);
+    if (strchr(text, '\n') != NULL || strchr(text, '\r') != NULL) {
+        fprintf(stderr, "%s: trainer text contains a literal line break; use \\\\n or \\\\r instead\n", path);
+        exit(EXIT_FAILURE);
+    }
     file = OpenTextForWrite(path);
     fputs(text, file);
     fclose(file);

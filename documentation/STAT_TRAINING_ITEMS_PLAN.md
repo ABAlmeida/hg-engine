@@ -1,6 +1,6 @@
 # Stat-Training Items Plan
 
-Last updated: 2026-08-02
+Last updated: 2026-08-13
 
 ## Decisions
 
@@ -8,9 +8,11 @@ Last updated: 2026-08-02
   the game's existing Bag-full behavior; no existing Medicine needs to be
   removed before these items are introduced.
 - Add 18 S, L, and Max vitamin variants for HP Up, Protein, Iron, Carbos,
-  Calcium, and Zinc, plus the Silver 1 reward IV Max. The vitamin variants have
-  no normal gameplay source yet; `DEBUG_CHEATS` may seed them for testing and
-  enables badge-independent obedience for its level-100 Rayquaza.
+  Calcium, and Zinc, plus the Silver 1 reward IV Max. All six S vitamins are
+  first-victory rewards from trainers on Routes 30 and 31 and in Sprout Tower;
+  the L and Max variants have no normal gameplay source yet. `DEBUG_CHEATS`
+  may seed all tiers for testing and enables badge-independent obedience for
+  its level-100 Rayquaza.
 - Retain the six existing vitamin IDs as the unsuffixed middle tier.
 - Use the following EV amounts:
   - `S`: 10 EVs.
@@ -41,11 +43,13 @@ Last updated: 2026-08-02
    hook or hard-coded address.
 5. Clamp EV additions against both the 252 per-stat cap and 510 total cap,
    recalculate battle stats once, and apply native vitamin friendship rules.
-6. Add IV Max to Silver 1's existing scripted reward. Leave vitamin-tier
-   acquisition and wider stat-item balance for a later content pass.
+6. Add IV Max to Silver 1's existing scripted reward. Distribute all six S
+   vitamins through early first-victory trainer rewards; leave acquisition for
+   the L and Max variants and wider stat-item balance for a later content pass.
 
 See `guides/ADDING_PARTY_USE_ITEMS.md` for the party-menu, separately linked
 overlay, and Thumb-call requirements discovered while implementing IV Max.
+See `VITAMIN_AVAILABILITY.md` for the current source and EV-supply audit.
 
 ## Memory and performance
 
