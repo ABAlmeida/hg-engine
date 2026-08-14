@@ -1,6 +1,6 @@
 # Stat-Training Items Plan
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 ## Decisions
 
@@ -28,8 +28,9 @@ Last updated: 2026-08-13
 - Reject Eggs. HP Up variants also retain Shedinja's normal HP-item exclusion.
 - Reuse each original vitamin icon for its three variants. Use the existing
   Gold Bottle Cap icon for IV Max until bespoke art is requested.
-- Award one IV Max alongside Silver 1's Oran Berry. Keep every EV-tier variant
-  unobtainable until its later acquisition and balance pass.
+- Award one IV Max alongside Silver 1's Oran Berry and another after Falkner's
+  first victory. Keep every EV-tier variant unobtainable until its later
+  acquisition and balance pass.
 
 ## Implementation
 
@@ -43,9 +44,10 @@ Last updated: 2026-08-13
    hook or hard-coded address.
 5. Clamp EV additions against both the 252 per-stat cap and 510 total cap,
    recalculate battle stats once, and apply native vitamin friendship rules.
-6. Add IV Max to Silver 1's existing scripted reward. Distribute all six S
-   vitamins through early first-victory trainer rewards; leave acquisition for
-   the L and Max variants and wider stat-item balance for a later content pass.
+6. Add IV Max to the existing scripted Silver 1 reward and Falkner's custom
+   Gym victory script. Distribute all six S vitamins through early
+   first-victory trainer rewards; leave acquisition for the L and Max variants
+   and wider stat-item balance for a later content pass.
 
 See `guides/ADDING_PARTY_USE_ITEMS.md` for the party-menu, separately linked
 overlay, and Thumb-call requirements discovered while implementing IV Max.
@@ -69,6 +71,9 @@ See `VITAMIN_AVAILABILITY.md` for the current source and EV-supply audit.
   intended name, description, pocket, and reused icon.
 - Confirm winning Silver 1 awards exactly one Oran Berry and one IV Max while
   losing awards neither and the battle cannot be repeated for another copy.
+- Confirm Falkner checks space for both TM51 and IV Max before awarding either,
+  gives each exactly once after victory, and retries the complete bundle after
+  a Bag-full refusal.
 - Check 10, 50, and 100 point gains from zero and near both EV caps.
 - Check Max at 0, 251, and 252 in the target stat and at 509/510 total EVs.
 - Check Shedinja HP items, Eggs, and no-effect cases do not consume the item.

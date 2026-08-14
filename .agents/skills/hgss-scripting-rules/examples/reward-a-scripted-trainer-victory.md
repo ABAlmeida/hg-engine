@@ -7,9 +7,11 @@ loss or adding the item to the opposing trainer's active battle-item array.
 
 ## Target
 
-- Script archive/source: `armips/scr_seq/scr_seq_revised_opening.s`
-- Script member: 842, `silver_one_after_lab`
-- Trigger: winning the relocated first Silver battle in New Bark Town
+- Silver 1 source: `armips/scr_seq/scr_seq_revised_opening.s`, member 842,
+  `silver_one_after_lab`.
+- Falkner source: `armips/scr_seq/scr_seq_00859_falkner_iv_max.s`, member 859,
+  `T22GYM0101`.
+- Trigger: a victory in the applicable scripted trainer battle.
 
 ## Verified HGSS commands
 
@@ -33,6 +35,13 @@ loss or adding the item to the opposing trainer's active battle-item array.
 - `callstd std_obtain_item_verbose` is standard script 2008 in
   `armips/include/scriptmacros.s`. It adds the item and presents the normal
   obtained-item message.
+- `goto_if_no_item_space ITEM, QUANTITY, TARGET` sets `VAR_SPECIAL_x8004` and
+  `VAR_SPECIAL_x8005`, checks Bag capacity, and branches when the item cannot
+  fit. Its parameter order and use before `std_give_item_verbose` are copied
+  from Falkner's original TM51 reward in member 859.
+- `giveitem_no_check ITEM, QUANTITY` resets those item variables and calls
+  `std_give_item_verbose`. Falkner uses it only after both TM51 and IV Max have
+  passed their capacity checks.
 
 ## Verified identifiers
 
@@ -46,6 +55,10 @@ loss or adding the item to the opposing trainer's active battle-item array.
 - Message 39, Silver's object ID, its departure movement, the scene variables,
   and completion flags were already used by this same script entry. No new
   variable, flag, message, map, event, or object ID is introduced.
+- Member 859 is Violet Gym (`T22GYM0101`). Trainer 20 is Falkner, and
+  `FLAG_GOT_TM51_FROM_FALKNER` is the original retry/completion state for his
+  post-victory TM51 handoff. The IV Max extension deliberately reuses that
+  state instead of allocating another flag.
 
 ## Minimal pattern
 
@@ -70,6 +83,17 @@ releaseall
 end
 ```
 
+Falkner's two-pocket, retryable reward uses this variation:
+
+```asm
+goto_if_no_item_space ITEM_TM051, 1, bag_full
+goto_if_no_item_space ITEM_IV_MAX, 1, bag_full
+giveitem_no_check ITEM_TM051, 1
+giveitem_no_check ITEM_IV_MAX, 1
+setflag FLAG_GOT_TM51_FROM_FALKNER
+// Continue the original post-gift dialogue and cleanup.
+```
+
 ## Control-flow checklist
 
 - The loss branch bypasses the reward and invokes normal blackout handling
@@ -81,12 +105,22 @@ end
   either pocket full remains outside this opening assumption.
 - When the central trainer-reward system is implemented, move IDs 495-497 into
   its external table and remove this script award in the same change.
+- Falkner must remain in his custom Gym script unless that script explicitly
+  calls a reusable reward routine. Adding trainer 20 to `trainer_rewards.csv`
+  alone cannot award the item because his battle bypasses the shared ordinary
+  trainer flow.
+- Falkner checks both pockets before giving either item. TM51 and IV Max use
+  different pockets, so the two independent capacity checks make the bundle
+  atomic without additional save state. The existing TM51 flag remains unset
+  on the Bag-full path, allowing the player to talk to Falkner and retry.
 
 ## Build and manual verification
 
-When explicitly requested, build with `make quick-rom -j$(nproc)`. On a new
-save, verify each starter matchup uses the correct level-5 opposing starter,
-none of the three variants knows a same-type attack or holds an item, the
-victory grants exactly one Oran Berry and one IV Max, losing grants neither and
-follows the permanent-death blackout outcome, and the battle cannot be repeated
-for another reward after save/reload.
+When explicitly requested, build with `make quick-rom -j$(nproc)`. For Silver
+1, verify each starter matchup uses the correct level-5 opposing starter, none
+of the three variants knows a same-type attack or holds an item, victory grants
+exactly one Oran Berry and one IV Max, loss grants neither, and the battle
+cannot be repeated for another reward after save/reload. For Falkner, verify a
+victory grants TM51 and one IV Max, later conversations grant neither again,
+and filling either relevant pocket produces the Bag-full response and permits
+a successful retry after space is made.

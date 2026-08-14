@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -86,7 +86,7 @@ complete.
 | Disable capture experience | Complete | Capture experience remains disabled. |
 | No battle experience | Complete; manually verified | Battle EXP presentation and gains are skipped. |
 | Item-only effort values | Complete; manually verified | `DISABLE_BATTLE_EV_GAIN` prevents defeated Pokémon from awarding EVs while vitamins remain available and can reach the modern 252-per-stat cap. EV-reducing items remain unchanged. |
-| Stat-training item tiers | Complete; manually verified | S, regular, L, and Max variants provide the configured EV amounts for all six stats, and IV Max maximizes all six IVs. Silver 1 awards one IV Max; early first-victory trainer rewards distribute all six S vitamins. L- and Max-tier acquisition remains deferred. See `STAT_TRAINING_ITEMS_PLAN.md` and `VITAMIN_AVAILABILITY.md`. |
+| Stat-training item tiers | Complete; Falkner reward awaiting manual verification | S, regular, L, and Max variants provide the configured EV amounts for all six stats, and IV Max maximizes all six IVs. Silver 1 awards one IV Max; Falkner's custom victory script is configured to award another; early first-victory trainer rewards distribute all six S vitamins. L- and Max-tier acquisition remains deferred. See `STAT_TRAINING_ITEMS_PLAN.md` and `VITAMIN_AVAILABILITY.md`. |
 | Medicine item availability cleanup | In progress; direct Berry mappings pending build and manual verification | Keep 14 obsolete healing/status item IDs intact while removing their normal acquisition sources. The Goldenrod herbal shop now stocks all effect-bearing Berries, with every Berry's global base price increased tenfold. Straightforward Berry replacements now cover marts, visible and hidden pickups, and Pickup; the four revival items still require a separate content decision. See `MEDICINE_ITEM_AVAILABILITY_PLAN.md`. |
 | Persistent level caps | Complete; manually verified | New saves begin at level 7 and story-trainer victories raise the saved cap according to `LEVEL_CAPS.md`. |
 | Level to Cap | Complete; manually verified | The party action advances one level at a time and preserves move and evolution prompts. |

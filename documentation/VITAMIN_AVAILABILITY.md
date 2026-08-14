@@ -1,6 +1,6 @@
 # Vitamin Availability
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 This document tracks all 24 EV-training vitamin items, their normal gameplay
 sources, and the amount of EV training available for each stat.
@@ -53,6 +53,16 @@ The S-tier rewards configured in `data/trainer_rewards.csv` are:
 | 4 | Bug Catcher Wade | Route 31 | Carbos S |
 | 51 | Sage Nico | Sprout Tower | Zinc S |
 | 43 | Sage Chow | Sprout Tower | Calcium S |
+
+## IV Max availability
+
+IV Max is not one of the 24 EV vitamins and is therefore excluded from the EV
+totals in this document. It has these finite normal-game sources:
+
+| Source | Quantity | Implementation | Verification |
+|---|---:|---|---|
+| Silver 1 | 1 | Scripted first-victory reward | Existing verified feature |
+| Falkner | 1 | Custom Violet Gym victory script | Not verified |
 
 ## Finite normal-game sources
 

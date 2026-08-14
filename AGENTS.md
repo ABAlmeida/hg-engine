@@ -144,7 +144,14 @@ smoke test. Battle-engine changes should add scenarios under
 - Whenever adding, removing, reassigning, or verifying trainer rewards, apply
   the repository-local tracker skill at
   `.agents/skills/maintain-trainer-reward-trackers/SKILL.md` and reconcile all
-  four reward-availability documents.
+  four reward-availability documents plus `documentation/POKEMON_TRAINERS.md`.
+- Keep `documentation/POKEMON_TRAINERS.md` and
+  `documentation/POKEMON_ENCOUNTERS.md` synchronized with trainer-party and
+  wild-encounter content changes respectively.
+- Preserve `../Pokemon Trainers.txt` and `../Pokemon Encounters.txt` as the
+  user's editable authoring drafts. When asked to apply those drafts, transfer
+  their verified content into the game data and the corresponding Markdown
+  trackers; do not delete or replace the drafts.
 - Before editing, run `git status --short --branch`; preserve unrelated user
   changes.
 - Follow `.clang-format` for `src/**/*.c` and `include/**/*.h`. Configure the

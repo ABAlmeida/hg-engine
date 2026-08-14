@@ -31,6 +31,8 @@ Whenever trainer rewards change:
    from source inspection or a successful build.
 7. Check related summaries in `documentation/PROJECT_PLAN.md` and feature plans
    when the change alters planned or completed progression.
+8. Update `documentation/POKEMON_TRAINERS.md` whenever a trainer's reward,
+   party, IVs, AI profile, or held items change alongside the reward work.
 
 ## Classification rules
 

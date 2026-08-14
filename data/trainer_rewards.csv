@@ -29,5 +29,5 @@ trainer_id,item_id,quantity
 50,1121,1
 # Violet Gym - Bird Keeper Rod: Razor Fang
 29,327,1
-# Falkner (trainer 20) uses Violet Gym's custom battle script rather than the
-# shared ordinary-trainer reward path, so his IV Max cannot be awarded here.
+# Violet Gym - Falkner (trainer 20): IV Max
+# His custom Gym Leader victory script awards this outside the shared table.
