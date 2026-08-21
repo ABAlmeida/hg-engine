@@ -11,6 +11,10 @@ loss or adding the item to the opposing trainer's active battle-item array.
   `silver_one_after_lab`.
 - Falkner source: `armips/scr_seq/scr_seq_00859_falkner_iv_max.s`, member 859,
   `T22GYM0101`.
+- Bugsy source: `armips/scr_seq/scr_seq_00869_bugsy_iv_max.s`, member 869,
+  `T23GYM0102`.
+- Proton source: `armips/scr_seq/scr_seq_00060_proton_reward.s`, member 60,
+  `D26R0102`.
 - Trigger: a victory in the applicable scripted trainer battle.
 
 ## Verified HGSS commands
@@ -113,6 +117,11 @@ setflag FLAG_GOT_TM51_FROM_FALKNER
   different pockets, so the two independent capacity checks make the bundle
   atomic without additional save state. The existing TM51 flag remains unset
   on the Bag-full path, allowing the player to talk to Falkner and retry.
+- Bugsy uses the same atomic two-pocket pattern with TM89 and IV Max, reusing
+  `FLAG_GOT_TM89_FROM_BUGSY` so a Bag-full result remains retryable.
+- Proton has no later retry conversation. His won-battle branch awards the
+  Amulet Coin before resuming the original post-battle dialogue and story
+  cleanup; the loss branch remains untouched.
 
 ## Build and manual verification
 

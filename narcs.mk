@@ -692,7 +692,7 @@ $(SCR_SEQ_PRISTINE): $(ROMNAME) $(SCR_SEQ_EXTRACTOR) $(VENV_ACTIVATE)
 $(SCR_SEQ_NARC): $(SCR_SEQ_DEPENDENCIES) $(SCR_SEQ_PRISTINE)
 	rm -rf $(SCR_SEQ_DIR)
 	$(NARCHIVE) extract $(SCR_SEQ_PRISTINE) -o $(SCR_SEQ_DIR) -nf
-	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file; done
+	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file || exit 1; done
 	$(NARCHIVE) create $@ $(SCR_SEQ_DIR) -nf
 
 # DSPRE edits made directly to the installed archive are outside Make's source
@@ -704,7 +704,7 @@ $(SCR_SEQ_NARC): $(SCR_SEQ_DEPENDENCIES) $(SCR_SEQ_PRISTINE)
 rebuild_scripts: $(BASE_EXTRACTION_STAMP) $(TRAINER_REWARD_SCRIPT)
 	rm -rf $(SCR_SEQ_DIR)
 	$(NARCHIVE) extract $(SCR_SEQ_TARGET) -o $(SCR_SEQ_DIR) -nf
-	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file; done
+	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file || exit 1; done
 	$(NARCHIVE) create $(SCR_SEQ_NARC) $(SCR_SEQ_DIR) -nf
 
 NARC_FILES += $(SCR_SEQ_NARC)

@@ -211,6 +211,10 @@
 // Heartless Gold opening documented in OPENING_SEQUENCE_PLAN.md.
 #define IMPLEMENT_REVISED_OPENING
 
+// Start Professor Oak's introduction through the existing "No Info Needed"
+// path instead of showing the Control Info / Adventure Info choice.
+#define SKIP_NEW_GAME_INFO_MENU
+
 // Owned HMs and Flash's TM can perform their field actions without being
 // taught to a compatible party Pokemon.
 #define IMPLEMENT_MACHINE_FIELD_ACTIONS

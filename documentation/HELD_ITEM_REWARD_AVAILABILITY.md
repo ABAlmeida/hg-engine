@@ -1,6 +1,6 @@
 # Held-Item Reward Availability
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 This document tracks non-Berry held items as candidates for first-victory
 trainer rewards. A candidate is an item with a nonzero implemented
@@ -17,7 +17,7 @@ checked deliberately.
 | Status | Count |
 |---|---:|
 | Non-Berry held-item candidates | 202 |
-| Assigned as trainer rewards | 6 |
+| Assigned as trainer rewards | 7 |
 | Manually verified trainer rewards | 0 |
 
 ## Updating this tracker
@@ -54,12 +54,12 @@ an implemented held effect, not that the item is an appropriate reward.
 | 215 | Macho Brace | `ITEM_MACHO_BRACE` | `HOLD_EFFECT_EVS_UP_SPEED_DOWN` | Not audited | Unassigned | Not verified |
 | 216 | Exp. Share | `ITEM_EXP_SHARE` | `HOLD_EFFECT_EXP_SHARE` | Not audited | Unassigned | Not verified |
 | 217 | Quick Claw | `ITEM_QUICK_CLAW` | `HOLD_EFFECT_SOMETIMES_PRIORITY` | Not audited | Unassigned | Not verified |
-| 218 | Soothe Bell | `ITEM_SOOTHE_BELL` | `HOLD_EFFECT_FRIENDSHIP_UP` | Not audited | Unassigned | Not verified |
+| 218 | Soothe Bell | `ITEM_SOOTHE_BELL` | `HOLD_EFFECT_FRIENDSHIP_UP` | Not audited | Hiker Daniel (ID 384), Union Cave, x1 | Not verified |
 | 219 | Mental Herb | `ITEM_MENTAL_HERB` | `HOLD_EFFECT_HEAL_MENTAL_CONDITIONS` | Not audited | Unassigned | Not verified |
 | 220 | Choice Band | `ITEM_CHOICE_BAND` | `HOLD_EFFECT_CHOICE_ATK` | Not audited | Unassigned | Not verified |
 | 221 | King's Rock | `ITEM_KINGS_ROCK` | `HOLD_EFFECT_SOMETIMES_FLINCH` | Not audited | Unassigned | Not verified |
 | 222 | Silver Powder | `ITEM_SILVER_POWDER` | `HOLD_EFFECT_STRENGTHEN_BUG` | Not audited | Unassigned | Not verified |
-| 223 | Amulet Coin | `ITEM_AMULET_COIN` | `HOLD_EFFECT_MONEY_UP` | Not audited | Unassigned | Not verified |
+| 223 | Amulet Coin | `ITEM_AMULET_COIN` | `HOLD_EFFECT_MONEY_UP` | Not audited | Executive Proton (ID 486), Slowpoke Well, x1 scripted | Not verified |
 | 224 | Cleanse Tag | `ITEM_CLEANSE_TAG` | `HOLD_EFFECT_ENCOUNTERS_DOWN` | Not audited | Unassigned | Not verified |
 | 225 | Soul Dew | `ITEM_SOUL_DEW` | `HOLD_EFFECT_LATI_SPECIAL` | Not audited | Unassigned | Not verified |
 | 226 | Deep Sea Tooth | `ITEM_DEEP_SEA_TOOTH` | `HOLD_EFFECT_CLAMPERL_SPATK` | Not audited | Unassigned | Not verified |
@@ -91,7 +91,7 @@ an implemented held effect, not that the item is an appropriate reward.
 | 252 | Up-Grade | `ITEM_UP_GRADE` | `HOLD_EFFECT_EVOLVE_PORYGON` | Not audited | Sage Neal (ID 55), Sprout Tower, x1 | Not verified |
 | 253 | Shell Bell | `ITEM_SHELL_BELL` | `HOLD_EFFECT_HP_RESTORE_ON_DMG` | Not audited | Unassigned | Not verified |
 | 254 | Sea Incense | `ITEM_SEA_INCENSE` | `HOLD_EFFECT_STRENGTHEN_WATER` | Not audited | Unassigned | Not verified |
-| 255 | Lax Incense | `ITEM_LAX_INCENSE` | `HOLD_EFFECT_ACC_REDUCE` | Not audited | Sage Jin (ID 53), Sprout Tower, x1 | Not verified |
+| 255 | Lax Incense | `ITEM_LAX_INCENSE` | `HOLD_EFFECT_ACC_REDUCE` | Not audited | Unassigned | Not verified |
 | 256 | Lucky Punch | `ITEM_LUCKY_PUNCH` | `HOLD_EFFECT_CHANSEY_CRITRATE_UP` | Not audited | Unassigned | Not verified |
 | 257 | Metal Powder | `ITEM_METAL_POWDER` | `HOLD_EFFECT_DITTO_DEF_UP` | Not audited | Unassigned | Not verified |
 | 258 | Thick Club | `ITEM_THICK_CLUB` | `HOLD_EFFECT_CUBONE_ATK_UP` | Not audited | Unassigned | Not verified |
@@ -106,7 +106,7 @@ an implemented held effect, not that the item is an appropriate reward.
 | 272 | Toxic Orb | `ITEM_TOXIC_ORB` | `HOLD_EFFECT_PSN_USER` | Not audited | Unassigned | Not verified |
 | 273 | Flame Orb | `ITEM_FLAME_ORB` | `HOLD_EFFECT_BRN_USER` | Not audited | Unassigned | Not verified |
 | 274 | Quick Powder | `ITEM_QUICK_POWDER` | `HOLD_EFFECT_DITTO_SPEED_UP` | Not audited | Unassigned | Not verified |
-| 275 | Focus Sash | `ITEM_FOCUS_SASH` | `HOLD_EFFECT_ENDURE` | Not audited | Unassigned | Not verified |
+| 275 | Focus Sash | `ITEM_FOCUS_SASH` | `HOLD_EFFECT_ENDURE` | Not audited | Bird Keeper Rod (ID 29), Violet Gym, x6 | Not verified |
 | 276 | Zoom Lens | `ITEM_ZOOM_LENS` | `HOLD_EFFECT_ACCURACY_UP_SLOWER` | Not audited | Unassigned | Not verified |
 | 277 | Metronome | `ITEM_METRONOME` | `HOLD_EFFECT_BOOST_REPEATED` | Not audited | Unassigned | Not verified |
 | 278 | Iron Ball | `ITEM_IRON_BALL` | `HOLD_EFFECT_SPEED_DOWN_GROUNDED` | Not audited | Unassigned | Not verified |
@@ -158,7 +158,7 @@ an implemented held effect, not that the item is an appropriate reward.
 | 324 | Dubious Disc | `ITEM_DUBIOUS_DISC` | `HOLD_EFFECT_EVOLVE_PORYGON2` | Not audited | Sage Troy (ID 54), Sprout Tower, x1 | Not verified |
 | 325 | Reaper Cloth | `ITEM_REAPER_CLOTH` | `HOLD_EFFECT_EVOLVE_DUSCLOPS` | Not audited | Unassigned | Not verified |
 | 326 | Razor Claw | `ITEM_RAZOR_CLAW` | `HOLD_EFFECT_CRITRATE_UP` | Not audited | Unassigned | Not verified |
-| 327 | Razor Fang | `ITEM_RAZOR_FANG` | `HOLD_EFFECT_SOMETIMES_FLINCH` | Not audited | Bird Keeper Rod (ID 29), Violet Gym, x1 | Not verified |
+| 327 | Razor Fang | `ITEM_RAZOR_FANG` | `HOLD_EFFECT_SOMETIMES_FLINCH` | Not audited | Bird Keeper Abe (ID 50), Violet Gym, x1 | Not verified |
 | 537 | Prism Scale | `ITEM_PRISM_SCALE` | `HOLD_EFFECT_EVOLVE_FEEBAS` | Not audited | Unassigned | Not verified |
 | 538 | Eviolite | `ITEM_EVIOLITE` | `HOLD_EFFECT_EVIOLITE` | Not audited | Unassigned | Not verified |
 | 539 | Float Stone | `ITEM_FLOAT_STONE` | `HOLD_EFFECT_HALVE_WEIGHT` | Not audited | Unassigned | Not verified |
@@ -225,7 +225,7 @@ an implemented held effect, not that the item is an appropriate reward.
 | 1118 | Throat Spray | `ITEM_THROAT_SPRAY` | `HOLD_EFFECT_BOOST_SPATK_ON_SOUND_MOVE` | Not audited | Unassigned | Not verified |
 | 1119 | Eject Pack | `ITEM_EJECT_PACK` | `HOLD_EFFECT_SWITCH_OUT_ON_STAT_DROP` | Not audited | Unassigned | Not verified |
 | 1120 | Heavy-Duty Boots | `ITEM_HEAVY_DUTY_BOOTS` | `HOLD_EFFECT_IGNORE_ENTRY_HAZARDS` | Not audited | Unassigned | Not verified |
-| 1121 | Blunder Policy | `ITEM_BLUNDER_POLICY` | `HOLD_EFFECT_BOOST_SPEED_ON_MISS` | Not audited | Bird Keeper Abe (ID 50), Violet Gym, x1 | Not verified |
+| 1121 | Blunder Policy | `ITEM_BLUNDER_POLICY` | `HOLD_EFFECT_BOOST_SPEED_ON_MISS` | Not audited | Unassigned | Not verified |
 | 1122 | Room Service | `ITEM_ROOM_SERVICE` | `HOLD_EFFECT_DROP_SPEED_IN_TRICK_ROOM` | Not audited | Unassigned | Not verified |
 | 1123 | Utility Umbrella | `ITEM_UTILITY_UMBRELLA` | `HOLD_EFFECT_UNAFFECTED_BY_RAIN_OR_SUN` | Not audited | Unassigned | Not verified |
 | 1777 | Adamant Crystal | `ITEM_ADAMANT_CRYSTAL` | `HOLD_EFFECT_DIALGA_BOOST_AND_TRANSFORM` | Not audited | Unassigned | Not verified |
@@ -248,4 +248,3 @@ The authoritative candidate list is the set of non-Berry records whose
 `holdEffect` is neither `0` nor `SOUBI_NONE` in
 `data/itemdata/itemdata.c`. Recalculate the candidate count whenever item
 behavior changes; do not infer candidacy from item names alone.
-

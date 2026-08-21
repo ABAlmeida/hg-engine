@@ -28,12 +28,12 @@ can therefore be lower than the nominal amount.
 
 | Stat | S vitamin | Regular vitamin | L vitamin | Max vitamin |
 |---|---|---|---|---|
-| HP | HP Up S — Youngster Mikey, Route 30, first victory | HP Up — unlimited purchase | HP Up L — unavailable | HP Up Max — unavailable |
-| Attack | Protein S — Youngster Joey, Route 30, first victory | Protein — unlimited purchase | Protein L — unavailable | Protein Max — unavailable |
-| Defense | Iron S — Bug Catcher Don, Route 30, first victory | Iron — unlimited purchase | Iron L — unavailable | Iron Max — unavailable |
-| Speed | Carbos S — Bug Catcher Wade, Route 31, first victory | Carbos — unlimited purchase | Carbos L — unavailable | Carbos Max — unavailable |
-| Sp. Atk | Calcium S — Sage Chow, Sprout Tower, first victory | Calcium — unlimited purchase | Calcium L — unavailable | Calcium Max — unavailable |
-| Sp. Def | Zinc S — Sage Nico, Sprout Tower, first victory | Zinc — unlimited purchase | Zinc L — unavailable | Zinc Max — unavailable |
+| HP | HP Up S — Mikey and Liz, 6 each | HP Up — unlimited purchase | HP Up L — unavailable | HP Up Max — unavailable |
+| Attack | Protein S — Joey and Roland, 6 each | Protein — unlimited purchase | Protein L — unavailable | Protein Max — unavailable |
+| Defense | Iron S — Don and Henry, 6 each | Iron — unlimited purchase | Iron L — unavailable | Iron Max — unavailable |
+| Speed | Carbos S — Wade and Gordon, 6 each | Carbos — unlimited purchase | Carbos L — unavailable | Carbos Max — unavailable |
+| Sp. Atk | Calcium S — Chow and Justin, 6 each | Calcium — unlimited purchase | Calcium L — unavailable | Calcium Max — unavailable |
+| Sp. Def | Zinc S — Nico and Ralph, 6 each | Zinc — unlimited purchase plus Leonard's first-victory reward | Zinc L — unavailable | Zinc Max — unavailable |
 
 The six regular vitamins are sold at both of these locations:
 
@@ -47,12 +47,18 @@ The S-tier rewards configured in `data/trainer_rewards.csv` are:
 
 | Trainer ID | Trainer | Area | First-victory reward |
 |---:|---|---|---|
-| 8 | Youngster Joey | Route 30 | Protein S |
-| 47 | Youngster Mikey | Route 30 | HP Up S |
-| 249 | Bug Catcher Don | Route 30 | Iron S |
-| 4 | Bug Catcher Wade | Route 31 | Carbos S |
-| 51 | Sage Nico | Sprout Tower | Zinc S |
-| 43 | Sage Chow | Sprout Tower | Calcium S |
+| 8 | Youngster Joey | Route 30 | 6 Protein S |
+| 47 | Youngster Mikey | Route 30 | 6 HP Up S |
+| 249 | Bug Catcher Don | Route 30 | 6 Iron S |
+| 4 | Bug Catcher Wade | Route 31 | 6 Carbos S |
+| 51 | Sage Nico | Sprout Tower | 6 Zinc S |
+| 43 | Sage Chow | Sprout Tower | 6 Calcium S |
+| 27 | Picnicker Liz | Route 32 | 6 HP Up S |
+| 26 | Camper Roland | Route 32 | 6 Protein S |
+| 60 | Fisherman Henry | Route 32 | 6 Iron S |
+| 18 | Fisherman Justin | Route 32 | 6 Calcium S |
+| 57 | Fisherman Ralph | Route 32 | 6 Zinc S |
+| 56 | Youngster Gordon | Route 32 | 6 Carbos S |
 
 ## IV Max availability
 
@@ -63,6 +69,7 @@ totals in this document. It has these finite normal-game sources:
 |---|---:|---|---|
 | Silver 1 | 1 | Scripted first-victory reward | Existing verified feature |
 | Falkner | 1 | Custom Violet Gym victory script | Not verified |
+| Bugsy | 1 | Custom Azalea Gym victory script | Not verified |
 
 ## Finite normal-game sources
 
@@ -71,12 +78,12 @@ not include shops, debug supplies, or conditional phone gifts.
 
 | Stat | Regular vitamins | S vitamins | Finite nominal EV total | Sources |
 |---|---:|---:|---:|---|
-| HP | 8 HP Up | 1 HP Up S | 410 | Burned Tower 1F; Route 4; Victory Road 2F; Bell Tower 9F; hidden on Route 38, Mt. Mortar 2F, and Rock Tunnel B1F; Route 35 Goldenrod Gatehouse Spearow-mail reward; Youngster Mikey first-victory reward |
-| Attack | 7 Protein | 1 Protein S | 360 | Route 25; Ice Path 1F; Team Rocket HQ B3F; Mt. Silver Cave 2F; hidden in the Pokéathlon Dome, Olivine Port exterior, and Cerulean Cave 2F; Youngster Joey first-victory reward |
-| Defense | 6 Iron | 1 Iron S | 310 | Ice Path B1F; Mt. Mortar 1F back area; Rock Tunnel B1F; hidden at Vermilion Port exterior, Cinnabar Island, and Mt. Silver Cave 2F; Bug Catcher Don first-victory reward |
-| Speed | 6 Carbos | 1 Carbos S | 310 | Whirl Islands B1F; Mt. Mortar B1F; Route 2 east; hidden in Bell Tower 8F, Ice Path B2F, and Route 10; Bug Catcher Wade first-victory reward |
-| Sp. Atk | 7 Calcium | 1 Calcium S | 360 | Route 12; Whirl Islands B1F; Dragon's Den; Mt. Silver Cave 2F; hidden on Route 13, Union Cave B2F, and Diglett's Cave; Sage Chow first-victory reward |
-| Sp. Def | 3 Zinc | 1 Zinc S | 160 | Hidden in Cerulean Cave 2F, Victory Road 3F, and Seafoam Islands B4F; Sage Nico first-victory reward |
+| HP | 8 HP Up | 12 HP Up S | 520 | Existing eight regular sources; Mikey and Liz first-victory rewards |
+| Attack | 7 Protein | 12 Protein S | 470 | Existing seven regular sources; Joey and Roland first-victory rewards |
+| Defense | 6 Iron | 12 Iron S | 420 | Existing six regular sources; Don and Henry first-victory rewards |
+| Speed | 6 Carbos | 12 Carbos S | 420 | Existing six regular sources; Wade and Gordon first-victory rewards |
+| Sp. Atk | 7 Calcium | 12 Calcium S | 470 | Existing seven regular sources; Chow and Justin first-victory rewards |
+| Sp. Def | 4 Zinc | 12 Zinc S | 320 | Existing three hidden Zinc; Leonard's Zinc reward; Nico and Ralph first-victory rewards |
 
 The finite nominal total assumes every item can apply its full amount across
 eligible Pokémon. Per-Pokémon EV caps can reduce the actual amount gained.
@@ -100,12 +107,12 @@ and rematch flow:
 
 | Stat | Finite one-time EVs | Purchasable EVs | Total normal-game availability |
 |---|---:|---|---|
-| HP | 410 | Unlimited through HP Up | Unlimited |
-| Attack | 360 | Unlimited through Protein | Unlimited |
-| Defense | 310 | Unlimited through Iron | Unlimited |
-| Speed | 310 | Unlimited through Carbos | Unlimited |
-| Sp. Atk | 360 | Unlimited through Calcium | Unlimited |
-| Sp. Def | 160 | Unlimited through Zinc | Unlimited |
+| HP | 520 | Unlimited through HP Up | Unlimited |
+| Attack | 470 | Unlimited through Protein | Unlimited |
+| Defense | 420 | Unlimited through Iron | Unlimited |
+| Speed | 420 | Unlimited through Carbos | Unlimited |
+| Sp. Atk | 470 | Unlimited through Calcium | Unlimited |
+| Sp. Def | 320 | Unlimited through Zinc | Unlimited |
 
 ## Debug-cheat availability
 

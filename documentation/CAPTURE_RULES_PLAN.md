@@ -172,7 +172,10 @@ family bitset, or an area override table.
 11. **Complete:** Review all battle exits so temporary encounter and Contest
     state is always cleared.
 12. **Complete:** Keep wild double battles disabled.
-13. **Build complete; focused manual verification pending:** Verify Safari and
+13. **Complete; build and manual verification pending:** Announce "This
+    Pokémon can be captured." after the wild-introduction message only when
+    the battle currently permits a player capture command.
+14. **Build complete; focused manual verification pending:** Verify Safari and
     the revised Contest retention-on-success behavior with an in-game save.
 
 Safari permissions are initialized centrally from the battle type, wild
@@ -203,6 +206,10 @@ The automated battle-test suite must only be run when explicitly requested.
 - A non-duplicate shiny encounter does not consume an unused area's standard
   opportunity.
 - A Shiny Bait encounter receives the same shiny-clause treatment.
+- Eligible ordinary, static, Contest, and Safari encounters announce that the
+  Pokémon can be captured after their wild-introduction message.
+- Consumed-area, duplicate, Totem, tutorial, and wild-double encounters do not
+  display the capture-available announcement.
 - Every Safari subarea shares one saved opportunity.
 - The first Safari encounter without a shiny-clause exemption consumes that
   opportunity even when it is a duplicate.

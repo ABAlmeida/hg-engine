@@ -102,6 +102,7 @@ wholly to one Heartless Gold feature without a historical comparison.
 | Configuration-only behavior | Existing code paths | Usually 0 incremental | Examples include fast text, National Dex configuration, and disabling trainer-battle item use when the implementation already exists upstream. Confirm with a link comparison if a conditional compiles additional code. |
 | Instant text and always-available National Dex | In-place/configured engine behavior | No dedicated synthetic-overlay object | Their patches belong to the original executable regions rather than the fixed synthetic overlay. |
 | Disable trainer line of sight | In-place ARM9 patch | 0 synthetic-overlay bytes | The patch replaces original instructions and does not allocate from overlay 129. Keep its address/range documented because its cost is fragility rather than overlay space. |
+| Skip new-game information menu | In-place overlay-53 patch | 0 synthetic-overlay bytes | Replaces one two-byte Thumb state assignment and reuses the existing No Info Needed path. Decompressing overlay 53 increases its packaged file from 9,516 to 12,192 bytes, while its runtime allocation remains the existing `0x2FA0` bytes. |
 | HM, opening, Bait, Healing Kit, reward, and medicine acquisition edits | Scripts, data tables, and in-place patches | 0 synthetic-overlay bytes | Their runtime behavior may call injected functions already accounted for above. Medicine replacements alter packaged tables or overwrite existing two-byte item IDs rather than adding linked code. |
 
 ## Planned features

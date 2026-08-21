@@ -1,6 +1,6 @@
 # Berry Reward Availability
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 This document tracks Berries as candidates for first-victory trainer rewards.
 The candidate set is the 67 standard Berry items recognized by `IS_ITEM_BERRY`
@@ -18,7 +18,7 @@ Berries, are excluded until they are deliberately added to normal progression.
 |---|---:|
 | Standard Berry candidates | 67 |
 | Available from the Goldenrod Berry Shop | 67 |
-| Assigned as trainer rewards | 1 |
+| Assigned as trainer rewards | 5 |
 | Manually verified trainer rewards | 0 |
 
 ## Updating this tracker
@@ -38,16 +38,16 @@ When adding a Berry to `data/trainer_rewards.csv`:
 
 | Item ID | Berry | Item constant | Other normal source | Trainer reward | Verification |
 |---:|---|---|---|---|---|
-| 149 | Cheri Berry | `ITEM_CHERI_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
-| 150 | Chesto Berry | `ITEM_CHESTO_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
-| 151 | Pecha Berry | `ITEM_PECHA_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
+| 149 | Cheri Berry | `ITEM_CHERI_BERRY` | Goldenrod Berry Shop | Firebreather Bill (ID 319), Union Cave, x1 | Not verified |
+| 150 | Chesto Berry | `ITEM_CHESTO_BERRY` | Goldenrod Berry Shop | Poké Maniac Larry (ID 23), Union Cave, x1 | Not verified |
+| 151 | Pecha Berry | `ITEM_PECHA_BERRY` | Goldenrod Berry Shop | Hiker Russel (ID 25), Union Cave, x1 | Not verified |
 | 152 | Rawst Berry | `ITEM_RAWST_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
 | 153 | Aspear Berry | `ITEM_ASPEAR_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
 | 154 | Leppa Berry | `ITEM_LEPPA_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
-| 155 | Oran Berry | `ITEM_ORAN_BERRY` | Goldenrod Berry Shop | Silver 1 scripted reward, all three trainer variants, x1 | Not verified |
+| 155 | Oran Berry | `ITEM_ORAN_BERRY` | Goldenrod Berry Shop | Silver 1; Andrew, Calvin, Nick, Gwen, Emma; Slowpoke Well Grunts 12/13/101; Al, Benny, Josh, Amy & Mimi; x1 each | Not verified |
 | 156 | Persim Berry | `ITEM_PERSIM_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
 | 157 | Lum Berry | `ITEM_LUM_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
-| 158 | Sitrus Berry | `ITEM_SITRUS_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
+| 158 | Sitrus Berry | `ITEM_SITRUS_BERRY` | Goldenrod Berry Shop | Bird Keeper Peter (ID 383), Route 32, x2 | Not verified |
 | 159 | Figy Berry | `ITEM_FIGY_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
 | 160 | Wiki Berry | `ITEM_WIKI_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |
 | 161 | Mago Berry | `ITEM_MAGO_BERRY` | Goldenrod Berry Shop | Unassigned | Not verified |

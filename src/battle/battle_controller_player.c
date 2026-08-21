@@ -231,6 +231,7 @@ BOOL LONG_CALL BattleContext_Main(struct BattleSystem *bsys, struct BattleStruct
 
 void LONG_CALL BattleControllerPlayer_GetBattleMon(struct BattleSystem *battleSystem, struct BattleStruct *ctx)
 {
+    CapturePermission capturePermission;
     int battlerId;
     int maxBattlers = BattleWorkClientSetMaxGet(battleSystem);
 
@@ -249,7 +250,20 @@ void LONG_CALL BattleControllerPlayer_GetBattleMon(struct BattleSystem *battleSy
 
 #ifdef IMPLEMENT_CAPTURE_RULES
     CaptureRules_InitializeSpecialBattle(battleSystem);
+    capturePermission = CaptureRules_GetEncounterPermission();
+#else
+    capturePermission = CAPTURE_PERMISSION_UNRESTRICTED;
 #endif
+
+    // The encounter-start script reads this scratch value before any other
+    // battle script can reuse it. Totem battles reject Balls through the base
+    // capture check; tutorials and wild doubles do not currently offer an
+    // immediately usable player Ball command.
+    ctx->temp_work = !ShouldPreventMonCapture(battleSystem)
+        && (BattleTypeGet(battleSystem) & (BATTLE_TYPE_TUTORIAL | BATTLE_TYPE_DOUBLES)) == 0
+        && capturePermission != CAPTURE_PERMISSION_BLOCKED_AREA
+        && capturePermission != CAPTURE_PERMISSION_BLOCKED_DUPLICATE;
+
     ctx->hp_temp = ctx->battlemon[1].hp;
     ctx->server_seq_no = CONTROLLER_COMMAND_START_ENCOUNTER;
 }

@@ -1,4 +1,5 @@
 #include "constants/battle_constants.h"
+#include "constants/battle_message_constants.h"
 .include "battle_commands.inc"
 
 .data
@@ -21,32 +22,32 @@ _Start:
     CompareVarToValue OPCODE_FLAG_SET, BSCRIPT_VAR_BATTLE_TYPE, BATTLE_TYPE_DOUBLES, _WildDoublesMessage
     // You encountered a wild {0}!
     PrintGlobalMessage 965, TAG_NICKNAME, BATTLER_CATEGORY_ENEMY
-    GoTo _SendOutPokemonMessage
+    GoTo _CaptureAvailabilityMessage
 
 _FirstEncounterMessage:
     // Whoa! A wild {0} came charging!
     PrintGlobalMessage 1167, TAG_NICKNAME, BATTLER_CATEGORY_ENEMY
-    GoTo _SendOutPokemonMessage
+    GoTo _CaptureAvailabilityMessage
 
 _HoneyTreeMessage:
     // A wild {0} appeared from the tree you slathered with Honey!
     PrintGlobalMessage 968, TAG_NICKNAME, BATTLER_CATEGORY_ENEMY
-    GoTo _SendOutPokemonMessage
+    GoTo _CaptureAvailabilityMessage
 
 _LegendaryMessage:
     // {0} appeared!
     PrintGlobalMessage 1246, TAG_NICKNAME, BATTLER_CATEGORY_ENEMY
-    GoTo _SendOutPokemonMessage
+    GoTo _CaptureAvailabilityMessage
 
 _DistortionWorldMessage:
     // The Distortion World’s {0} appeared!
     PrintGlobalMessage 1268, TAG_NICKNAME, BATTLER_CATEGORY_ENEMY
-    GoTo _SendOutPokemonMessage
+    GoTo _CaptureAvailabilityMessage
 
 _WildDoublesMessage:
     // A wild {0} and {1} appeared!
     PrintGlobalMessage 967, TAG_NICKNAME_NICKNAME, BATTLER_CATEGORY_ENEMY_SLOT_1, BATTLER_CATEGORY_ENEMY_SLOT_2
-    GoTo _SendOutPokemonMessage
+    GoTo _CaptureAvailabilityMessage
 
 _TotemEncounter:
     // You are challenged by {0}!
@@ -59,9 +60,22 @@ _TotemEncounter:
     PrintBufferedMessage
     GoTo _SendOutPokemonMessage
 
+_CaptureAvailabilityMessage:
+    Wait
+    WaitButtonABTime 30
+    // tempData is initialized immediately before this encounter script. Zero
+    // means the current battle does not offer a usable capture command.
+    CompareVarToValue OPCODE_EQU, BSCRIPT_VAR_TEMP_DATA, 0, _PrintSendOutPokemonMessage
+    // This Pokémon can be captured.
+    PrintGlobalMessage BATTLE_MSG_CAPTURE_ALLOWED, TAG_NONE
+    Wait
+    WaitButtonABTime 60
+    GoTo _PrintSendOutPokemonMessage
+
 _SendOutPokemonMessage:
     Wait
     WaitButtonABTime 30
+_PrintSendOutPokemonMessage:
     CompareVarToValue OPCODE_FLAG_SET, BSCRIPT_VAR_BATTLE_TYPE, BATTLE_TYPE_MULTI, _SendOutPokemonMessage_Multi
     CompareVarToValue OPCODE_EQU, BSCRIPT_VAR_BATTLE_TYPE, BATTLE_TYPE_DOUBLES, _SendOutPokemonMessage_Doubles
     // Go! {0}!
@@ -156,6 +170,11 @@ _SafariEncounter:
     HealthbarSlideIn BATTLER_CATEGORY_PLAYER
     WaitButtonABTime 7
     Wait
+    CompareVarToValue OPCODE_EQU, BSCRIPT_VAR_TEMP_DATA, 0, _Cleanup
+    // This Pokémon can be captured.
+    PrintGlobalMessage BATTLE_MSG_CAPTURE_ALLOWED, TAG_NONE
+    Wait
+    WaitButtonABTime 60
     GoTo _Cleanup
 
 _PalParkEncounter:

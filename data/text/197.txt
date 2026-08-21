@@ -1780,3 +1780,4 @@ The wild {STRVAR_1 1, 0, 0} got over its\ninfatuation.
 The opposing {STRVAR_1 1, 0, 0} got over\nits infatuation.
 You have already had an encounter\nin this area!
 You have already caught this pokémon!
+This Pokémon can be captured.

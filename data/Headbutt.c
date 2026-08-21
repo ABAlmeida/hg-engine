@@ -5141,18 +5141,18 @@ const HeadbuttArchiveData __data =
         .specialTreeCount = 0,
         .normalSlots =
         {
-            { SPECIES_SPEAROW, 3, 5 },
-            { SPECIES_HERACROSS, 3, 5 },
-            { SPECIES_HERACROSS, 3, 5 },
-            { SPECIES_AIPOM, 3, 5 },
-            { SPECIES_AIPOM, 3, 5 },
-            { SPECIES_AIPOM, 3, 5 },
-            { SPECIES_SPEAROW, 6, 8 },
-            { SPECIES_SPEAROW, 6, 8 },
-            { SPECIES_SPEAROW, 6, 8 },
-            { SPECIES_AIPOM, 6, 8 },
-            { SPECIES_AIPOM, 6, 8 },
-            { SPECIES_AIPOM, 6, 8 },
+            { SPECIES_PINSIR, 16, 16 },
+            { SPECIES_SCYTHER, 16, 16 },
+            { SPECIES_SHUCKLE, 16, 16 },
+            { SPECIES_BELDUM, 16, 16 },
+            { SPECIES_HERACROSS, 16, 16 },
+            { SPECIES_PINSIR, 16, 16 },
+            { SPECIES_SCYTHER, 16, 16 },
+            { SPECIES_SHUCKLE, 16, 16 },
+            { SPECIES_BELDUM, 16, 16 },
+            { SPECIES_HERACROSS, 16, 16 },
+            { SPECIES_PINSIR, 16, 16 },
+            { SPECIES_SCYTHER, 16, 16 },
         },
         .specialSlots =
         {
@@ -6707,7 +6707,7 @@ const HeadbuttArchiveData __data =
     },
 
     .ilexForest = {
-        .normalTreeCount = 56,
+        .normalTreeCount = 0,
         .specialTreeCount = 0,
         .normalSlots =
         {

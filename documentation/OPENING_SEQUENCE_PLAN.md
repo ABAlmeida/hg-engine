@@ -1,6 +1,6 @@
 # Revised Opening Sequence Plan
 
-Last updated: 2026-08-09
+Last updated: 2026-08-21
 
 ## Status
 
@@ -10,6 +10,10 @@ registered Healing Kit cleanup still need focused manual verification.
 
 ## Decisions
 
+- Skip the initial Control Info / Adventure Info menu on a new game. Enter
+  Professor Oak's introduction through the game's existing No Info Needed
+  path; do not skip the time-of-day greeting, character setup, naming, save
+  initialization, shrink animation, or bedroom entry.
 - Use a new save for this opening. Existing saves that have passed any of the
   affected scenes do not need migration.
 - Preserve the normal HGSS counterpart selection. Lyra demonstrates catching
@@ -53,27 +57,29 @@ registered Healing Kit cleanup still need focused manual verification.
 
 ## Intended progression
 
-1. The player goes downstairs and Mum's normal automatic cutscene begins.
-2. During that one cutscene, Mum completes the normal opening setup, unlocks
+1. Selecting New Game proceeds directly into Professor Oak's introduction
+   without displaying the optional information menu.
+2. The player goes downstairs and Mum's normal automatic cutscene begins.
+3. During that one cutscene, Mum completes the normal opening setup, unlocks
    the Pokégear Map and Running Shoes, and asks whether to save the player's
    money.
-3. The player visits Elm and chooses a starter through the normal selection
+4. The player visits Elm and chooses a starter through the normal selection
    and nickname flow.
-4. Elm gives the Healing Kit and registers his phone number.
-5. The assistant gives 5 Potions, 20 Poké Balls, and 20 Poké Bait.
-6. When the player leaves the lab, Silver approaches and starts Silver 1.
-7. The first trip through Route 29 triggers the shortened counterpart and
+5. Elm gives the Healing Kit and registers his phone number.
+6. The assistant gives 5 Potions, 20 Poké Balls, and 20 Poké Bait.
+7. When the player leaves the lab, Silver approaches and starts Silver 1.
+8. The first trip through Route 29 triggers the shortened counterpart and
    Slakoth tutorial. It explains Bait and Balls but does not start a tutorial
    battle.
-8. Cherrygrove is already in its post-guide-tour state.
-9. Mr. Pokémon gives the hatchable Egg. Oak gives the Pokédex and Fishing
+9. Cherrygrove is already in its post-guide-tour state.
+10. Mr. Pokémon gives the hatchable Egg. Oak gives the Pokédex and Fishing
    Rod.
-10. Elm calls when the player leaves, asks them to hatch and care for the Egg,
+11. Elm calls when the player leaves, asks them to hatch and care for the Egg,
     and releases them from the return objective.
-11. Route 30's northern path is open and normal Violet City progression begins.
-12. After Falkner, Elm directs the player to his assistant in Violet City's
+12. Route 30's northern path is open and normal Violet City progression begins.
+13. After Falkner, Elm directs the player to his assistant in Violet City's
     Poké Mart. The assistant gives one Shiny Bait instead of another Egg.
-13. Before entering Violet City, the counterpart challenges the player in the
+14. Before entering Violet City, the counterpart challenges the player in the
     Route 31 gatehouse. Victory awards the Vs. Recorder and completes the
     scene; defeat does neither.
 

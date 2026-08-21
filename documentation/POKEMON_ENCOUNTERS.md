@@ -140,7 +140,7 @@ workflow.
 | 7 | 5% | Sewaddle |
 | 8 | 4% | Petilil |
 | 9 | 4% | Minccino |
-| 10 | 1% | Scatterbug |
+| 10 | 1% | Volbeat |
 | 11 | 1% | Flabébé |
 
 ## Dark Cave — Route 31 entrance
@@ -240,9 +240,101 @@ workflow.
 |---:|---:|---:|---|
 | 0 | 60% | 40% | Oshawott |
 | 1 | 30% | 30% | Piplup |
-| 2 | 5% | 15% | Mudkip |
-| 3 | 4% | 10% | Squirtle |
-| 4 | 1% | 5% | Froakie |
+| 2 | 5% | 15% | Pyukumuku |
+| 3 | 4% | 10% | Bruxish |
+| 4 | 1% | 5% | Binacle |
+
+## Route 33
+
+- Level: 16 only.
+
+| Slot | Probability | Species |
+|---:|---:|---|
+| 0 | 20% | Oddish |
+| 1 | 20% | Venonat |
+| 2 | 10% | Koffing |
+| 3 | 10% | Budew |
+| 4 | 10% | Gulpin |
+| 5 | 10% | Seviper |
+| 6 | 5% | Croagunk |
+| 7 | 5% | Venipede |
+| 8 | 4% | Trubbish |
+| 9 | 4% | Salandit |
+| 10 | 1% | Hisuian Sneasel |
+| 11 | 1% | Skrelp |
+
+## Slowpoke Well
+
+- Floors: all.
+- Level: 16 only.
+
+| Slot | Probability | Species |
+|---:|---:|---|
+| 0 | 20% | Slowpoke |
+| 1 | 20% | Drowzee |
+| 2 | 10% | Galarian Ponyta |
+| 3 | 10% | Galarian Ponyta |
+| 4 | 10% | Smoochum |
+| 5 | 10% | Smoochum |
+| 6 | 5% | Natu |
+| 7 | 5% | Chimecho |
+| 8 | 4% | Natu |
+| 9 | 4% | Chimecho |
+| 10 | 1% | Natu |
+| 11 | 1% | Chimecho |
+
+All rods and Surf use level-16 Slowpoke, Slowpoke, Slowpoke, Beldum, and
+Beldum at the standard method-specific 5-slot probabilities.
+
+## Azalea Town Headbutt
+
+- Level: 16 only.
+- The 12 weighted Headbutt slots contain only Pinsir, Scyther, Shuckle,
+  Beldum, and Heracross; the five-species draft list repeats to fill the fixed
+  archive layout.
+
+## Ilex Forest
+
+- Level: 18 only.
+- Headbutt encounters are disabled.
+
+| Slot | Probability | Species |
+|---:|---:|---|
+| 0 | 20% | Caterpie |
+| 1 | 20% | Weedle |
+| 2 | 10% | Wurmple |
+| 3 | 10% | Scatterbug |
+| 4 | 10% | Paras |
+| 5 | 10% | Ledyba |
+| 6 | 5% | Pineco |
+| 7 | 5% | Nincada |
+| 8 | 4% | Spinarak |
+| 9 | 4% | Combee |
+| 10 | 1% | Anorith |
+| 11 | 1% | Yanma |
+
+All rods and Surf use level-18 Surskit, Cutiefly, Dewpider, Dwebble, and
+Wimpod at the standard method-specific 5-slot probabilities.
+
+## Route 34
+
+- Level: 16 only.
+- Rod and Surf encounters are disabled.
+
+| Slot | Probability | Species |
+|---:|---:|---|
+| 0 | 20% | Tauros |
+| 1 | 20% | Meowth |
+| 2 | 10% | Miltank |
+| 3 | 10% | Doduo |
+| 4 | 10% | Slakoth |
+| 5 | 10% | Girafarig |
+| 6 | 5% | Dunsparce |
+| 7 | 5% | Porygon |
+| 8 | 4% | Smeargle |
+| 9 | 4% | Stantler |
+| 10 | 1% | Teddiursa |
+| 11 | 1% | Munchlax |
 
 ## Ruins of Alph
 
@@ -250,6 +342,12 @@ workflow.
 - Remove all grass, rod, Surf, and Rock Smash encounters.
 
 ## Union Cave
+
+### Static encounter
+
+- Lapras is available on Union Cave B2F on every day of the week at level 20.
+- The first completed battle permanently consumes the encounter, including
+  catching or defeating Lapras, fleeing, or blacking out.
 
 ### Land
 

@@ -17,7 +17,7 @@ or an HM.
 | Status | Count |
 |---|---:|
 | Distinct implemented moves awaiting TM placement | 94 |
-| Assigned as trainer rewards | 0 |
+| Assigned as trainer rewards | 5 |
 | Manually verified rewards | 0 |
 
 ## Updating this tracker
@@ -38,8 +38,8 @@ number teaches the same move.
 
 | TM item | Move | Engine status | Availability | Reward source | Verification |
 |---|---|---|---|---|---|
-| TM00 | Mega Punch | Implemented | Unavailable | Unassigned | Not verified |
-| TM095 | Leech Life | Implemented | Unavailable | Unassigned | Not verified |
+| TM00 | Mega Punch | Implemented | Available | Sage Jin (ID 53), Sprout Tower, x1 | Not verified |
+| TM095 | Leech Life | Implemented | Available | Youngster Albert (ID 49), Route 32, x1 | Not verified |
 | TM096 | Eerie Impulse | Implemented | Unavailable | Unassigned | Not verified |
 | TM097 | Fly | Implemented | Unavailable | Unassigned | Not verified |
 | TM099 | Iron Head | Implemented | Unavailable | Unassigned | Not verified |
@@ -88,7 +88,7 @@ number teaches the same move.
 | TM173 | Charge | Implemented | Unavailable | Unassigned | Not verified |
 | TM174 | Haze | Implemented | Unavailable | Unassigned | Not verified |
 | TM176 | Sand Tomb | Implemented | Unavailable | Unassigned | Not verified |
-| TM177 | Spite | Implemented | Unavailable | Unassigned | Not verified |
+| TM177 | Spite | Implemented | Available | Hiker Anthony (ID 61), Route 33, x1 | Not verified |
 | TM178 | Gravity | Implemented | Unavailable | Unassigned | Not verified |
 | TM181 | Knock Off | Implemented | Unavailable | Unassigned | Not verified |
 | TM182 | Bug Bite | Implemented | Unavailable | Unassigned | Not verified |
@@ -96,7 +96,7 @@ number teaches the same move.
 | TM184 | Vacuum Wave | Implemented | Unavailable | Unassigned | Not verified |
 | TM185 | Lunge | Implemented | Unavailable | Unassigned | Not verified |
 | TM186 | High Horsepower | Implemented | Unavailable | Unassigned | Not verified |
-| TM187 | Icicle Spear | Implemented | Unavailable | Unassigned | Not verified |
+| TM187 | Icicle Spear | Implemented | Available | Hiker Phillip (ID 203), Union Cave, x1 | Not verified |
 | TM188 | Scald | Implemented | Unavailable | Unassigned | Not verified |
 | TM189 | Heat Crash | Implemented | Unavailable | Unassigned | Not verified |
 | TM190 | Solar Blade | Implemented | Unavailable | Unassigned | Not verified |
@@ -109,7 +109,7 @@ number teaches the same move.
 | TM199 | Lash Out | Implemented | Unavailable | Unassigned | Not verified |
 | TM200 | Scale Shot | Implemented | Unavailable | Unassigned | Not verified |
 | TM201 | Misty Explosion | Implemented | Unavailable | Unassigned | Not verified |
-| TM202 | Pain Split | Implemented | Unavailable | Unassigned | Not verified |
+| TM202 | Pain Split | Implemented | Available | Firebreather Ray (ID 390), Union Cave, x1 | Not verified |
 | TM204 | Double-Edge | Implemented | Unavailable | Unassigned | Not verified |
 | TM205 | Endeavor | Implemented | Unavailable | Unassigned | Not verified |
 | TM206 | Petal Blizzard | Implemented | Unavailable | Unassigned | Not verified |

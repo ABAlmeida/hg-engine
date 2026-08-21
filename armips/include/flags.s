@@ -1054,9 +1054,10 @@ FLAG_HIDDENITEM_R45_R46_PP_MAX                            equ 1030
 
 NUM_HIDDEN_ITEMS                                          equ   231
 
-// the following are unused flags for Hidden Items
+// Spare hidden-item flag range. Named entries are persistent project flags;
+// FLAG_UNK entries remain unallocated.
 
-FLAG_UNK_407                                              equ 1031
+FLAG_UNION_CAVE_LAPRAS_CONSUMED                           equ 1031
 FLAG_UNK_408                                              equ 1032
 FLAG_UNK_409                                              equ 1033
 FLAG_UNK_40A                                              equ 1034

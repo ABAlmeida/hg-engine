@@ -426,7 +426,9 @@ static void BuildTrainerTeamText(const TrainerData *entry, const char *speciesNa
     for (i = 0; i < partyCount; i++) {
         char speciesName[RAWTEXT_PATH_LENGTH];
 
-        ReadIndexedTextFile(speciesNameDir, entry->party[i].species, speciesName, sizeof(speciesName));
+        // Trainer species may pack a form number into the upper five bits via
+        // MON_WITH_FORM. Team previews use the base species name.
+        ReadIndexedTextFile(speciesNameDir, entry->party[i].species & 0x7FF, speciesName, sizeof(speciesName));
         if (i > 0) {
             AppendText(team, teamSize, i == partyCount - 1 ? (partyCount == 2 ? " and " : ", and ") : ", ");
         }
