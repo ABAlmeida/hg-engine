@@ -1,7 +1,7 @@
 You must be {STRVAR_1 3, 0, 0}.\rIt was I who sent an email\nto Professor Elm earlier.\r
 You must be {STRVAR_1 3, 0, 0}.\rIt was I who sent an email\nto Professor Elm earlier.\r
-This Pokémon Egg is what I wanted\nProfessor Elm to examine.\r
-A friend of mine from Ecruteak gave\nit to me.\rI bet you can’t find this kind of\nEgg anywhere else in Johto.\rProfessor Elm asked you to help with\nhis research, didn’t he?\rPlease hatch it and look after\nwhatever Pokémon is inside.
+Ah, you must be helping\nProfessor Elm with that Egg!\rI find many unusual Pokémon\non my travels.\rShiny Bait is one of my secrets.\nIt’s how I find so many of them.\rPlease try one for yourself!
+Use Shiny Bait where wild\nPokémon live.\rIt lets you catch a Pokémon\nwhere you’ve already caught one.\rBe careful! If its species is\nregistered in your Pokédex,\ryou won’t be able to catch it.\rThe Pokémon it attracts will\nalways be Shiny!
 You have a long journey ahead.\rHere. Your Pokémon should have\nsome rest.
 Please take good care of that Egg.\rI’m sure Professor Elm will learn\nplenty from your adventure.
 Life is delightful!\nAlways, new discoveries to be made!
@@ -29,6 +29,6 @@ That Orb has something to do with\nthe ancient ruins located past\fCianwood City
 The Embedded Tower is past Cianwood,\nsomewhere in the Cliff Cave.\rOr so I heard.\rOr so I remember.\rOr so I believe!
 It’s packed with foreign magazines.\rCan’t even read their titles...
 It’s a big computer.\nHmm. It’s broken.
+Mr. Pokémon has already entrusted\nthe Egg to you.
+Professor Oak has already left\nfor his radio show.
 A whole pile of strange coins!\fMaybe they’re from another country...
-{STRVAR_1 3, 0, 0} received\nthe Pokémon Egg!
-Professor Oak: Before I go, take this\nFishing Rod. It will help you meet\fPokémon that live in the water.

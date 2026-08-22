@@ -7,6 +7,17 @@ The build converts the table into the encounter NARC at `a/0/3/7`.
 Safari Zone encounters are separate and live in `data/SafariEncounters.c`.
 Headbutt encounters are also separate and live in `data/Headbutt.c`.
 
+After changing any of these tables, regenerate the implementation and usage
+tracker:
+
+```sh
+python tools/generate_pokemon_availability.py
+python tools/generate_pokemon_availability.py --check
+```
+
+This updates each affected Pokémon's catchable locations in
+`documentation/POKEMON_AVAILABILITY.md`.
+
 ## Find an area's table
 
 Encounter-table identifiers are defined in

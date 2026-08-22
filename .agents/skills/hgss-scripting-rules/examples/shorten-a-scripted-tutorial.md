@@ -2,8 +2,8 @@
 
 ## Goal
 
-Keep the Route 29 counterpart and Marill introduction while skipping HGSS's
-simulated capture battle and its duplicate Poké Ball gift.
+Keep the Route 29 counterpart and Slakoth grass demonstration while skipping
+HGSS's simulated capture battle and its duplicate Poké Ball gift.
 
 ## Target and verified command
 
@@ -16,6 +16,11 @@ The patch asserts both `CatchingTutorial` and the following known movement
 command before replacing the six bytes with a `goto`. The destination copies
 the original cleanup: departure movements, object hiding, hide flags,
 `VAR_UNK_408B`, `FLAG_UNK_09A`, `releaseall`, and `end`.
+
+The existing pre-animation `GenderMsgBox` uses local messages 0/1, now the
+Poké Bait explanation. The shortened continuation uses local messages 21/22
+for the gendered "...Just like that." response before the verified departure
+movements. These IDs belong to member 225's message bank, `data/text/373.txt`.
 
 ## Minimal pattern
 
@@ -38,4 +43,3 @@ end
 Check both protagonist genders, confirm the grass animation still runs, and
 confirm there is no tutorial battle, extra Ball gift, capture-rule mutation,
 or second trigger after re-entering Route 29.
-

@@ -69,7 +69,7 @@ _CaptureAvailabilityMessage:
     // This Pokémon can be captured.
     PrintGlobalMessage BATTLE_MSG_CAPTURE_ALLOWED, TAG_NONE
     Wait
-    WaitButtonABTime 60
+    WaitButtonABTime 120
     GoTo _PrintSendOutPokemonMessage
 
 _SendOutPokemonMessage:
@@ -174,7 +174,7 @@ _SafariEncounter:
     // This Pokémon can be captured.
     PrintGlobalMessage BATTLE_MSG_CAPTURE_ALLOWED, TAG_NONE
     Wait
-    WaitButtonABTime 60
+    WaitButtonABTime 120
     GoTo _Cleanup
 
 _PalParkEncounter:

@@ -148,6 +148,12 @@ smoke test. Battle-engine changes should add scenarios under
 - Keep `documentation/POKEMON_TRAINERS.md` and
   `documentation/POKEMON_ENCOUNTERS.md` synchronized with trainer-party and
   wild-encounter content changes respectively.
+- Whenever species data, ability limitations, move implementation flags,
+  learnsets, wild encounters, or trainer parties change, apply
+  `.agents/skills/maintain-pokemon-availability/SKILL.md` and regenerate
+  `documentation/POKEMON_AVAILABILITY.md` and the generated unusable-TM
+  section of `documentation/TM_REWARD_AVAILABILITY.md` with
+  `python tools/generate_pokemon_availability.py`.
 - Preserve `../Pokemon Trainers.txt` and `../Pokemon Encounters.txt` as the
   user's editable authoring drafts. When asked to apply those drafts, transfer
   their verified content into the game data and the corresponding Markdown
@@ -187,6 +193,9 @@ smoke test. Battle-engine changes should add scenarios under
   learnset, form, cry, save, and Pokédex path still requires an explicit audit.
 - New species being compiled does not place them in encounters, trainers,
   gifts, or other content.
+- Do not treat internal species IDs as National Pokédex numbers after Arceus.
+  IDs 494-543 are reserved Egg/Bad Egg and numbered placeholders; Victini is
+  National Dex 494 but engine species ID 544.
 - The existing wild-double-battle option is documented as unstable/broken and
   should remain disabled.
 

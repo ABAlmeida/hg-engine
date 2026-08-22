@@ -31,8 +31,8 @@ Hello, {STRVAR_1 3, 0, 0}?\rI expect that there are some Pokémon\nin the Kanto 
 Hello, {STRVAR_1 3, 0, 0}?\rI expect that there are some Pokémon\nin the Kanto region that I don’t know.\rThere are probably also methods of\nevolution that I’m not familiar with yet.\rI should use that perspective and\ndiscover what I can!
 Hello, {STRVAR_1 3, 0, 0}?\rIt seems that Pokémon that have been\ninfected with Pokérus level up better.\fWe’re not quite sure why...
 Hello, {STRVAR_1 3, 0, 0}?\rIt seems that Pokémon that have been\ninfected with Pokérus level up better.\fWe’re not quite sure why...
-Hello, {STRVAR_1 3, 0, 0}?\rMr. Pokémon told me everything.\rThe Egg itself will give us all the\ndata we need as it hatches.\rPlease care for it on your journey.\nYou don’t need to come back here!
-Hello, {STRVAR_1 3, 0, 0}?\rMr. Pokémon told me everything.\rThe Egg itself will give us all the\ndata we need as it hatches.\rPlease care for it on your journey.\nYou don’t need to come back here!
+Hello, {STRVAR_1 3, 0, 0}?\rMr. Pokémon told me you\narrived safely.\rThe Egg will give us the data\nwe need as it hatches.\rPlease look after it during\nyour journey.\rYou don’t need to return here!
+Hello, {STRVAR_1 3, 0, 0}?\rMr. Pokémon told me you\narrived safely.\rThe Egg will give us the data\nwe need as it hatches.\rPlease look after it during\nyour journey.\rYou don’t need to return here!
 Hello, {STRVAR_1 3, 0, 0}?\rI have a special reward for looking\nafter that Egg.\rMy assistant is waiting at the\nPoké Mart in Violet City!
 Hello, {STRVAR_1 3, 0, 0}?\rI have a special reward for looking\nafter that Egg.\rMy assistant is waiting at the\nPoké Mart in Violet City!
 {STRVAR_1 3, 0, 0}, how are things going?\rI called because something weird is\nhappening with the radio broadcasts.\rThey were talking about Team Rocket.\r{STRVAR_1 3, 0, 0}, do you know anything\nabout it?\rMaybe Team Rocket has returned.\nNo, that just can’t be true.\rSorry to bug you. Take care!

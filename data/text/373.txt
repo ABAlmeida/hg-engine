@@ -1,5 +1,5 @@
-Lyra: {STRVAR_1 3, 0, 0}!\nTo find a wild Pokémon, first use\fPoké Bait where Pokémon live.\rCome on! I’ll show you where.\r
-Ethan: {STRVAR_1 3, 0, 0}!\nTo find a wild Pokémon, first use\fPoké Bait where Pokémon live.\rCome on! I’ll show you where.\r
+Lyra: {STRVAR_1 3, 0, 0}!\rWild Pokémon hide in places\nlike tall grass.\rBut you won’t find them unless\nyou lure them out.\rUse Poké Bait wherever Pokémon\nlive.\rYou’ll be sure to find one.\rCome on! I’ll show you how.
+Ethan: {STRVAR_1 3, 0, 0}!\rWild Pokémon hide in places\nlike tall grass.\rBut you won’t find them unless\nyou lure them out.\rUse Poké Bait wherever Pokémon\nlive.\rYou’ll be sure to find one.\rCome on! I’ll show you how.
 ...Just like that!\r...\nHuh? Was I too fast?\rI’ll try again. Come this way!\r
 See? Just like that!\rIt’s better to lower your\ntarget’s HP more than I did,\for make it sleep or something.\rYou can try all kinds of things\nto see what works.\rI’ll give you these. Good luck!\r
 See? Just like that!\rIt’s better to lower your\ntarget’s HP more than I did,\for make it sleep or something.\rYou can try all kinds of things\nto see what works.\rI’ll give you these. Good luck!\r
@@ -19,5 +19,5 @@ Rt. 29\nWest to Cherrygrove City
 Rt. 29\nEast to New Bark Town
 Lyra: There you are!\r
 Ethan: There you are!\r
-Lyra: First, use Poké Bait\nwhere wild Pokémon live.\rWhen one appears, weaken it and\nthrow any kind of Poké Ball!
-Ethan: First, use Poké Bait\nwhere wild Pokémon live.\rWhen one appears, weaken it and\nthrow any kind of Poké Ball!
+Lyra: ...Just like that.
+Ethan: ...Just like that.

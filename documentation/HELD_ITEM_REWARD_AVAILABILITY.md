@@ -1,6 +1,6 @@
 # Held-Item Reward Availability
 
-Last updated: 2026-08-14
+Last updated: 2026-08-22
 
 This document tracks non-Berry held items as candidates for first-victory
 trainer rewards. A candidate is an item with a nonzero implemented
@@ -160,7 +160,7 @@ an implemented held effect, not that the item is an appropriate reward.
 | 326 | Razor Claw | `ITEM_RAZOR_CLAW` | `HOLD_EFFECT_CRITRATE_UP` | Not audited | Unassigned | Not verified |
 | 327 | Razor Fang | `ITEM_RAZOR_FANG` | `HOLD_EFFECT_SOMETIMES_FLINCH` | Not audited | Bird Keeper Abe (ID 50), Violet Gym, x1 | Not verified |
 | 537 | Prism Scale | `ITEM_PRISM_SCALE` | `HOLD_EFFECT_EVOLVE_FEEBAS` | Not audited | Unassigned | Not verified |
-| 538 | Eviolite | `ITEM_EVIOLITE` | `HOLD_EFFECT_EVIOLITE` | Not audited | Unassigned | Not verified |
+| 538 | Eviolite | `ITEM_EVIOLITE` | `HOLD_EFFECT_EVIOLITE` | Professor Elm after showing the tracked hatched Togepi, x1 | Unassigned | Not verified |
 | 539 | Float Stone | `ITEM_FLOAT_STONE` | `HOLD_EFFECT_HALVE_WEIGHT` | Not audited | Unassigned | Not verified |
 | 540 | Rocky Helmet | `ITEM_ROCKY_HELMET` | `HOLD_EFFECT_DAMAGE_ON_CONTACT` | Not audited | Unassigned | Not verified |
 | 541 | Air Balloon | `ITEM_AIR_BALLOON` | `HOLD_EFFECT_UNGROUND_DESTROYED_ON_HIT` | Not audited | Unassigned | Not verified |

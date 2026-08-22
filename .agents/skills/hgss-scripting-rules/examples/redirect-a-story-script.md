@@ -47,6 +47,15 @@ though the source labels looked separate. The no-op setup now points to the
 existing `end` terminating the Silver victory routine. Reusing a verified
 terminator avoids both the overlapping write and an unnecessary extra command.
 
+The first New Bark counterpart scene uses the same redirect-and-replay pattern
+for a dialogue insertion. At member-842 offset `0xDCC`, Slakoth begins movement
+`0xE60` immediately before the counterpart leads it away. The patch verifies
+that command and object 3, replaces it with a branch, displays gendered local
+messages 40/41, replays the displaced movement, and returns to the untouched
+`wait_movement` at `0xDD4`. Returning to `0xDD4` is essential: returning to the
+hook would repeat the dialogue, while returning after the wait would let the
+departure start before Slakoth finishes moving.
+
 ## Minimal pattern
 
 ```asm
@@ -68,6 +77,11 @@ entry. Accept an already-patched pointer as well when the patch must support
 After assembly, verify that each appended movement sequence still exists in
 the output and that no later `.org` writes inside its byte range. Source order
 alone does not prevent Armips from seeking backward and replacing prior data.
+
+For a mid-script dialogue insertion, branch over the complete displaced
+command, replay it in the appended continuation, and return to the original
+command immediately following it. Assert the original opcode, object, and
+relative target, plus the already-patched branch target for idempotence.
 
 ## Control-flow and manual verification
 

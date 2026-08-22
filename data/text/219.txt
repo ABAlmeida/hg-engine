@@ -4,7 +4,7 @@
 ...\n...\rHmm. Looks like the sun is descending\nin the sky...\r...So this would be what is called\n“twilight,” wouldn’t it?\r
 ...\n...\rHmm... Interesting...\n...\rHuh? Oh! Excuse me, sorry!\nI was just reading this book here.\r
 ...\n...\rYaaaaaaawn...\n...\rHuh? A guest?\nAt this hour?\r
-Welcome to Pokémon\nHeartless Gold!\rThings may work differently\nfrom what you are used to.\rPokémon do not gain\nExp. Points from battles.\rChoose LEVEL TO CAP from the\nPokémon menu to level them up.\rPokémon also do not gain\neffort values from battles.\rUse vitamins to increase their\neffort values.\r
+Welcome to Pokémon\nHeartless Gold!\rThings may work differently\nfrom what you are used to.\rPokémon do not gain\nExp. Points from battles.\rChoose LEVEL from the Pokémon\nmenu to level them up.\rPokémon also do not gain\neffort values from battles.\rUse vitamins to increase their\neffort values.\r
 I will first tell you important\nthings about this game.\n\nPlease touch any topic you’d like\nto know more about on the\nlower screen.
 
 I’ll explain this game’s controls.\n\nYou can control this game by\ntouching the lower screen, also\ncalled the Touch Screen.\n\nPlease touch the panel in the\nbottom right of the Touch Screen.

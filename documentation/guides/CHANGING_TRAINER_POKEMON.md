@@ -5,6 +5,17 @@ controlled in `data/Trainers.c`. Edit that file rather than an extracted
 trainer NARC or a DSPRE-generated copy. `trainerdatagen` converts it into the
 trainer data, party, name, and message archives during a ROM build.
 
+After changing a party's species, regenerate the implementation and usage
+tracker:
+
+```sh
+python tools/generate_pokemon_availability.py
+python tools/generate_pokemon_availability.py --check
+```
+
+This updates every affected species' trainer-name and trainer-ID list in
+`documentation/POKEMON_AVAILABILITY.md`.
+
 ## Find the trainer ID
 
 Field scripts start battles using a trainer ID. Locate the script or existing

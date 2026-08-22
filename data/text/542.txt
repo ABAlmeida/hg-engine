@@ -38,3 +38,5 @@ Elm Pokémon Lab
 {STRVAR_1 3, 0, 0}’s House
 Silver: I see you finally got\nyour Pokémon...\rBut you’re no match for me!
 Silver: Hmph...\rEnjoy the victory while it lasts.\nNext time, I’ll be stronger.
+Lyra: Normally Slakoth is a\nlazy Pokémon, but my guy is\rquite the gutsy fellow.
+Ethan: Normally Slakoth is a\nlazy Pokémon, but my guy is\rquite the gutsy fellow.

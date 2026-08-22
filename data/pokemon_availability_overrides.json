@@ -1,0 +1,22 @@
+{
+  "unimplementedAbilities": {
+    "ABILITY_RIPEN": {
+      "reason": "Ripen is explicitly marked as currently unimplemented by its Fling battle scenario.",
+      "source": "data/battle_tests/moves/fling/ripen.c"
+    }
+  },
+  "speciesLimitations": {
+    "SPECIES_KARRABLAST": {
+      "reason": "Its trade-with-Shelmet evolution method is explicitly documented as unimplemented.",
+      "source": "documentation/wiki/New-Evolution-Methods-Documentation.md"
+    },
+    "SPECIES_SHELMET": {
+      "reason": "Its trade-with-Karrablast evolution method is explicitly documented as unimplemented.",
+      "source": "documentation/wiki/New-Evolution-Methods-Documentation.md"
+    }
+  },
+  "disabledEncounterMethods": [
+    "goodRod",
+    "superRod"
+  ]
+}

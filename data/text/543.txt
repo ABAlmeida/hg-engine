@@ -1,8 +1,8 @@
 Professor Elm: Hi, {STRVAR_1 3, 0, 0}!\nI’ve been waiting for you!\rDo you know anything about\nmy research?\rAs you know, Pokémon are carried\nin Poké Balls these days.\rBut before the Poké Ball was invented,\npeople used to walk with Pokémon.\fJust like your friend Lyra does!\rPoké Balls are great because you can\ncarry many Pokémon.\rBut walking with Pokémon must have\nsome advantages.\rIt could have something to do with how\nPokémon grow or evolve...\rSo I’m going to give you a Pokémon!\rCan you walk beside this Pokémon,\noutside of its Poké Ball, to see if this\fbrings any special feelings or bonds\fbetween Pokémon and people?\rThe device over there has some Pokémon\nyou could choose from...\r
 Professor Elm: Hi, {STRVAR_1 3, 0, 0}!\nI’ve been waiting for you!\rDo you know anything about\nmy research?\rAs you know, Pokémon are carried\nin Poké Balls these days.\rBut before the Poké Ball was invented,\npeople used to walk with Pokémon.\fJust like your friend Ethan does!\rPoké Balls are great because you can\ncarry many Pokémon.\rBut walking with Pokémon must have\nsome advantages.\rIt could have something to do with how\nPokémon grow or evolve...\rSo I’m going to give you a Pokémon!\rCan you walk beside this Pokémon,\noutside of its Poké Ball, to see if this\fbrings any special feelings or bonds\fbetween Pokémon and people?\rThe device over there has some Pokémon\nyou could choose from...\r
-Professor Elm: Oh, hey! I got an email!\r
+Professor Elm: Oh, hey!\nI got an email from Mr. Pokémon!\r
 Professor Elm: ...\nHm... Uh-huh... OK...\r
-Professor Elm: Hey, listen.\nI have this acquaintance that people\fcall Mr. Pokémon.\rHe keeps finding weird things and\nraving about his discoveries.\rAnyway, I just got an email from him\nsaying that this time it’s real.\rIt’s probably another Pokémon Egg,\nbut we’re still so busy with our\fPokémon research...\rWait!\nI know!\rYou can go in our place, right?\nCan we count on you?\rYou can choose one of the Pokémon\nover there.\r
+Professor Elm: Mr. Pokémon\nrecently sent me a peculiar Egg.\rHe asked me to study it, and now\nhe’s made another discovery!\rHe wants to meet the Trainer\nwho’ll help look after the Egg.\rWait!\nI know!\rYou can help with both parts\nof my research!\rFirst, choose one of the Pokémon\nover there.\r
 Professor Elm: If a wild Pokémon\nappears, let your Pokémon battle it!
 Professor Elm: Where are you going?\nThe Poké Balls are in that device.\r
 {STRVAR_1 3, 0, 0} received {STRVAR_1 0, 1, 0}\nfrom Professor Elm!
@@ -19,8 +19,8 @@ There are no valuable Pokémon left...\rYou wonder who Professor Elm gave the\nl
 Huh? Me?\nI’m not the professor.\rHe’s at the back of the room.\n
 {STRVAR_1 3, 0, 0}, I want you to have these\nto help you with your task.\r
 {STRVAR_1 3, 0, 0}, I want you to have these\nto help you with your task.\r
-Use Poké Bait where wild\nPokémon live.\rThen throw a Poké Ball when\none appears.\rKeep those Potions handy, too!
-Use Poké Bait where wild\nPokémon live.\rThen throw a Poké Ball when\none appears.\rKeep those Potions handy, too!
+Use Poké Bait where wild\nPokémon live.\rThen throw a Poké Ball when\none appears.\rUse the Fishing Rod near water\nto find more Pokémon.\rKeep those Potions handy, too!
+Use Poké Bait where wild\nPokémon live.\rThen throw a Poké Ball when\none appears.\rUse the Fishing Rod near water\nto find more Pokémon.\rKeep those Potions handy, too!
 Who are you?\nWe are investigating the case of the\fmissing Pokémon here...\rRule number one!\n“Whoever did it will come\fback to the site.”\rOh my... So you must be...\nthe one who did it?\r
 Lyra: Hold on a second!\nHe has nothing to do with it!\rI saw it.\nThere was a red-haired boy\flooking into the building!\r
 Ethan: Hold on a second!\nShe has nothing to do with it!\rI saw it.\nThere was a red-haired boy\flooking into the building!\r
@@ -47,7 +47,7 @@ Professor Elm: Hi, {STRVAR_1 3, 0, 0}!\nHow are you?\rHow is the Egg doing?\nAre
 Professor Elm: What?\nThat Pokémon!?\r
 Hmm...\nAs far as I know, there is not a\fPokémon like this in Johto...\rJust like Mr. Pokémon was saying\nover the phone...\rThe legendary Pokémon could be...\nOh, never mind.\rAnyway, I’m sure things will be\nhappening around you, {STRVAR_1 3, 0, 0}!\rYou are making me all excited!\nI’ll give you a present for that.\fPlease take it.\r
 Hmm...\nAs far as I know, there is not a\fPokémon like this in Johto...\rJust like Mr. Pokémon was saying\nover the phone...\rThe legendary Pokémon could be...\nOh, never mind.\rAnyway, I’m sure things will be\nhappening around you, {STRVAR_1 3, 0, 0}!\rYou are making me all excited!\nI’ll give you a present for that.\fPlease take it.\r
-Professor Elm: That’s an Everstone.\rA Pokémon changes its shape as\nit evolves.\rBut if it’s holding an Everstone,\nyou can prevent it from evolving.\rIf you like the way a Pokémon is now,\nhave it hold an Everstone!\r
+Professor Elm:\nThat’s an Eviolite.\rA Pokémon that can evolve can\nhold it to boost its Defense.\rIt also boosts its Sp. Def!\r
 Professor Elm: {STRVAR_1 3, 0, 0}, good luck\nwith your journey!\rOh, one more thing...\nDon’t forget about my research!
 Professor Elm: {STRVAR_1 3, 0, 0}, good luck\nwith your journey!\rOh, one more thing...\nDon’t forget about my research!
 Uh-oh, your Bag is chock-full.
@@ -105,3 +105,6 @@ Professor Elm: {STRVAR_1 3, 0, 0}!\nI’m truly surprised!\rI can’t believe th
 Hmm...\nAs far as I know, there are no\fPokémon like this at Johto...\rJust like Mr. Pokémon was saying\nover the phone.\rYou seem to be there when\nsomething exciting happens,\f{STRVAR_1 3, 0, 0}!\rYou are making me all excited!\nI’ll give you a present for that.\fPlease take it.\r
 Hmm...\nAs far as I know, there are no\fPokémon like this at Johto...\rJust like Mr. Pokémon was saying\nover the phone.\rYou seem to be there when\nsomething exciting happens,\f{STRVAR_1 3, 0, 0}!\rYou are making me all excited!\nI’ll give you a present for that.\fPlease take it.\r
 Professor Elm: Before you go,\nlet me register my number.\rCall me if anything unusual happens!
+Professor Elm: Before you go,\nI have one more favor to ask.\rIt’s time to entrust that Egg\nto you.\rPlease help me learn\nwhat hatches from it!
+{STRVAR_1 3, 0, 0} received\nthe Pokémon Egg!
+Professor Elm: Take good care\nof that Egg.\rI’m sure we’ll learn something\nremarkable together!

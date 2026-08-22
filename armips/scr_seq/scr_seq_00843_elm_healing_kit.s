@@ -9,14 +9,18 @@
 
 ELM_ASSISTANT_TABLE_ENTRY equ 0x0C
 ELM_ASSISTANT_OBJECT_ID   equ 2
+ELM_EGG_INTRO_MESSAGE     equ 107
+ELM_EGG_RECEIVED_MESSAGE  equ 108
+ELM_EGG_CARE_MESSAGE      equ 109
 
 .if IMPLEMENT_REUSABLE_HEALER
 
 // Elm's starter sequence closes message 11 here and normally turns him back
 // toward the player. Redirect that movement command to the appended gift
-// routine, then return to the original WaitMovement command.
+// routine, then resume immediately after the original WaitMovement command.
 ELM_GIFT_HOOK_OFFSET        equ 0x2C5
-ELM_GIFT_RETURN_OFFSET      equ 0x2CD
+ELM_GIFT_RETURN_OFFSET      equ 0x2CF
+ELM_ORIGINAL_WAIT_OFFSET    equ 0x2CD
 ELM_TURN_TO_PLAYER_MOVEMENT equ 0x390
 ELMS_LAB_ORIGINAL_END       equ 0x1158
 ELM_OBJECT_ID               equ 0
@@ -25,7 +29,7 @@ SCRIPT_OPCODE_GOTO           equ 22
 SCRIPT_OPCODE_APPLY_MOVEMENT equ 94
 SCRIPT_OPCODE_WAIT_MOVEMENT  equ 95
 
-ELM_ORIGINAL_MOVEMENT_DISTANCE equ ELM_TURN_TO_PLAYER_MOVEMENT - ELM_GIFT_RETURN_OFFSET
+ELM_ORIGINAL_MOVEMENT_DISTANCE equ ELM_TURN_TO_PLAYER_MOVEMENT - ELM_ORIGINAL_WAIT_OFFSET
 ELM_GIFT_BRANCH_DISTANCE        equ ELMS_LAB_ORIGINAL_END - (ELM_GIFT_HOOK_OFFSET + 6)
 
 .macro assert_elm_gift_hook,file
@@ -42,7 +46,7 @@ ELM_GIFT_BRANCH_DISTANCE        equ ELMS_LAB_ORIGINAL_END - (ELM_GIFT_HOOK_OFFSE
     .else
         .error "Elm Healing Kit patch found an unexpected hook command"
     .endif
-    .if readu16(file, ELM_GIFT_RETURN_OFFSET) != SCRIPT_OPCODE_WAIT_MOVEMENT
+    .if readu16(file, ELM_ORIGINAL_WAIT_OFFSET) != SCRIPT_OPCODE_WAIT_MOVEMENT
         .error "Elm Healing Kit patch found an unexpected return command"
     .endif
 .endmacro
@@ -54,15 +58,27 @@ assert_elm_gift_hook "build/a012/2_843"
 .org ELM_GIFT_HOOK_OFFSET
 goto elm_give_healing_kit
 
-// Append the gift rather than overwriting another part of Elm's script. The
-// routine replays the displaced movement before returning to the untouched
-// WaitMovement command.
+// Append the gift rather than overwriting another part of Elm's script. Replay
+// and finish the displaced movement first so Elm faces the player throughout
+// both gifts, then resume after the original WaitMovement command.
 .org ELMS_LAB_ORIGINAL_END
 elm_give_healing_kit:
+apply_movement ELM_OBJECT_ID, ELM_TURN_TO_PLAYER_MOVEMENT
+wait_movement
 setvar VAR_SPECIAL_x8004, ITEM_HEALING_KIT
 setvar VAR_SPECIAL_x8005, 1
 callstd std_obtain_item_verbose
 .if IMPLEMENT_REVISED_OPENING
+closemsg
+// The party contains only the new starter here, so the specialized story-Egg
+// command cannot fail for lack of space and preserves Elm's hatch tracking.
+npc_msg ELM_EGG_INTRO_MESSAGE
+give_togepi_egg
+buffer_players_name 0
+npc_msg ELM_EGG_RECEIVED_MESSAGE
+play_fanfare SEQ_ME_TAMAGO_GET
+wait_fanfare
+npc_msg ELM_EGG_CARE_MESSAGE
 closemsg
 buffer_players_name 0
 npc_msg 106
@@ -72,12 +88,11 @@ wait_fanfare
 wait_button
 .endif
 closemsg
-apply_movement ELM_OBJECT_ID, ELM_TURN_TO_PLAYER_MOVEMENT
 goto ELM_GIFT_RETURN_OFFSET
 
 .if IMPLEMENT_REVISED_OPENING
 // Script-table entry 3 is the assistant who stops the player at the lab exit.
-// Check all three stacks before granting any so a full Bag cannot produce a
+// Check all four gifts before granting any so a full Bag cannot produce a
 // partial gift that is duplicated when the event is retried.
 .if readu32("build/a012/2_843", ELM_ASSISTANT_TABLE_ENTRY) != 0x654 && readu32("build/a012/2_843", ELM_ASSISTANT_TABLE_ENTRY) != (elm_assistant_opening_supplies - 0x10)
     .error "Revised opening found an unexpected Elm assistant script"
@@ -111,17 +126,22 @@ wait_movement
 buffer_players_name 0
 gender_msgbox 19, 20
 goto_if_no_item_space ITEM_POTION, 5, elm_assistant_bag_full
-goto_if_no_item_space ITEM_POKE_BALL, 20, elm_assistant_bag_full
-goto_if_no_item_space ITEM_POKE_BAIT, 20, elm_assistant_bag_full
+goto_if_no_item_space ITEM_POKE_BALL, 100, elm_assistant_bag_full
+goto_if_no_item_space ITEM_POKE_BAIT, 100, elm_assistant_bag_full
+goto_if_no_item_space ITEM_OLD_ROD, 1, elm_assistant_bag_full
 setvar VAR_SPECIAL_x8004, ITEM_POTION
 setvar VAR_SPECIAL_x8005, 5
 callstd std_obtain_item_verbose
 setvar VAR_SPECIAL_x8004, ITEM_POKE_BALL
-setvar VAR_SPECIAL_x8005, 20
+setvar VAR_SPECIAL_x8005, 100
 callstd std_obtain_item_verbose
 setvar VAR_SPECIAL_x8004, ITEM_POKE_BAIT
-setvar VAR_SPECIAL_x8005, 20
+setvar VAR_SPECIAL_x8005, 100
 callstd std_obtain_item_verbose
+setvar VAR_SPECIAL_x8004, ITEM_OLD_ROD
+setvar VAR_SPECIAL_x8005, 1
+callstd std_obtain_item_verbose
+setflag FLAG_GOT_OLD_ROD
 closemsg
 // Hide the New Bark counterpart before the exterior map loads. The revised
 // New Bark setup preserves these flags across the post-battle field reload.

@@ -1,12 +1,12 @@
 # Revised Opening Sequence Plan
 
-Last updated: 2026-08-21
+Last updated: 2026-08-22
 
 ## Status
 
 Implemented in source. The main progression has passed an initial manual test;
-the dialogue, New Bark object cleanup, revised Silver path, Fishing Rod gift, and
-registered Healing Kit cleanup still need focused manual verification.
+Elm's earlier Togepi Egg gift, the assistant's Fishing Rod gift, Mr. Pokémon's
+Shiny Bait gift, and the revised dialogue still need focused manual verification.
 
 ## Decisions
 
@@ -20,11 +20,14 @@ registered Healing Kit cleanup still need focused manual verification.
   for a male player; Ethan does so for a female player. Revisit this only if
   the separate forced-protagonist plan is retained.
 - Replace the counterpart's recurring Marill companion with Slakoth while
-  preserving the existing object movements and scene flags.
+  preserving the existing object movements and scene flags. During the first
+  New Bark encounter, Lyra or Ethan remarks that their normally lazy Slakoth
+  is unusually gutsy before leading it away.
 - The rival is always named `Silver`. Do not display the rival naming screen.
-- Professor Elm continues to give the Healing Kit during the starter sequence.
-- Elm's assistant gives 5 Potions, 20 standard Poké Balls, and 20 Poké Bait in
-  one conversation before the player leaves the lab.
+- Professor Elm faces the player while giving the Healing Kit, then gives the
+  normal tracked Togepi Egg during the starter sequence.
+- Elm's assistant gives 5 Potions, 100 standard Poké Balls, 100 Poké Bait, and
+  the Fishing Rod in one conversation before the player leaves the lab.
 - Move Silver's first battle to immediately after the player leaves Elm's lab.
 - Preserve Mum's automatic first-downstairs cutscene. Extend that same
   cutscene so Mum gives the normal opening menu features, the Pokégear, the
@@ -32,14 +35,15 @@ registered Healing Kit cleanup still need focused manual verification.
   conversation.
 - The Cherrygrove guide tour does not run. Put the guide into his established
   post-tour state because the Map and Running Shoes are already unlocked.
-- Mr. Pokémon gives the actual hatchable story Egg. It is initially Togepi;
-  changing its species is deferred.
+- Mr. Pokémon gives one Shiny Bait and explains that it permits another catch
+  in an already-used area, but cannot bypass the Pokédex-based duplicate
+  species rule. The Togepi Egg has already come from Elm.
 - Preserve the later post-Falkner Violet City assistant event, but replace its
   duplicate Egg with exactly one Shiny Bait. Rewrite both Elm's preceding
   phone call and the assistant's dialogue to describe the new reward.
 - Preserve Professor Oak's Pokédex sequence at Mr. Pokémon's house.
-- Professor Oak also gives the Fishing Rod before leaving Mr. Pokémon's
-  house. Its internal item ID remains `ITEM_OLD_ROD` for compatibility.
+- Professor Oak leaves through his original departure sequence after giving
+  the Pokédex; the assistant has already supplied the Fishing Rod.
 - On leaving Mr. Pokémon's house, Elm calls to say that he has the data he
   needs and asks the player to hatch and care for the Egg. The player does not
   return to Elm.
@@ -65,15 +69,17 @@ registered Healing Kit cleanup still need focused manual verification.
    money.
 4. The player visits Elm and chooses a starter through the normal selection
    and nickname flow.
-5. Elm gives the Healing Kit and registers his phone number.
-6. The assistant gives 5 Potions, 20 Poké Balls, and 20 Poké Bait.
+5. Elm turns to face the player, gives the Healing Kit and tracked Togepi Egg,
+   and registers his phone number.
+6. The assistant gives 5 Potions, 100 Poké Balls, 100 Poké Bait, and the
+   Fishing Rod.
 7. When the player leaves the lab, Silver approaches and starts Silver 1.
 8. The first trip through Route 29 triggers the shortened counterpart and
-   Slakoth tutorial. It explains Bait and Balls but does not start a tutorial
-   battle.
+   Slakoth tutorial. It explains luring Pokémon with Bait but does not start a
+   tutorial battle.
 9. Cherrygrove is already in its post-guide-tour state.
-10. Mr. Pokémon gives the hatchable Egg. Oak gives the Pokédex and Fishing
-   Rod.
+10. Mr. Pokémon explains Shiny Bait and gives one. Oak gives the Pokédex and
+    leaves normally.
 11. Elm calls when the player leaves, asks them to hatch and care for the Egg,
     and releases them from the return objective.
 12. Route 30's northern path is open and normal Violet City progression begins.
@@ -196,9 +202,12 @@ Do not include the planned Laptop gift in this implementation.
 
 ## 4. Preserve Elm's starter and Healing Kit flow
 
-Retain the complete original starter selection, starter-dependent state,
-nickname choice, and Elm dialogue. Keep the Healing Kit after the starter has
-been received and before the player exits the lab.
+Retain the complete original starter selection, starter-dependent state, and
+nickname choice. After the starter has been received, finish Elm's displaced
+turn so he faces the player, give the Healing Kit, and then use the established
+specialized Togepi Egg command. That command preserves the saved identity used
+by Elm's later hatch call; do not add IV, Shiny, species-choice, or ability
+configuration.
 
 Move or retain Elm's phone-number registration so it completes during this
 same visit. Use the existing registration command and contact identifier from
@@ -208,25 +217,28 @@ registration later.
 Review the existing Healing Kit patch after the combined changes to ensure:
 
 - every starter and nickname branch reaches the gift exactly once;
-- the displaced Elm movement still occurs;
+- the displaced Elm movement finishes before either gift message;
 - message closure and movement waits remain balanced; and
-- revisiting Elm cannot grant a second Healing Kit.
+- revisiting Elm cannot grant a second Healing Kit or Egg.
 
 ## 5. Give all starting supplies from the assistant
 
 Extend the assistant's existing lab-exit conversation to award, in order:
 
 1. 5 Potions;
-2. 20 standard Poké Balls; and
-3. 20 Poké Bait.
+2. 100 standard Poké Balls; and
+3. 100 Poké Bait; and
+4. the Fishing Rod (`ITEM_OLD_ROD`).
 
 Use the established verbose item-obtained standard script for each stack so
 the correct item name, quantity, fanfare, and pocket behavior are retained.
 The opening starts with sufficient Bag capacity, so no new deferred-reward
 save state is required.
 
-Gate the complete assistant sequence with the existing starter/lab scene
-progression. Advance its completion state only after all three grants, and
+Set the established `FLAG_GOT_OLD_ROD` only after the Fishing Rod is awarded,
+so the original later fisherman recognizes that it is already owned. Gate the
+complete assistant sequence with the existing starter/lab scene progression.
+Advance its completion state only after all four grants, and
 ensure the assistant's later dialogue cannot award them again.
 
 Remove the normal later Poké Ball reward from the catching tutorial so the
@@ -329,11 +341,10 @@ outbound journey after Silver 1. Preserve normal counterpart selection:
 - the existing companion object and movements for both paths, rendered as
   Slakoth through its shared static sprite tag.
 
-Replace the catching explanation with dialogue that tells the player to:
-
-1. stand on valid encounter terrain;
-2. use Poké Bait to begin a wild encounter; and
-3. throw a Poké Ball during the encounter.
+Replace the catching explanation with dialogue that tells the player wild
+Pokémon hide in places such as tall grass and must be lured out with Poké
+Bait. After the retained grass animation, the counterpart says, "...Just like
+that," and immediately leaves with Slakoth.
 
 Retain the first verified overworld movement in which the counterpart and
 Slakoth move or jump into the grass. Branch around the `catching_tutorial`
@@ -368,37 +379,18 @@ Confirm that:
 - any dialogue or item previously attached to the completed tour cannot be
   awarded twice.
 
-## 10. Give the hatchable story Egg at Mr. Pokémon's house
+## 10. Give Shiny Bait at Mr. Pokémon's house
 
 Preserve Mr. Pokémon's introduction and Professor Oak's Pokédex sequence.
-Replace the Mystery Egg key-item handoff with the established hatchable Egg
-gift behavior.
+Replace the obsolete Mystery Egg key-item handoff with a retryable verbose gift
+of one `ITEM_SHINY_BAIT`. Mr. Pokémon explains that he uses it to attract
+unusual Pokémon and that the attracted encounter is Shiny. If the Bag has no
+space, do not advance the story state; allow the scene to retry after the
+player makes room and reloads the map.
 
-Before choosing the Egg command, audit later scripts that read the saved
-Togepi personality and gender:
-
-- If retained later story checks require that identity, use the specialized
-  Togepi Egg command after correcting its existing object-lifetime defect.
-- If no retained consumer requires it, use the general verified Egg command
-  with Togepi and the original story Egg's known-good parameters.
-
-`ScrCmd_GiveTogepiEgg()` currently frees its temporary Pokémon and then reads
-that freed object to save its personality and gender. If the specialized path
-is retained, move the identity read/write before `sys_FreeMemoryEz()` and
-review the generated object size. Do not use the current ordering.
-
-The normal opening guarantees party space because the player has only their
-starter. The implementation should nevertheless preserve the selected
-command's established full-party behavior and must not claim the gift
-succeeded if it did not.
-
-Remove or retire the Mystery Egg key item so it cannot remain as an obsolete
-quest item. Do not suppress the later Violet City assistant event: repurpose it
-as the one-time Shiny Bait reward described below.
-
-Changing Togepi to another species remains a later content change. Keep the
-chosen species at one identifiable source location so that later work does not
-require tracing several scripts or C literals.
+Retain the existing heal, Oak introduction, Pokédex, phone registration, and
+post-scene state normalization. Restore Oak's original close-and-depart bytes
+rather than redirecting him to a Fishing Rod gift.
 
 ## 11. Replace the panic call and retire the return journey
 
@@ -517,16 +509,16 @@ or task ownership is correct.
 4. Extend Mum's automatic downstairs cutscene with the Pokégear, Map, Running
    Shoes, and savings flow while preserving the initial New Bark counterpart
    scene.
-5. Integrate Elm's phone registration with the existing starter and Healing
-   Kit patch.
-6. Add the assistant's three exact item stacks and remove the later tutorial
-   Ball reward.
+5. Integrate Elm's tracked Togepi Egg and phone registration with the existing
+   starter and Healing Kit patch, finishing his turn before the gifts.
+6. Add the assistant's three exact item stacks and Fishing Rod, then remove
+   the later tutorial Ball reward.
 7. Move Silver 1 to New Bark and retire the original battle and naming flow.
 8. Move and shorten the counterpart/Slakoth tutorial without starting opcode
    251's tutorial battle.
 9. Advance Cherrygrove to its established post-tour state.
-10. Move the hatchable Egg to Mr. Pokémon, resolve the Egg-helper lifetime
-    issue, and retire the Mystery Egg key item.
+10. Replace Mr. Pokémon's obsolete Mystery Egg handoff with Shiny Bait and
+    restore Oak's original departure.
 11. Replace Elm's panic call and reproduce the verified final state of the
     skipped return journey.
 12. Open Route 30 through its normal post-opening state.
@@ -561,7 +553,7 @@ Use a new in-game save, not a save state, and manually verify:
 5. all three starters and both nickname choices;
 6. exactly one Healing Kit and one Elm phone registration, plus Healing Kit
    registration and registered-button use;
-7. exactly 5 Potions, 20 Poké Balls, and 20 Poké Bait after the assistant;
+7. exactly 5 Potions, 100 Poké Balls, and 100 Poké Bait after the assistant;
 8. no duplicate gifts after revisiting the lab;
 9. all three Silver 1 trainer variants using a level-5, perfect-IV starter with
    no held item, no STAB moves, and the Super Effective, Evaluate Attacks, and
@@ -576,8 +568,8 @@ Use a new in-game save, not a save state, and manually verify:
     consumption from the shortened demonstration;
 16. tutorial cleanup and one-time behavior after leaving and re-entering;
 17. no Cherrygrove guide tour and the guide's correct post-tour placement;
-18. Mr. Pokémon's hatchable Togepi Egg and Oak's Pokédex, phone, and Fishing
-    Rod gifts, with no later duplicate Fishing Rod gift;
+18. Elm's tracked Togepi Egg and the assistant's Fishing Rod, plus Mr.
+    Pokémon's Shiny Bait and Oak's normal Pokédex and phone sequence;
 19. absence of an obsolete Mystery Egg key item;
 20. the new Elm call completing without a lock, fade, or phone-task hang;
 21. no return-to-Elm objective, police scene, or later Violet duplicate Egg;
@@ -588,6 +580,7 @@ Use a new in-game save, not a save state, and manually verify:
     retry after a full-Bag refusal and no duplicate after save/reload;
 26. the assistant's revised dialogue, departure, and normal downstream scene
     cleanup without granting a second Egg;
-27. the Egg hatching and any retained Elm Egg dialogue; and
+27. the Egg hatching, Elm recognizing Togepi, Togetic, or Togekiss, and exactly
+    one Eviolite reward, including the existing full-Bag response; and
 28. later Silver encounters displaying the fixed name and using their normal
     teams and progression.

@@ -1,10 +1,10 @@
 # TM Reward Availability
 
-Last updated: 2026-08-13
+Last updated: 2026-08-22
 
-This document tracks the distinct, implemented TM moves that are not currently
-obtainable as TMs in Heartless Gold. It is intended to support assigning TMs as
-first-victory trainer rewards.
+This document tracks TM reward candidates and TM assignments that must not be
+used because their moves are unimplemented. It is intended to support assigning
+safe TMs as first-victory trainer rewards.
 
 The machine assignments come from `src/item.c`. "Implemented" means the move is
 not marked with `FLAG_UNUSABLE_UNIMPLEMENTED` in `data/Moves.c`; it does not
@@ -19,16 +19,27 @@ or an HM.
 | Distinct implemented moves awaiting TM placement | 94 |
 | Assigned as trainer rewards | 5 |
 | Manually verified rewards | 0 |
+| Unusable TM mappings | 12 |
 
 ## Updating this tracker
 
+After changing move implementation flags or TM mappings, regenerate the
+unusable-TM section and its summary count with:
+
+```sh
+python tools/generate_pokemon_availability.py
+python tools/generate_pokemon_availability.py --check
+```
+
 When adding a TM to `data/trainer_rewards.csv`:
 
-1. Change **Availability** from `Unavailable` to `Available`.
-2. Record the trainer name, numeric trainer ID, and location under **Reward source**.
-3. Leave **Verification** as `Not verified` until the reward has been received
+1. Confirm that the TM is in the candidate table and is not listed as
+   `Unusable`.
+2. Change **Availability** from `Unavailable` to `Available`.
+3. Record the trainer name, numeric trainer ID, and location under **Reward source**.
+4. Leave **Verification** as `Not verified` until the reward has been received
    and the TM has been used successfully in a current build.
-4. After that manual check, change **Verification** to `Verified` and update the
+5. After that manual check, change **Verification** to `Verified` and update the
    summary counts above.
 
 Use one row per distinct move. Do not add another row merely because another TM
@@ -133,25 +144,28 @@ number teaches the same move.
 | TM224 | Curse | Implemented | Unavailable | Unassigned | Not verified |
 | TM228 | Psychic Noise | Implemented | Unavailable | Unassigned | Not verified |
 
-## Excluded TM assignments
+## Unusable TM assignments
 
-The following TM assignments are not reward candidates because their moves are
-explicitly marked unimplemented:
+This generated table is the explicit do-not-use list. These TM items must not
+be assigned as rewards while their moves remain marked
+`FLAG_UNUSABLE_UNIMPLEMENTED` in `data/Moves.c`.
 
-| TM item | Move |
-|---|---|
-| TM100 | Confide |
-| TM144 | Fire Pledge |
-| TM145 | Water Pledge |
-| TM146 | Grass Pledge |
-| TM170 | Steel Beam |
-| TM171 | Tera Blast |
-| TM179 | Smack Down |
-| TM195 | Burning Jealousy |
-| TM225 | Hard Press |
-| TM226 | Dragon Cheer |
-| TM227 | Alluring Voice |
-| TM229 | Upper Hand |
+<!-- BEGIN GENERATED UNUSABLE TM ASSIGNMENTS -->
+| TM item | Move | Engine status | Availability | Reward source | Verification |
+| --- | --- | --- | --- | --- | --- |
+| TM100 | Confide | Unimplemented | Unusable | Do not assign | N/A |
+| TM144 | Fire Pledge | Unimplemented | Unusable | Do not assign | N/A |
+| TM145 | Water Pledge | Unimplemented | Unusable | Do not assign | N/A |
+| TM146 | Grass Pledge | Unimplemented | Unusable | Do not assign | N/A |
+| TM170 | Steel Beam | Unimplemented | Unusable | Do not assign | N/A |
+| TM171 | Tera Blast | Unimplemented | Unusable | Do not assign | N/A |
+| TM179 | Smack Down | Unimplemented | Unusable | Do not assign | N/A |
+| TM195 | Burning Jealousy | Unimplemented | Unusable | Do not assign | N/A |
+| TM225 | Hard Press | Unimplemented | Unusable | Do not assign | N/A |
+| TM226 | Dragon Cheer | Unimplemented | Unusable | Do not assign | N/A |
+| TM227 | Alluring Voice | Unimplemented | Unusable | Do not assign | N/A |
+| TM229 | Upper Hand | Unimplemented | Unusable | Do not assign | N/A |
+<!-- END GENERATED UNUSABLE TM ASSIGNMENTS -->
 
 TM093, TM094, TM098, TM103, TM105, TM107, TM111, TM114, TM115, TM116,
 TM119, TM120, TM125, TM126, TM129, TM135, TM141, TM143, TM148, TM149,

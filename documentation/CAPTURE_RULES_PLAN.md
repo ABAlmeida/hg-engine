@@ -1,6 +1,6 @@
 # Challenge Capture Rules Plan
 
-Last updated: 2026-08-04
+Last updated: 2026-08-22
 
 This document records the reviewed design for the challenge capture rules.
 The save-data foundation, ordinary encounter rules, Safari behavior, and
@@ -174,7 +174,8 @@ family bitset, or an area override table.
 12. **Complete:** Keep wild double battles disabled.
 13. **Complete; build and manual verification pending:** Announce "This
     Pokémon can be captured." after the wild-introduction message only when
-    the battle currently permits a player capture command.
+    the battle currently permits a player capture command. Normal and Safari
+    announcements wait up to 120 frames for player input.
 14. **Build complete; focused manual verification pending:** Verify Safari and
     the revised Contest retention-on-success behavior with an in-game save.
 

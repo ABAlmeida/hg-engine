@@ -18,6 +18,15 @@ SCRIPT_OPCODE_SETFLAG           equ 30
 SCRIPT_OPCODE_APPLY_MOVEMENT    equ 94
 
 NEW_BARK_SETUP_TABLE_ENTRY equ 0x24
+NEW_BARK_COMMENT_HOOK_OFFSET equ 0xDCC
+NEW_BARK_COMMENT_RETURN_OFFSET equ 0xDD4
+NEW_BARK_COMMENT_MOVEMENT equ 0xE60
+NEW_BARK_LYRA_SLAKOTH_MESSAGE equ 40
+NEW_BARK_ETHAN_SLAKOTH_MESSAGE equ 41
+
+ELM_HATCH_REWARD_SETVAR_OFFSET equ 0x5F2
+ELM_HATCH_REWARD_ITEM_OFFSET equ ELM_HATCH_REWARD_SETVAR_OFFSET + 4
+ELM_HATCH_REWARD_QUANTITY_OFFSET equ ELM_HATCH_REWARD_SETVAR_OFFSET + 6
 
 PLAYER_OBJECT_ID equ 255
 MUM_OBJECT_ID    equ 0
@@ -36,6 +45,24 @@ TRAINER_LYRA_GATEHOUSE   equ 738
 TRAINER_ETHAN_GATEHOUSE  equ 739
 
 .if IMPLEMENT_REVISED_OPENING
+
+// Elm's vanilla post-hatch reward prepares the gift in VAR_SPECIAL_x8004,
+// checks Bag space, and gives it through the standard verbose item routine.
+// Change only that prepared item so the existing trigger and completion flow
+// now award Eviolite instead of Everstone.
+.if readu16("build/a012/2_843", ELM_HATCH_REWARD_SETVAR_OFFSET) != SCRIPT_OPCODE_SETVAR || readu16("build/a012/2_843", ELM_HATCH_REWARD_SETVAR_OFFSET + 2) != VAR_SPECIAL_x8004
+    .error "Revised opening found an unexpected Elm hatch-reward command"
+.endif
+.if readu16("build/a012/2_843", ELM_HATCH_REWARD_ITEM_OFFSET) != ITEM_EVERSTONE && readu16("build/a012/2_843", ELM_HATCH_REWARD_ITEM_OFFSET) != ITEM_EVIOLITE
+    .error "Revised opening found an unexpected Elm hatch-reward item"
+.endif
+.if readu16("build/a012/2_843", ELM_HATCH_REWARD_QUANTITY_OFFSET) != SCRIPT_OPCODE_SETVAR || readu16("build/a012/2_843", ELM_HATCH_REWARD_QUANTITY_OFFSET + 2) != VAR_SPECIAL_x8005 || readu16("build/a012/2_843", ELM_HATCH_REWARD_QUANTITY_OFFSET + 4) != 1
+    .error "Revised opening found an unexpected Elm hatch-reward quantity"
+.endif
+.open "build/a012/2_843", 0
+.org ELM_HATCH_REWARD_ITEM_OFFSET
+.halfword ITEM_EVIOLITE
+.close
 
 // Player's house 1F: preserve the automatic opening, then fold Mum's later
 // Pokégear, Map, Running Shoes, and savings conversations into it.
@@ -134,10 +161,27 @@ end
 .if readu32("build/a012/2_842", NEW_BARK_SETUP_TABLE_ENTRY) != 0x6D && readu32("build/a012/2_842", NEW_BARK_SETUP_TABLE_ENTRY) != (revised_new_bark_setup - (NEW_BARK_SETUP_TABLE_ENTRY + 4))
     .error "Revised opening found an unexpected New Bark setup script"
 .endif
+
+// In the first New Bark companion scene, this is Slakoth's final movement
+// before the counterpart leads it away. Insert one line of dialogue here,
+// replay the displaced movement, and return to the original WaitMovement.
+.if readu16("build/a012/2_842", NEW_BARK_COMMENT_HOOK_OFFSET) == SCRIPT_OPCODE_APPLY_MOVEMENT
+    .if readu16("build/a012/2_842", NEW_BARK_COMMENT_HOOK_OFFSET + 2) != NEW_BARK_MARILL_OBJECT_ID || readu32("build/a012/2_842", NEW_BARK_COMMENT_HOOK_OFFSET + 4) != (NEW_BARK_COMMENT_MOVEMENT - NEW_BARK_COMMENT_RETURN_OFFSET)
+        .error "Revised opening found an unexpected New Bark companion movement"
+    .endif
+.elseif readu16("build/a012/2_842", NEW_BARK_COMMENT_HOOK_OFFSET) == SCRIPT_OPCODE_GOTO
+    .if readu32("build/a012/2_842", NEW_BARK_COMMENT_HOOK_OFFSET + 2) != (counterpart_slakoth_comment - (NEW_BARK_COMMENT_HOOK_OFFSET + 6))
+        .error "Revised opening found an unexpected existing companion branch"
+    .endif
+.else
+    .error "Revised opening found an unexpected New Bark companion command"
+.endif
 .org 0x20
 .word silver_one_after_lab - 0x24
 .org NEW_BARK_SETUP_TABLE_ENTRY
 .word revised_new_bark_setup - (NEW_BARK_SETUP_TABLE_ENTRY + 4)
+.org NEW_BARK_COMMENT_HOOK_OFFSET
+goto counterpart_slakoth_comment
 
 .org 0x174C
 silver_one_after_lab:
@@ -223,6 +267,12 @@ step 18, 2 // West twice.
 step 17, 3 // Reach the horizontal path to Route 29.
 step 18, 5 // Run west to New Bark's Route 29 exit.
 step_end
+
+counterpart_slakoth_comment:
+gender_msgbox NEW_BARK_LYRA_SLAKOTH_MESSAGE, NEW_BARK_ETHAN_SLAKOTH_MESSAGE
+closemsg
+apply_movement NEW_BARK_MARILL_OBJECT_ID, NEW_BARK_COMMENT_MOVEMENT
+goto NEW_BARK_COMMENT_RETURN_OFFSET
 .close
 
 // Route 29: retain the counterpart and Marill grass animation, but replace
@@ -260,7 +310,7 @@ releaseall
 end
 .close
 
-// Mr. Pokémon: give the real party Egg at the original Mystery Egg point,
+// Mr. Pokémon: replace the obsolete Mystery Egg handoff with Shiny Bait,
 // then continue through Oak's untouched Pokédex sequence.
 .open "build/a012/2_229", 0
 .if readu16("build/a012/2_229", 0x8B) == SCRIPT_OPCODE_SETVAR
@@ -268,8 +318,8 @@ end
         .error "Revised opening found unexpected Mystery Egg parameters"
     .endif
 .elseif readu16("build/a012/2_229", 0x8B) == SCRIPT_OPCODE_GOTO
-    .if readu32("build/a012/2_229", 0x8D) != (mr_pokemon_gives_real_egg - 0x91)
-        .error "Revised opening found an unexpected existing Egg branch"
+    .if readu32("build/a012/2_229", 0x8D) != (mr_pokemon_gives_shiny_bait - 0x91)
+        .error "Revised opening found an unexpected existing Mr. Pokemon branch"
     .endif
 .else
     .error "Revised opening found an unexpected Mystery Egg gift"
@@ -284,12 +334,14 @@ end
     .error "Revised opening found an unexpected Oak departure"
 .endif
 .org 0x8B
-goto mr_pokemon_gives_real_egg
+goto mr_pokemon_gives_shiny_bait
 
-// Give Oak's Fishing Rod before replaying his original departure movement.
-// The item keeps the vanilla Old Rod ID for save and engine compatibility.
+// The assistant now gives the Fishing Rod at Elm's lab. Restore Oak's original
+// close-and-depart sequence so this patch is also correct after rebuild_scripts
+// has read a previously patched member.
 .org 0x34F
-goto oak_gives_old_rod
+closemsg
+apply_movement MR_POKEMON_OAK_OBJECT_ID, 0x450
 
 // Oak's original tail remains in place, but its scene values must describe
 // the shortened route instead of enabling the skipped rival/police return.
@@ -305,12 +357,11 @@ goto oak_gives_old_rod
 .halfword SCRIPT_OPCODE_SETFLAG // Keep the unused lab officer hidden.
 
 .org 0x45C
-mr_pokemon_gives_real_egg:
-give_togepi_egg
-buffer_players_name 0
-npc_msg 32
-play_fanfare SEQ_ME_TAMAGO_GET
-wait_fanfare
+mr_pokemon_gives_shiny_bait:
+goto_if_no_item_space ITEM_SHINY_BAIT, 1, mr_pokemon_shiny_bait_bag_full
+setvar VAR_SPECIAL_x8004, ITEM_SHINY_BAIT
+setvar VAR_SPECIAL_x8005, 1
+callstd std_obtain_item_verbose
 npc_msg 3
 npc_msg 4
 closemsg
@@ -329,16 +380,11 @@ clearflag FLAG_HIDE_ROUTE_30_YOUNGSTER_JOEY
 clearflag FLAG_HIDE_CHERRYGROVE_MART_SPECIAL_CLERK
 goto 0x2E8
 
-.org 0x4B0
-oak_gives_old_rod:
-npc_msg 33
-setvar VAR_SPECIAL_x8004, ITEM_OLD_ROD
-setvar VAR_SPECIAL_x8005, 1
-callstd std_obtain_item_verbose
-setflag FLAG_GOT_OLD_ROD
+mr_pokemon_shiny_bait_bag_full:
+callstd std_bag_is_full
 closemsg
-apply_movement MR_POKEMON_OAK_OBJECT_ID, 0x450
-goto 0x359
+releaseall
+end
 .close
 
 // Violet Poké Mart: keep the normal post-Falkner assistant event but turn the
