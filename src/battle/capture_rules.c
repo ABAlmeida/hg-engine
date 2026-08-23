@@ -105,14 +105,27 @@ static void CaptureRules_EvaluateSafariEncounter(
     CaptureRules_SetEncounterPermission(CAPTURE_PERMISSION_ALLOWED_STANDARD);
 }
 
-void LONG_CALL CaptureRules_InitializeSpecialBattle(struct BattleSystem *battleSystem)
+void LONG_CALL CaptureRules_InitializeBattle(struct BattleSystem *battleSystem)
 {
     struct PartyPokemon *wildMon;
     struct SaveData *saveData;
+    CapturePermission permission = CaptureRules_GetEncounterPermission();
 
-    // Ordinary encounters were evaluated by the field-generation hook. Safari
-    // uses a different generator, so initialize it after the battle party loads.
-    if (CaptureRules_GetEncounterPermission() != CAPTURE_PERMISSION_UNRESTRICTED
+    // Field generation has already approved this ordinary encounter. Commit
+    // its area here, once the encounter has actually become a battle. This
+    // still makes defeat and fleeing consume the opportunity, but a failed
+    // fishing timing prompt never reaches this point.
+    if (permission == CAPTURE_PERMISSION_ALLOWED_STANDARD) {
+        saveData = SaveBlock2_get();
+        CaptureRules_ConsumeArea(
+            CaptureRules_GetSave(saveData),
+            BattleWorkPlaceIDGet(battleSystem));
+        return;
+    }
+
+    // Safari uses a different generator, so evaluate it after the battle party
+    // has loaded.
+    if (permission != CAPTURE_PERMISSION_UNRESTRICTED
         || (BattleTypeGet(battleSystem) & BATTLE_TYPE_SAFARI) == 0
         || BattleWorkPokeCountGet(battleSystem, BATTLER_ENEMY) == 0) {
         return;

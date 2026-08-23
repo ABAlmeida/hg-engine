@@ -13,6 +13,7 @@ SCRIPT_OPCODE_GOTO              equ 22
 SCRIPT_OPCODE_GENDER_MSGBOX     equ 132
 SCRIPT_OPCODE_PLAY_CRY          equ 76
 SCRIPT_OPCODE_CLOSEMSG          equ 53
+SCRIPT_OPCODE_FOLLOWER_MOVEMENT equ 602
 SCRIPT_OPCODE_SETVAR            equ 41
 SCRIPT_OPCODE_SETFLAG           equ 30
 SCRIPT_OPCODE_APPLY_MOVEMENT    equ 94
@@ -110,17 +111,31 @@ play_fanfare SEQ_SE_PL_KIRAKIRA
 wait_fanfare
 npc_msg 9
 npc_msg 10
+// Preserve Mum's original Pokégear tutorial choice. The message embeds the
+// Yes/No menu, but GetMenuChoice is still required to read its result.
+touchscreen_menu_hide
+getmenuchoice VAR_SPECIAL_RESULT
+touchscreen_menu_show
+compare VAR_SPECIAL_RESULT, 0
+goto_if_ne mum_pokegear_help_no
 npc_msg 11
+goto mum_pokegear_help_done
+mum_pokegear_help_no:
+npc_msg 12
+mum_pokegear_help_done:
 npc_msg 13
+wait_button_or_dpad
 
 register_pokegear_card 1
 play_fanfare SEQ_ME_POKEGEAR_REGIST
 wait_fanfare
 npc_msg 39
+wait_button
 give_running_shoes
 play_fanfare SEQ_SE_PL_KIRAKIRA
 wait_fanfare
 npc_msg 40
+wait_button
 
 npc_msg 15
 touchscreen_menu_hide
@@ -201,6 +216,7 @@ wait_movement
 callstd std_play_rival_intro_music
 buffer_rivals_name 0
 npc_msg 38
+wait_button
 closemsg
 get_starter_choice VAR_TEMP_x4000
 compare VAR_TEMP_x4000, SPECIES_CHIKORITA
@@ -228,6 +244,8 @@ silver_won:
 callstd std_play_rival_outro_music
 buffer_rivals_name 0
 npc_msg 39
+wait_button
+closemsg
 // Silver 1 predates the central trainer-reward system. Award its configured
 // rewards here for now; migrate this trainer to trainer_rewards.csv when that
 // system is implemented so the player cannot receive them twice.
@@ -245,6 +263,9 @@ setflag FLAG_HIDE_NEW_BARK_RIVAL
 setflag FLAG_MET_PASSERBY_BOY
 setvar VAR_SCENE_NEW_BARK_TOWN_OW, 2
 setvar VAR_SCENE_PLAYERS_HOUSE_1F, 4
+// End the temporary rival theme and restore New Bark's map music before the
+// player regains field control.
+callstd std_fade_end_rival_outro_music
 releaseall
 // The stage-1 New Bark setup is intentionally a no-op. Reuse this existing
 // terminator so it cannot overwrite the tightly packed movement lists below.
@@ -270,6 +291,7 @@ step_end
 
 counterpart_slakoth_comment:
 gender_msgbox NEW_BARK_LYRA_SLAKOTH_MESSAGE, NEW_BARK_ETHAN_SLAKOTH_MESSAGE
+wait_button
 closemsg
 apply_movement NEW_BARK_MARILL_OBJECT_ID, NEW_BARK_COMMENT_MOVEMENT
 goto NEW_BARK_COMMENT_RETURN_OFFSET
@@ -278,6 +300,17 @@ goto NEW_BARK_COMMENT_RETURN_OFFSET
 // Route 29: retain the counterpart and Marill grass animation, but replace
 // the simulated capture battle and Ball gift with a short Bait explanation.
 .open "build/a012/2_225", 0
+.if readu16("build/a012/2_225", 0x58A) == SCRIPT_OPCODE_CLOSEMSG
+    .if readu16("build/a012/2_225", 0x58C) != SCRIPT_OPCODE_FOLLOWER_MOVEMENT || readu16("build/a012/2_225", 0x58E) != 0
+        .error "Revised opening found unexpected Route 29 tutorial message cleanup"
+    .endif
+.elseif readu16("build/a012/2_225", 0x58A) == SCRIPT_OPCODE_GOTO
+    .if readu32("build/a012/2_225", 0x58C) != (catching_tutorial_lyra_message_done - 0x590)
+        .error "Revised opening found an unexpected existing Route 29 message branch"
+    .endif
+.else
+    .error "Revised opening found an unexpected Route 29 tutorial message command"
+.endif
 .if readu16("build/a012/2_225", 0x4FB) == SCRIPT_OPCODE_CATCHING_TUTORIAL
     .if readu16("build/a012/2_225", 0x4FD) != SCRIPT_OPCODE_APPLY_MOVEMENT || readu16("build/a012/2_225", 0x4FF) != ROUTE_29_FRIEND_OBJECT_ID
         .error "Revised opening found an unexpected Route 29 post-tutorial movement"
@@ -289,14 +322,22 @@ goto NEW_BARK_COMMENT_RETURN_OFFSET
 .else
     .error "Revised opening found an unexpected Route 29 tutorial command"
 .endif
+.org 0x58A
+// Lyra's original helper printed message 2 and immediately closed it. Branch
+// after the known NPCMsg, wait for player input, then replay the CloseMsg and
+// follower-movement command before returning to the untouched helper.
+goto catching_tutorial_lyra_message_done
 .org 0x4FB
 goto shortened_catching_tutorial
 
 .org 0xA14
 shortened_catching_tutorial:
+compare VAR_TEMP_x4002, 0
+goto_if_eq shortened_catching_cleanup
 gender_msgbox 21, 22
 wait_button
 closemsg
+shortened_catching_cleanup:
 apply_movement ROUTE_29_FRIEND_OBJECT_ID, 0x928
 apply_movement ROUTE_29_MARILL_OBJECT_ID, 0x93C
 wait_movement
@@ -308,6 +349,13 @@ setvar VAR_UNK_408B, 0
 setflag FLAG_UNK_09A
 releaseall
 end
+
+.align 2
+catching_tutorial_lyra_message_done:
+wait_button
+closemsg
+scrcmd_602 0
+goto 0x590
 .close
 
 // Mr. Pokémon: replace the obsolete Mystery Egg handoff with Shiny Bait,
@@ -364,6 +412,7 @@ setvar VAR_SPECIAL_x8005, 1
 callstd std_obtain_item_verbose
 npc_msg 3
 npc_msg 4
+wait_button
 closemsg
 fade_screen 6, 1, 0, 0
 wait_fade

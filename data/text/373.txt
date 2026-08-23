@@ -1,6 +1,6 @@
-Lyra: {STRVAR_1 3, 0, 0}!\rWild Pokémon hide in places\nlike tall grass.\rBut you won’t find them unless\nyou lure them out.\rUse Poké Bait wherever Pokémon\nlive.\rYou’ll be sure to find one.\rCome on! I’ll show you how.
-Ethan: {STRVAR_1 3, 0, 0}!\rWild Pokémon hide in places\nlike tall grass.\rBut you won’t find them unless\nyou lure them out.\rUse Poké Bait wherever Pokémon\nlive.\rYou’ll be sure to find one.\rCome on! I’ll show you how.
-...Just like that!\r...\nHuh? Was I too fast?\rI’ll try again. Come this way!\r
+Lyra: {STRVAR_1 3, 0, 0}!\rWild Pokémon hide in places\nlike tall grass.\rBut you won’t find them unless\nyou lure them out.\rUse Poké Bait wherever Pokémon\nlive.\rYou’ll be sure to find one.\rCome on! I’ll show you how.\r
+Ethan: {STRVAR_1 3, 0, 0}!\rWild Pokémon hide in places\nlike tall grass.\rBut you won’t find them unless\nyou lure them out.\rUse Poké Bait wherever Pokémon\nlive.\rYou’ll be sure to find one.\rCome on! I’ll show you how.\r
+...Just like that.
 See? Just like that!\rIt’s better to lower your\ntarget’s HP more than I did,\for make it sleep or something.\rYou can try all kinds of things\nto see what works.\rI’ll give you these. Good luck!\r
 See? Just like that!\rIt’s better to lower your\ntarget’s HP more than I did,\for make it sleep or something.\rYou can try all kinds of things\nto see what works.\rI’ll give you these. Good luck!\r
 

@@ -43,7 +43,7 @@ A trainer entry contains trainer-wide data, a party, and optional battle text:
 [495] = {
     .name = "Boy",
     .data = {
-        .trainerType = TRAINER_DATA_TYPE_MOVES,
+        .trainerType = TRAINER_DATA_TYPE_MOVES | TRAINER_DATA_TYPE_ITEMS,
         .trainerClass = TRAINERCLASS_PASSERBY,
         .items = { ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE },
         .aiFlags = F_TRAINER_EXPERT_AI,
@@ -56,6 +56,7 @@ A trainer entry contains trainer-wide data, a party, and optional battle text:
             .level = 5,
             .species = SPECIES_CHIKORITA,
             .moves = { MOVE_TACKLE, MOVE_GROWL, MOVE_NONE, MOVE_NONE },
+            .item = ITEM_ORAN_BERRY,
             .ballSeal = 0,
         },
     },
@@ -325,11 +326,13 @@ When changing the first rival battle:
 2. Keep the starter relationship correct for each player choice.
 3. Keep common party members, levels, IV policy, moves, and AI consistent
    across all three variants.
-4. Retain the Passerby Boy identity unless the story is changed to reveal
+4. Keep the Oran Berry held item on each starter variant unless the encounter
+   design is deliberately changed.
+5. Retain the Passerby Boy identity unless the story is changed to reveal
    Silver before the battle.
-5. Check that the team is appropriate for the current starting level cap.
-6. Confirm the scripted battle still selects the intended IDs.
-7. Remember that the level-cap increase is keyed by trainer ID, not by the
+6. Check that the team is appropriate for the current starting level cap.
+7. Confirm the scripted battle still selects the intended IDs.
+8. Remember that the level-cap increase is keyed by trainer ID, not by the
    species in the party.
 
 ## Build and review

@@ -33,6 +33,9 @@ proton_reward:
 setvar VAR_SPECIAL_x8004, ITEM_AMULET_COIN
 setvar VAR_SPECIAL_x8005, 1
 callstd std_obtain_item_verbose
+// The verbose item standard leaves its message window open. Close it before
+// Proton's original fade and post-battle story continuation.
+closemsg
 fade_screen 6, 1, 0, 0
 goto 0x8A
 

@@ -204,6 +204,11 @@
 // IMPLEMENT_BAIT_ENCOUNTERS disables ordinary passive encounters and enables Poké Bait and Shiny Bait.
 #define IMPLEMENT_BAIT_ENCOUNTERS
 
+// Prevent field-model uploads from exhausting the fixed VBlank task queue.
+// The scheduler waits for VBlank before model work consumes the slots reserved
+// for field lifecycle tasks.
+#define FIX_FIELD_MODEL_VBLANK_QUEUE_OVERFLOW
+
 // Professor Elm gives a reusable Key Item that fully heals the party.
 #define IMPLEMENT_REUSABLE_HEALER
 

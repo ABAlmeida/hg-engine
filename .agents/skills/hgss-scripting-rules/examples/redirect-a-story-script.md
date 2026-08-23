@@ -40,9 +40,33 @@ shows both objects, including when the field reloads after battle. Hiding them
 only in the battle scene therefore causes both a visible pop-in and a post-
 battle reappearance.
 
-Member 842 has very little appended space. The Silver approach list fills
-`0x1828` through `0x183F`, and `silver_depart` begins at `0x1840`. A former
-`.org 0x1840` setup stub overwrote the departure's first movement action even
+Mum's combined opening in member 845 also preserves the original Pokégear
+question contract. Message 10 contains the Yes/No control, but displaying it
+does not read the selection: the verified vanilla flow hides the touchscreen
+menu, calls `getmenuchoice VAR_SPECIAL_RESULT`, restores the touchscreen menu,
+and selects message 11 for Yes or message 12 for No. Both paths converge on
+message 13 and the original `wait_button_or_dpad`. The added Map and Running
+Shoes messages also use explicit waits before the next gift or savings prompt;
+a fanfare delay is not a substitute for player acknowledgement.
+
+The same rule applies to text-controlled pauses in the retained Oak sequence
+at Mr. Pokémon's house. Local message 12 in `data/text/377.txt` is followed
+immediately by `GivePokedex` and its fanfare, so the message must end in the
+verified HGSS `\r` acknowledgement control. Without it, the script advances as
+soon as the printer finishes and the acquisition line can disappear without
+player input. Oak's modified new-game messages 6, 34, and 35 in
+`data/text/219.txt` already end in `\r` and therefore require acknowledgement.
+
+Mr. Pokémon's revised gift follows the same boundary rule. Local message 2 is
+immediately followed by `std_obtain_item_verbose`, and message 3 is immediately
+followed by message 4. Messages 2 and 3 therefore end in `\r`; message 4 uses
+the explicit `wait_button` already present in the redirected script before the
+window closes and the healing transition begins.
+
+Member 842 has very little appended space. After the rival-outro cleanup was
+added, the Silver approach list fills `0x182C` through `0x1843`, and
+`silver_depart` begins at `0x1844`. A former `.org 0x1840` setup stub
+overwrote the departure's first movement action in the earlier layout even
 though the source labels looked separate. The no-op setup now points to the
 existing `end` terminating the Silver victory routine. Reusing a verified
 terminator avoids both the overlapping write and an unnecessary extra command.
@@ -82,6 +106,25 @@ For a mid-script dialogue insertion, branch over the complete displaced
 command, replay it in the appended continuation, and return to the original
 command immediately following it. Assert the original opcode, object, and
 relative target, plus the already-patched branch target for idempotence.
+
+For embedded Yes/No text, copy the complete menu flow rather than only its
+messages:
+
+```asm
+npc_msg QUESTION_MESSAGE
+touchscreen_menu_hide
+getmenuchoice VAR_SPECIAL_RESULT
+touchscreen_menu_show
+compare VAR_SPECIAL_RESULT, 0
+goto_if_ne no_answer
+npc_msg YES_MESSAGE
+goto answer_done
+no_answer:
+npc_msg NO_MESSAGE
+answer_done:
+npc_msg FINAL_MESSAGE
+wait_button_or_dpad
+```
 
 ## Control-flow and manual verification
 

@@ -1,6 +1,13 @@
 #include "include/config.h"
 #include "include/debug.h"
 
+#ifdef FIX_FIELD_MODEL_VBLANK_QUEUE_OVERFLOW
+# The original scheduler creates one VBlank task per field-model resource.
+# Retarget only the verified field-overlay Thumb call; replacing the short ARM9
+# scheduler itself would overwrite neighbouring functions.
+0001 FieldModel_ScheduleVBlankUpload 021F1A10 bl
+#endif
+
 #ifdef IMPLEMENT_FAIR_TRAINER_AI
 # Replace the two verified overlay-12 calls into the HGSS overlay-10 AI.
 # The hook installer validates that each source instruction is a Thumb BL.

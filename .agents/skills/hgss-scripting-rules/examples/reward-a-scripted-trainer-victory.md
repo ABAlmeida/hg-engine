@@ -38,7 +38,10 @@ loss or adding the item to the opposing trainer's active battle-item array.
   awards in `armips/scr_seq/scr_seq_00843_elm_healing_kit.s`.
 - `callstd std_obtain_item_verbose` is standard script 2008 in
   `armips/include/scriptmacros.s`. It adds the item and presents the normal
-  obtained-item message.
+  obtained-item message. The standard waits for acknowledgement but leaves
+  its message window open so a caller can continue talking. A reward path that
+  returns, releases the field, fades the screen, or resumes movement must run
+  `closemsg` after the call unless it deliberately prints another message.
 - `goto_if_no_item_space ITEM, QUANTITY, TARGET` sets `VAR_SPECIAL_x8004` and
   `VAR_SPECIAL_x8005`, checks Bag capacity, and branches when the item cannot
   fit. Its parameter order and use before `std_give_item_verbose` are copied
@@ -46,6 +49,11 @@ loss or adding the item to the opposing trainer's active battle-item array.
 - `giveitem_no_check ITEM, QUANTITY` resets those item variables and calls
   `std_give_item_verbose`. Falkner uses it only after both TM51 and IV Max have
   passed their capacity checks.
+- `callstd std_play_rival_outro_music` starts standard script 2070, which
+  stops the map BGM and installs the temporary rival-outro theme.
+  `callstd std_fade_end_rival_outro_music` runs its verified matching standard
+  script 2071: fade the temporary BGM, stop it, and reset the map BGM. A scene
+  that starts the outro must run this cleanup before releasing field control.
 
 ## Verified identifiers
 
@@ -75,6 +83,7 @@ releaseall
 end
 
 victory:
+callstd std_play_rival_outro_music
 npc_msg 39
 setvar VAR_SPECIAL_x8004, ITEM_ORAN_BERRY
 setvar VAR_SPECIAL_x8005, 1
@@ -83,6 +92,9 @@ setvar VAR_SPECIAL_x8004, ITEM_IV_MAX
 setvar VAR_SPECIAL_x8005, 1
 callstd std_obtain_item_verbose
 closemsg
+apply_movement SILVER_OBJECT_ID, silver_depart
+wait_movement
+callstd std_fade_end_rival_outro_music
 releaseall
 end
 ```
@@ -104,6 +116,10 @@ setflag FLAG_GOT_TM51_FROM_FALKNER
   before releasing the field lock.
 - The item is awarded before the script advances Silver's completed scene
   state, so ordinary execution cannot revisit the reward.
+- Silver's departure completes while the rival-outro theme is active. The
+  matching fade/end standard then restores New Bark's map music before
+  `releaseall`; omitting it leaves the temporary-music state active and the
+  field silent after that theme ends.
 - Silver 1 occurs before normal play can fill the Berry or Medicine pocket, so
   a retry branch is not added to this mandatory cutscene. A modified save with
   either pocket full remains outside this opening assumption.
@@ -121,7 +137,8 @@ setflag FLAG_GOT_TM51_FROM_FALKNER
   `FLAG_GOT_TM89_FROM_BUGSY` so a Bag-full result remains retryable.
 - Proton has no later retry conversation. His won-battle branch awards the
   Amulet Coin before resuming the original post-battle dialogue and story
-  cleanup; the loss branch remains untouched.
+  cleanup; the loss branch remains untouched. Its patch explicitly closes the
+  standard item window before the original fade begins.
 
 ## Build and manual verification
 
@@ -129,7 +146,9 @@ When explicitly requested, build with `make quick-rom -j$(nproc)`. For Silver
 1, verify each starter matchup uses the correct level-5 opposing starter, none
 of the three variants knows a same-type attack or holds an item, victory grants
 exactly one Oran Berry and one IV Max, loss grants neither, and the battle
-cannot be repeated for another reward after save/reload. For Falkner, verify a
+cannot be repeated for another reward after save/reload. Confirm the rival
+outro plays during Silver's departure and New Bark's map music resumes before
+the player can move. For Falkner, verify a
 victory grants TM51 and one IV Max, later conversations grant neither again,
 and filling either relevant pocket produces the Bag-full response and permits
 a successful retry after space is made.

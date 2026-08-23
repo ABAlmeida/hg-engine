@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-#define LEVEL_CAP_INITIAL 7
+#define LEVEL_CAP_INITIAL 5
 #define LEVEL_CAP_MAX     100
 
 // Number of direct-indexed trainer entries stored in the level-cap code table.

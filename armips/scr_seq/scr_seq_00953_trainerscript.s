@@ -914,6 +914,9 @@ _0D99:
 
 _HG_AWARD_TRAINER_REWARD:
 	callstd std_obtain_item_verbose
+	// The standard routine waits for acknowledgement but deliberately leaves
+	// its message window open for callers that continue the conversation.
+	closemsg
 	return
 
 _0D9F:

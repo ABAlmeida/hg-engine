@@ -73,25 +73,6 @@ static BOOL CaptureRules_IsAreaConsumed(const CaptureRulesSave *captureRules, u3
         != 0;
 }
 
-static BOOL CaptureRules_ConsumeArea(CaptureRulesSave *captureRules, u32 mapSection)
-{
-    u32 mask;
-    u32 *word;
-
-    if (!CaptureRules_IsValidArea(mapSection)) {
-        return FALSE;
-    }
-
-    word = &captureRules->consumedAreas[mapSection / CAPTURE_AREA_BITS_PER_WORD];
-    mask = 1U << (mapSection % CAPTURE_AREA_BITS_PER_WORD);
-    if ((*word & mask) != 0) {
-        return FALSE;
-    }
-
-    *word |= mask;
-    return TRUE;
-}
-
 static BOOL CaptureRules_IsSpeciesDuplicate(struct SaveData *saveData, u16 species)
 {
     // Egg, Bad Egg, and the placeholder IDs before Victini are not Pokedex
@@ -141,9 +122,9 @@ static void CaptureRules_EvaluateOrdinaryEncounter(
         return;
     }
 
-    // An eligible ordinary encounter consumes the area only after passing the
-    // duplicate check, even if the player later defeats or flees from it.
-    CaptureRules_ConsumeArea(captureRules, battleParam->map_section);
+    // Commit the area only if this generated Pokemon reaches battle startup.
+    // In particular, a failed fishing timing prompt discards its generated
+    // BattleSetup without consuming the area's capture opportunity.
     CaptureRules_SetEncounterPermission(CAPTURE_PERMISSION_ALLOWED_STANDARD);
 }
 

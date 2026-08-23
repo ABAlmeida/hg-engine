@@ -47,7 +47,7 @@ feature total.
 | Summary stat/IV/EV viewer, nature colours, and friendship | `summary.o` | 1,144 | The final object is 46 bytes larger than the 1,098-byte pre-friendship object and 74 bytes smaller than the failed first implementation. It shares the Pokémon pointer and nature result and calculates nature effects instead of storing the former 150-byte table. |
 | Goldenrod Berry Shop inventory | `mart.o` data table | Measurement pending; nominal payload grows by 126 bytes | The former five-entry, 10-byte herbal table becomes a 68-entry, 136-byte Berry table including its terminator. This uses the existing mart path and avoids a larger custom shop/price hook; confirm the linked delta and remaining headroom on the next explicitly requested build. |
 | General script commands | `script_new_cmds.o` | Measurement pending | Previously 136 bytes. Configured Egg IV/ability handling now shares this dispatcher; measure its new object size and remaining overlay-129 headroom on the next explicitly requested build. |
-
+| Field VBlank model-upload backpressure | `field_vblank.o` | Measurement pending | Retargets one verified field-overlay call to a guarded scheduler that waits at 28 of 32 occupied slots. It adds injected code but no BSS, heap, save, archive, or VRAM allocation. Measure the object and remaining overlay-129 headroom on the next explicitly requested build. |
 ## Battle-extension feature costs
 
 | Feature | Measured cost | Notes and possible savings |

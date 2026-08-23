@@ -79,6 +79,7 @@ npc_msg ELM_EGG_RECEIVED_MESSAGE
 play_fanfare SEQ_ME_TAMAGO_GET
 wait_fanfare
 npc_msg ELM_EGG_CARE_MESSAGE
+wait_button
 closemsg
 buffer_players_name 0
 npc_msg 106
@@ -152,6 +153,7 @@ setvar VAR_UNK_408B, 1
 clearflag FLAG_HIDE_ROUTE_29_FRIEND
 clearflag FLAG_HIDE_ROUTE_29_MARILL
 npc_msg 21
+wait_button
 closemsg
 compare VAR_TEMP_x4000, 3
 goto_if_ne elm_assistant_depart_x4

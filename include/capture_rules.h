@@ -43,7 +43,7 @@ void LONG_CALL CaptureRules_GenerateOrdinaryEncounter(
     void *encounterGen,
     struct PartyPokemon *leadMon,
     struct BATTLE_PARAM *battleParam);
-void LONG_CALL CaptureRules_InitializeSpecialBattle(struct BattleSystem *battleSystem);
+void LONG_CALL CaptureRules_InitializeBattle(struct BattleSystem *battleSystem);
 BOOL LONG_CALL CaptureRules_ScrCmdBugContestAction(SCRIPTCONTEXT *ctx);
 
 #endif

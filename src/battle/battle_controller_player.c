@@ -249,7 +249,7 @@ void LONG_CALL BattleControllerPlayer_GetBattleMon(struct BattleSystem *battleSy
     }
 
 #ifdef IMPLEMENT_CAPTURE_RULES
-    CaptureRules_InitializeSpecialBattle(battleSystem);
+    CaptureRules_InitializeBattle(battleSystem);
     capturePermission = CaptureRules_GetEncounterPermission();
 #else
     capturePermission = CAPTURE_PERMISSION_UNRESTRICTED;

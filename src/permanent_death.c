@@ -1,5 +1,6 @@
 #include "../include/permanent_death.h"
 
+#include "../include/bag.h"
 #include "../include/battle.h"
 #include "../include/config.h"
 #include "../include/pokemon.h"
@@ -119,6 +120,15 @@ void PermanentDeath_ProcessPartyAfterBattle(SaveData *saveData)
             || GetMonData(mon, MON_DATA_IS_EGG, NULL)
             || GetMonData(mon, MON_DATA_HP, NULL) != 0) {
             continue;
+        }
+
+        // This routine runs during both battle teardown and field-side Contest
+        // cleanup. Use the persistent default heap for the Bag's temporary
+        // item-data lookup in both lifetimes. If the pocket is full, death
+        // still takes precedence and the item is lost with the Pokemon.
+        u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
+        if (heldItem != ITEM_NONE) {
+            Bag_AddItem(Sav2_Bag_get(saveData), heldItem, 1, HEAPID_DEFAULT);
         }
 
         PokeParty_Delete(party, i - 1);

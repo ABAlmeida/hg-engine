@@ -51,8 +51,12 @@ When an eligible encounter starts:
    area, and prevent capture even when the area was already consumed.
 4. Read its displayed map section from `BATTLE_PARAM.map_section`.
 5. If that map section is already present in `consumedAreas`, prevent capture.
-6. Otherwise, mark the map section consumed immediately and allow capture
-   attempts for that encounter.
+6. Otherwise, allow capture attempts and mark the map section consumed when
+   the generated encounter actually reaches battle initialization.
+
+Generation alone does not consume an area. This distinction matters for
+fishing: failing the reel-in timing prompt discards the generated battle setup
+before battle initialization, so the player retains that area's opportunity.
 
 Static and scripted encounters, roamers, gifts, eggs, trades, the catching
 tutorial, Pal Park, wireless battles, and debug battles do not consume an
@@ -199,6 +203,7 @@ The automated battle-test suite must only be run when explicitly requested.
 - The rules apply before the player receives Poké Balls.
 - A valid first encounter consumes its displayed map section even if it flees,
   is defeated, or is not caught.
+- A failed fishing reel-in prompt does not consume the displayed map section.
 - A duplicate species does not consume an ordinary map section.
 - A consumed ordinary map section blocks later captures.
 - A genuinely shiny, non-duplicate encounter may be caught in a consumed area.

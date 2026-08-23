@@ -33,41 +33,68 @@ trainer_id,item_id,quantity
 # His custom Gym Leader victory script awards this outside the shared table.
 
 # Route 32
+# Route 32 - Youngster Albert: TM095 (Leech Life)
 49,620,1
+# Route 32 - Picnicker Liz: HP Up S
 27,2688,6
+# Route 32 - Camper Roland: Protein S
 26,2689,6
+# Route 32 - Fisherman Henry: Iron S
 60,2690,6
+# Route 32 - Fisherman Justin: Calcium S
 18,2692,6
+# Route 32 - Fisherman Ralph: Zinc S
 57,2693,6
+# Route 32 - Youngster Gordon: Carbos S
 56,2691,6
+# Route 32 - Bird Keeper Peter: Sitrus Berry
 383,158,2
 
 # Union Cave
+# Union Cave 1F - Firebreather Ray: TM202 (Pain Split)
 390,2262,1
+# Union Cave 1F - Hiker Daniel: Soothe Bell
 384,218,1
+# Union Cave 1F - Hiker Russel: Pecha Berry
 25,151,1
+# Union Cave 1F - Firebreather Bill: Cheri Berry
 319,149,1
+# Union Cave 1F - Poké Maniac Larry: Chesto Berry
 23,150,1
+# Union Cave B1F North - Hiker Leonard: Zinc
 204,52,1
+# Union Cave B1F North - Hiker Phillip: TM187 (Icicle Spear)
 203,2247,1
+# Union Cave B1F South - Poké Maniac Andrew: Oran Berry
 201,155,1
+# Union Cave B1F South - Poké Maniac Calvin: Oran Berry
 202,155,1
+# Union Cave B2F - Ace Trainer Nick: Oran Berry
 205,155,1
+# Union Cave B2F - Ace Trainer Gwen: Oran Berry
 206,155,1
+# Union Cave B2F - Ace Trainer Emma: Oran Berry
 363,155,1
 
-# Route 33
+# Route 33 - Hiker Anthony: TM177 (Spite)
 61,2237,1
 
-# Slowpoke Well ordinary trainers
+# Slowpoke Well - Team Rocket Grunt (trainer 12): Oran Berry
 12,155,1
+# Slowpoke Well - Team Rocket Grunt (trainer 101): Oran Berry
 101,155,1
+# Slowpoke Well - Team Rocket Grunt (trainer 13): Oran Berry
 13,155,1
-# Executive Proton (trainer 486) uses a custom story script and is awarded there.
+# Slowpoke Well - Executive Proton (trainer 486): Amulet Coin
+# His custom story script awards this outside the shared table.
 
-# Azalea Gym ordinary trainers
+# Azalea Gym - Bug Catcher Al: Oran Berry
 68,155,1
+# Azalea Gym - Bug Catcher Benny: Oran Berry
 67,155,1
+# Azalea Gym - Bug Catcher Josh: Oran Berry
 69,155,1
+# Azalea Gym - Twins Amy & Mimi: Oran Berry
 10,155,1
-# Bugsy (trainer 21) uses a custom Gym Leader victory script.
+# Azalea Gym - Bugsy (trainer 21): IV Max
+# His custom Gym Leader victory script awards this outside the shared table.

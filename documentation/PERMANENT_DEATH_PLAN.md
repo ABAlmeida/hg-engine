@@ -5,6 +5,8 @@
 After an eligible battle has copied its final party state back into the save:
 
 - every non-Egg party Pokémon whose final HP is zero is permanently deleted;
+- each deleted Pokémon's held item is first returned to its normal Bag pocket
+  when that pocket has space;
 - one or more removed Pokémon display
   `Your Pokémon that died have left the party.`;
 - if no usable party Pokémon remains, the first non-Egg Pokémon in PC box and
@@ -36,7 +38,8 @@ completion path should call the same centralized operation.
 `PermanentDeath_ProcessPartyAfterBattle` owns all deletion and recovery:
 
 1. traverse the party backwards so compaction cannot skip adjacent entries;
-2. delete every eligible zero-HP Pokémon;
+2. attempt to return each eligible Pokémon's held item to the Bag, then delete
+   every eligible zero-HP Pokémon;
 3. record that a death notification is pending;
 4. if the remaining party has no usable Pokémon, scan all PC boxes in
    deterministic box-major order;
@@ -46,6 +49,9 @@ completion path should call the same centralized operation.
 
 The add-before-delete ordering makes recovery transactional. Failure to add
 leaves the boxed Pokémon untouched.
+
+Permanent removal is not cancelled when the Bag cannot accept a held item. In
+that edge case the Pokémon is still deleted and its held item is lost.
 
 ### Battle completion hook
 

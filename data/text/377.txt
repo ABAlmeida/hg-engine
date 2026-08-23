@@ -1,7 +1,7 @@
 You must be {STRVAR_1 3, 0, 0}.\rIt was I who sent an email\nto Professor Elm earlier.\r
 You must be {STRVAR_1 3, 0, 0}.\rIt was I who sent an email\nto Professor Elm earlier.\r
-Ah, you must be helping\nProfessor Elm with that Egg!\rI find many unusual Pokémon\non my travels.\rShiny Bait is one of my secrets.\nIt’s how I find so many of them.\rPlease try one for yourself!
-Use Shiny Bait where wild\nPokémon live.\rIt lets you catch a Pokémon\nwhere you’ve already caught one.\rBe careful! If its species is\nregistered in your Pokédex,\ryou won’t be able to catch it.\rThe Pokémon it attracts will\nalways be Shiny!
+Ah, you must be helping\nProfessor Elm with that Egg!\rI find many unusual Pokémon\non my travels.\rShiny Bait is one of my secrets.\nIt’s how I find so many of them.\rPlease try one for yourself!\r
+Use Shiny Bait where wild\nPokémon live.\rIt lets you catch a Pokémon\nwhere you’ve already caught one.\rBe careful! If its species is\nregistered in your Pokédex,\ryou won’t be able to catch it.\rThe Pokémon it attracts will\nalways be Shiny!\r
 You have a long journey ahead.\rHere. Your Pokémon should have\nsome rest.
 Please take good care of that Egg.\rI’m sure Professor Elm will learn\nplenty from your adventure.
 Life is delightful!\nAlways, new discoveries to be made!
@@ -10,7 +10,7 @@ Professor Oak: And with that...\rI’m Professor Oak, a Pokémon\nresearcher!\rS
 Professor Oak: And with that...\rI’m Professor Oak, a Pokémon\nresearcher!\rSo you’re {STRVAR_1 3, 0, 0}!\rI was just visiting my friend\nMr. Pokémon.\rI heard you were running an errand\nfor Professor Elm, so I waited here.\r
 Professor Oak: Oh! What’s this?\nA rare Pokémon!\rI see!\nYou must be helping Professor Elm’s\fresearch! I think I understand why\fProfessor Elm gave you that Pokémon.\rYou will treat your Pokémon with love\nand care, it seems.\r
 Professor Oak: ...Ah!\rYou seem to be dependable.\nHow would you like to help me out?\rSee? This is the latest version of\nthe Pokédex.\rIt automatically records data on\nPokémon you’ve seen or caught.\rIt’s a high-tech encyclopedia!\nI’d like you to have it.\r
-{STRVAR_1 3, 0, 0} received the Pokédex\nfrom Professor Oak!
+{STRVAR_1 3, 0, 0} received the Pokédex\nfrom Professor Oak!\r
 Go meet many kinds of Pokémon and\ncomplete that Pokédex!\fBut I’ve stayed too long.\rI have to get to Goldenrod for my\nusual radio show.\r{STRVAR_1 3, 0, 0}, I have a feeling that\nthis is not the last time we’ll meet...\rLet’s exchange numbers\njust to be on the safe side.\r
 Go meet many kinds of Pokémon and\ncomplete that Pokédex!\fBut I’ve stayed too long.\rI have to get to Goldenrod for my\nusual radio show.\r{STRVAR_1 3, 0, 0}, I have a feeling that\nthis is not the last time we’ll meet...\rLet’s exchange numbers\njust to be on the safe side.\r
 {STRVAR_1 3, 0, 0} registered Professor Oak\nin the Pokégear!\r

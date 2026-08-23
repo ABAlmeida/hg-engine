@@ -24,6 +24,10 @@ preventing a consumable replacement from becoming repeatable.
   source references before being named for this purpose.
 - `yesno VAR_SPECIAL_RESULT` and the convention that result 1 is the declined
   branch are copied from the existing HGSS common scripts.
+- The Violet assistant's gendered pre-reward messages are local IDs 2/3 in
+  `data/text/557.txt`. Both end in `\r` so the player acknowledges the
+  explanation before `std_obtain_item_verbose` replaces it with the item
+  message.
 
 ## Minimal pattern
 
