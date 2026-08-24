@@ -108,3 +108,5 @@ Professor Elm: Before you go,\nlet me register my number.\rCall me if anything u
 Professor Elm: Before you go,\nI have one more favor to ask.\rIt’s time to entrust that Egg\nto you.\rPlease help me learn\nwhat hatches from it!
 {STRVAR_1 3, 0, 0} received\nthe Pokémon Egg!
 Professor Elm: Take good care\nof that Egg.\rI’m sure we’ll learn something\nremarkable together!
+You can’t leave yet.\rHatch Professor Elm’s Egg, then\nshow him the Pokémon inside.
+Before leaving, raise the Pokémon\nfrom the Egg to Lv. 5.

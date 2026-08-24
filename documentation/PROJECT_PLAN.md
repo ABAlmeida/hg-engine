@@ -55,10 +55,11 @@ complete.
 - Remove normal acquisition sources for every item in the Battle Items pocket.
   Retain their IDs and item data for archive stability.
 - Consolidate the opening so Mum supplies the early travel features, Elm gives
-  the tracked Togepi Egg, his assistant supplies the Fishing Rod, Silver 1
-  occurs outside the lab, the counterpart teaches Bait without a simulated
-  battle, and Mr. Pokemon gives Shiny Bait before progression continues toward
-  Violet City. See `OPENING_SEQUENCE_PLAN.md`.
+  the tracked Togepi Egg, the player must hatch it, show its Pokémon to Elm,
+  and raise it to level 5 before his assistant supplies the Fishing Rod,
+  Silver 1 occurs outside the lab, the counterpart teaches Bait without a
+  simulated battle, and Mr. Pokemon gives Shiny Bait before progression
+  continues toward Violet City. See `OPENING_SEQUENCE_PLAN.md`.
 - Replace the counterpart's recurring Marill companion with Slakoth. Before
   giving the Vs. Recorder in the Route 31-Violet gatehouse, Lyra or Ethan must
   be defeated in a gender-selected three-Pokemon battle. Losing follows the
@@ -94,7 +95,7 @@ complete.
 | Bait encounters | Complete; manually verified | Poké Bait and Shiny Bait work on valid terrain; invalid use is rejected; preserved encounter types remain available. Non–Shiny Bait wild encounters are forced non-shiny so Shiny Bait is the sole wild shiny source. See `BAIT_ENCOUNTERS.md`. |
 | Reusable healer | Complete; manually verified | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, cannot be used in battle, and can be registered to a field-use button. See `REUSABLE_HEALER_PLAN.md`. |
 | Intermittent field VBlank task failure | Fix implemented; build and manual verification pending | Field-model texture uploads are the confirmed bulk producer. Their replacement scheduler reserves four entries in the original 32-entry VBlank queue and retries excess uploads through existing main/VWait queues, preventing model bursts from starving field-lifecycle work. See `FIELD_VBLANK_TASK_FAILURE_INVESTIGATION.md`. |
-| Revised opening sequence | Implemented; initial manual pass complete; revised gift ordering and dialogue verification pending | Skip the optional new-game information menu through its existing No Info Needed path, consolidate Mum's early unlocks, have Elm face the player while giving the Healing Kit and tracked Togepi Egg, give the starting supplies and Fishing Rod through the assistant, move Silver 1 onto a valid New Bark path, shorten the counterpart's tutorial to explain Bait without a battle, have Mr. Pokémon explain and give Shiny Bait, preserve Oak's normal Pokédex departure, replace the later Egg gift with Shiny Bait, and remove the return-to-Elm requirement. See `OPENING_SEQUENCE_PLAN.md`. |
+| Revised opening sequence | Implemented; new lab-exit gate pending build and manual verification | Skip the optional new-game information menu through its existing No Info Needed path, consolidate Mum's early unlocks, have Elm face the player while giving the Healing Kit and tracked Togepi Egg, require the Egg to hatch, its Togepi-line Pokémon to be shown to Elm and raised to level 5 before the assistant gives the starting supplies and Fishing Rod, move Silver 1 onto a valid New Bark path, shorten the counterpart's tutorial to explain Bait without a battle, have Mr. Pokémon explain and give Shiny Bait, preserve Oak's normal Pokédex departure, replace the later Egg gift with Shiny Bait, and remove the return-to-Elm requirement. See `OPENING_SEQUENCE_PLAN.md`. |
 | First counterpart battle and Slakoth companion | Implemented; build and manual verification pending | Replace the counterpart's shared companion graphics and surviving scripted cries with Slakoth. The first New Bark encounter includes gendered dialogue about its unusually gutsy behavior. The Route 31-Violet gatehouse now requires a victory over Lyra or Ethan before the existing Vs. Recorder gift and completion state can proceed. |
 | Permanent death and wipe recovery | Complete; manually verified | Eligible fainted party Pokémon are deleted centrally after battle. Common field scripts report deaths and transactional reserve recovery after the overworld is visible; no-reserve wipes show the ending message and return to title. See `PERMANENT_DEATH_PLAN.md`. |
 | Laptop PC access | Planned; independent from permanent death | Add a reusable Laptop Key Item that opens the shared PC menu from safe field contexts. Mum initially gives it during the existing Pokégear sequence. See `LAPTOP_PLAN.md`. |

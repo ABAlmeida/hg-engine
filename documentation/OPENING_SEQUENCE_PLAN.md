@@ -1,6 +1,6 @@
 # Revised Opening Sequence Plan
 
-Last updated: 2026-08-22
+Last updated: 2026-08-24
 
 ## Status
 
@@ -26,8 +26,12 @@ Shiny Bait gift, and the revised dialogue still need focused manual verification
 - The rival is always named `Silver`. Do not display the rival naming screen.
 - Professor Elm faces the player while giving the Healing Kit, then gives the
   normal tracked Togepi Egg during the starter sequence.
-- Elm's assistant gives 5 Potions, 100 standard Poké Balls, 100 Poké Bait, and
-  the Fishing Rod in one conversation before the player leaves the lab.
+- Before the player can leave Elm's lab, require the tracked Egg to be hatched,
+  its Togepi-line Pokémon to be shown to Elm, and that Pokémon to reach at
+  least level 5. Elm recognizes it anywhere in the party rather than requiring
+  it to be the first usable Pokémon.
+- After those requirements are complete, Elm's assistant gives 5 Potions, 100
+  standard Poké Balls, 100 Poké Bait, and the Fishing Rod in one conversation.
 - Move Silver's first battle to immediately after the player leaves Elm's lab.
 - Preserve Mum's automatic first-downstairs cutscene. Extend that same
   cutscene so Mum gives the normal opening menu features, the Pokégear, the
@@ -45,8 +49,8 @@ Shiny Bait gift, and the revised dialogue still need focused manual verification
 - Professor Oak leaves through his original departure sequence after giving
   the Pokédex; the assistant has already supplied the Fishing Rod.
 - On leaving Mr. Pokémon's house, Elm calls to say that he has the data he
-  needs and asks the player to hatch and care for the Egg. The player does not
-  return to Elm.
+  needs and asks the player to continue the journey and care for their
+  Pokémon. The player does not return to Elm.
 - Keep the catching tutorial on the first outbound journey. Retain the
   counterpart and Slakoth's first overworld grass animation, replace its
   explanation with Poké Bait instructions, and skip the simulated capture
@@ -71,21 +75,24 @@ Shiny Bait gift, and the revised dialogue still need focused manual verification
    and nickname flow.
 5. Elm turns to face the player, gives the Healing Kit and tracked Togepi Egg,
    and registers his phone number.
-6. The assistant gives 5 Potions, 100 Poké Balls, 100 Poké Bait, and the
+6. The player uses the Party menu to hatch the tracked Egg, shows the resulting
+   Togepi-line Pokémon to Elm, and raises it to at least level 5. The assistant
+   turns the player back at the exit until both requirements are complete.
+7. The assistant gives 5 Potions, 100 Poké Balls, 100 Poké Bait, and the
    Fishing Rod.
-7. When the player leaves the lab, Silver approaches and starts Silver 1.
-8. The first trip through Route 29 triggers the shortened counterpart and
+8. When the player leaves the lab, Silver approaches and starts Silver 1.
+9. The first trip through Route 29 triggers the shortened counterpart and
    Slakoth tutorial. It explains luring Pokémon with Bait but does not start a
    tutorial battle.
-9. Cherrygrove is already in its post-guide-tour state.
-10. Mr. Pokémon explains Shiny Bait and gives one. Oak gives the Pokédex and
+10. Cherrygrove is already in its post-guide-tour state.
+11. Mr. Pokémon explains Shiny Bait and gives one. Oak gives the Pokédex and
     leaves normally.
-11. Elm calls when the player leaves, asks them to hatch and care for the Egg,
+12. Elm calls when the player leaves, confirms that he has the data he needs,
     and releases them from the return objective.
-12. Route 30's northern path is open and normal Violet City progression begins.
-13. After Falkner, Elm directs the player to his assistant in Violet City's
+13. Route 30's northern path is open and normal Violet City progression begins.
+14. After Falkner, Elm directs the player to his assistant in Violet City's
     Poké Mart. The assistant gives one Shiny Bait instead of another Egg.
-14. Before entering Violet City, the counterpart challenges the player in the
+15. Before entering Violet City, the counterpart challenges the player in the
     Route 31 gatehouse. Victory awards the Vs. Recorder and completes the
     scene; defeat does neither.
 
@@ -396,8 +403,8 @@ rather than redirecting him to a Fishing Rod gift.
 
 After the Egg and Pokédex sequences complete and the player leaves Mr.
 Pokémon's house, use the established HGSS phone-call flow for a new Elm
-message. Elm explains that he has the information he needs and asks the player
-to hatch and care for the Egg.
+message. Elm confirms that he has the information he needs and asks the player
+to continue the journey and care for their Pokémon.
 
 Do not reuse an identifier or parameter until its original HGSS call sequence
 has been verified. Preserve the call's field lock, music, message close,
@@ -511,8 +518,9 @@ or task ownership is correct.
    scene.
 5. Integrate Elm's tracked Togepi Egg and phone registration with the existing
    starter and Healing Kit patch, finishing his turn before the gifts.
-6. Add the assistant's three exact item stacks and Fishing Rod, then remove
-   the later tutorial Ball reward.
+6. Gate the lab exit behind Elm's completed Togepi-line inspection and level
+   5, then add the assistant's three exact item stacks and Fishing Rod and
+   remove the later tutorial Ball reward.
 7. Move Silver 1 to New Bark and retire the original battle and naming flow.
 8. Move and shorten the counterpart/Slakoth tutorial without starting opcode
    251's tutorial battle.
@@ -568,19 +576,22 @@ Use a new in-game save, not a save state, and manually verify:
     consumption from the shortened demonstration;
 16. tutorial cleanup and one-time behavior after leaving and re-entering;
 17. no Cherrygrove guide tour and the guide's correct post-tour placement;
-18. Elm's tracked Togepi Egg and the assistant's Fishing Rod, plus Mr.
+18. the assistant blocking the exit before Elm has seen the hatched Pokémon;
+19. the assistant blocking the exit while that Pokémon is below level 5;
+20. Elm recognizing Togepi, Togetic, or Togekiss in any party slot;
+21. Elm's tracked Togepi Egg and the assistant's Fishing Rod, plus Mr.
     Pokémon's Shiny Bait and Oak's normal Pokédex and phone sequence;
-19. absence of an obsolete Mystery Egg key item;
-20. the new Elm call completing without a lock, fade, or phone-task hang;
-21. no return-to-Elm objective, police scene, or later Violet duplicate Egg;
-22. immediate northern Route 30 access, including after save/reload;
-23. normal Violet City, Falkner, and post-Falkner progression;
-24. Elm's post-Falkner call referring to a special reward, not an Egg;
-25. exactly one Shiny Bait from the Violet assistant, including a successful
+22. absence of an obsolete Mystery Egg key item;
+23. the new Elm call completing without a lock, fade, or phone-task hang;
+24. no return-to-Elm objective, police scene, or later Violet duplicate Egg;
+25. immediate northern Route 30 access, including after save/reload;
+26. normal Violet City, Falkner, and post-Falkner progression;
+27. Elm's post-Falkner call referring to a special reward, not an Egg;
+28. exactly one Shiny Bait from the Violet assistant, including a successful
     retry after a full-Bag refusal and no duplicate after save/reload;
-26. the assistant's revised dialogue, departure, and normal downstream scene
+29. the assistant's revised dialogue, departure, and normal downstream scene
     cleanup without granting a second Egg;
-27. the Egg hatching, Elm recognizing Togepi, Togetic, or Togekiss, and exactly
+30. the Egg hatching and exactly
     one Eviolite reward, including the existing full-Bag response; and
-28. later Silver encounters displaying the fixed name and using their normal
+31. later Silver encounters displaying the fixed name and using their normal
     teams and progression.

@@ -125,7 +125,7 @@ FLAG_GOT_TM05_FROM_ROUTE_32_MAN                            equ 110
 FLAG_UNK_06F                                               equ 111
 FLAG_GOT_EGG_FROM_ELMS_ASSISTANT                           equ 112
 FLAG_TRADE_VIOLET_CITY_BELLSPROUT_ONIX                     equ 113
-FLAG_UNK_072                                               equ 114
+FLAG_SHOWED_TOGEPI_TO_ELM                                 equ 114
 FLAG_GOT_TM51_FROM_FALKNER                                 equ 115
 FLAG_UNK_074                                               equ 116
 FLAG_GOT_OLD_ROD                                           equ 117
