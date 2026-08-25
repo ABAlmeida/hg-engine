@@ -48,6 +48,11 @@ command in
 parameter zero selects the normal intro/title startup path in
 `.scratch/pret-pokeheartgold/src/main.c`.
 
+The `ResetGame` macro is a semantic alias for
+`FinishPermanentDeathNotification 1`. It is suitable for other terminal field
+scripts because the command clears only transient permanent-death notification
+state before calling the same verified system reset.
+
 ## Verified identifiers
 
 - Variables:
@@ -83,6 +88,34 @@ script termination if that implementation contract changes later.
 The shared notification checks whether any deaths are pending and displays
 message 121 when the pending flag is nonzero. The message wording covers both
 singular and plural removals, so no exact count is needed.
+
+## Compile-time demo boundary variation
+
+Bugsy's scripted victory in member 869 uses the same reset mechanism when
+`HEARTLESS_GOLD_DEMO` is generated as one from `include/config.h`. The normal
+reward path acknowledges and closes message 5, displays the demo-complete
+message in the verified-unused map-message slot 4, waits for acknowledgement,
+closes it, and calls `ResetGame`. The Bag-full path branches to the same ending
+so full item pockets cannot bypass the demo boundary. A lost battle never
+reaches either reward branch and remains retryable.
+
+The map-message provenance is pret-pokeheartgold map header
+`MAP_AZALEA_GYM`/`MAP_T23GYM0102`: script member 869 uses message bank 567.
+The matching message source identifies slot 4 as unused in the original map.
+The build-generated `HEARTLESS_GOLD_DEMO` Armips constant prevents the C and
+script configuration from drifting apart.
+
+```asm
+.if HEARTLESS_GOLD_DEMO
+bugsy_demo_complete:
+    npc_msg 4
+    wait_button
+    closemsg
+    ResetGame
+.endif
+releaseall
+end
+```
 
 ## Control-flow checklist
 

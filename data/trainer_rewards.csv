@@ -11,7 +11,6 @@ trainer_id,item_id,quantity
 249,2690,6
 # Route 31 - Bug Catcher Wade: Carbos S
 4,2691,6
-
 # Sprout Tower - Sage Nico: Zinc S
 51,2693,6
 # Sprout Tower - Sage Chow: Calcium S
@@ -48,7 +47,7 @@ trainer_id,item_id,quantity
 # Route 32 - Youngster Gordon: Carbos S
 56,2691,6
 # Route 32 - Bird Keeper Peter: Sitrus Berry
-383,158,2
+383,158,1
 
 # Union Cave
 # Union Cave 1F - Firebreather Ray: TM202 (Pain Split)
@@ -63,8 +62,8 @@ trainer_id,item_id,quantity
 23,150,1
 # Union Cave B1F North - Hiker Leonard: Zinc
 204,52,1
-# Union Cave B1F North - Hiker Phillip: TM187 (Icicle Spear)
-203,2247,1
+# Union Cave B1F North - Hiker Phillip: Oran Berry
+203,155,1
 # Union Cave B1F South - Poké Maniac Andrew: Oran Berry
 201,155,1
 # Union Cave B1F South - Poké Maniac Calvin: Oran Berry
@@ -76,25 +75,25 @@ trainer_id,item_id,quantity
 # Union Cave B2F - Ace Trainer Emma: Oran Berry
 363,155,1
 
-# Route 33 - Hiker Anthony: TM177 (Spite)
-61,2237,1
+# Route 33 - Hiker Anthony: Linking Cord
+61,1611,1
 
-# Slowpoke Well - Team Rocket Grunt (trainer 12): Oran Berry
-12,155,1
-# Slowpoke Well - Team Rocket Grunt (trainer 101): Oran Berry
-101,155,1
-# Slowpoke Well - Team Rocket Grunt (trainer 13): Oran Berry
-13,155,1
+# Slowpoke Well - Team Rocket Grunt (trainer 12): Rawst Berry
+12,152,1
+# Slowpoke Well - Team Rocket Grunt (trainer 101): Deep Sea Tooth
+101,226,1
+# Slowpoke Well - Team Rocket Grunt (trainer 13): Deep Sea Scale
+13,227,1
 # Slowpoke Well - Executive Proton (trainer 486): Amulet Coin
 # His custom story script awards this outside the shared table.
 
-# Azalea Gym - Bug Catcher Al: Oran Berry
-68,155,1
-# Azalea Gym - Bug Catcher Benny: Oran Berry
-67,155,1
-# Azalea Gym - Bug Catcher Josh: Oran Berry
-69,155,1
-# Azalea Gym - Twins Amy & Mimi: Oran Berry
-10,155,1
+# Azalea Gym - Bug Catcher Al: Persim Berry
+68,156,1
+# Azalea Gym - Bug Catcher Benny: Lax Incense
+67,255,1
+# Azalea Gym - Bug Catcher Josh: Lum Berry
+69,157,1
+# Azalea Gym - Twins Amy & Mimi: TM187 (Icicle Spear)
+10,2247,1
 # Azalea Gym - Bugsy (trainer 21): IV Max
 # His custom Gym Leader victory script awards this outside the shared table.

@@ -216,6 +216,11 @@
 // Heartless Gold opening documented in OPENING_SEQUENCE_PLAN.md.
 #define IMPLEMENT_REVISED_OPENING
 
+// HEARTLESS_GOLD_DEMO ends the current public demo after Bugsy's victory
+// sequence and returns to the normal game startup. Comment it out to allow
+// progression beyond Azalea Gym.
+#define HEARTLESS_GOLD_DEMO
+
 // Start Professor Oak's introduction through the existing "No Info Needed"
 // path instead of showing the Control Info / Adventure Info choice.
 #define SKIP_NEW_GAME_INFO_MENU

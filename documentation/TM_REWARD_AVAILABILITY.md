@@ -1,6 +1,6 @@
 # TM Reward Availability
 
-Last updated: 2026-08-22
+Last updated: 2026-08-25
 
 This document tracks TM reward candidates and TM assignments that must not be
 used because their moves are unimplemented. It is intended to support assigning
@@ -17,7 +17,7 @@ or an HM.
 | Status | Count |
 |---|---:|
 | Distinct implemented moves awaiting TM placement | 94 |
-| Assigned as trainer rewards | 5 |
+| Assigned as trainer rewards | 4 |
 | Manually verified rewards | 0 |
 | Unusable TM mappings | 12 |
 
@@ -99,7 +99,7 @@ number teaches the same move.
 | TM173 | Charge | Implemented | Unavailable | Unassigned | Not verified |
 | TM174 | Haze | Implemented | Unavailable | Unassigned | Not verified |
 | TM176 | Sand Tomb | Implemented | Unavailable | Unassigned | Not verified |
-| TM177 | Spite | Implemented | Available | Hiker Anthony (ID 61), Route 33, x1 | Not verified |
+| TM177 | Spite | Implemented | Unavailable | Unassigned | Not verified |
 | TM178 | Gravity | Implemented | Unavailable | Unassigned | Not verified |
 | TM181 | Knock Off | Implemented | Unavailable | Unassigned | Not verified |
 | TM182 | Bug Bite | Implemented | Unavailable | Unassigned | Not verified |
@@ -107,7 +107,7 @@ number teaches the same move.
 | TM184 | Vacuum Wave | Implemented | Unavailable | Unassigned | Not verified |
 | TM185 | Lunge | Implemented | Unavailable | Unassigned | Not verified |
 | TM186 | High Horsepower | Implemented | Unavailable | Unassigned | Not verified |
-| TM187 | Icicle Spear | Implemented | Available | Hiker Phillip (ID 203), Union Cave, x1 | Not verified |
+| TM187 | Icicle Spear | Implemented | Available | Twins Amy & Mimi (ID 10), Azalea Gym, x1 | Not verified |
 | TM188 | Scald | Implemented | Unavailable | Unassigned | Not verified |
 | TM189 | Heat Crash | Implemented | Unavailable | Unassigned | Not verified |
 | TM190 | Solar Blade | Implemented | Unavailable | Unassigned | Not verified |

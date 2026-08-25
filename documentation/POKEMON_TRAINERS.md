@@ -1,6 +1,6 @@
 # Pokémon Trainers
 
-Last updated: 2026-08-24
+Last updated: 2026-08-25
 
 This document tracks the intended trainer parties and first-victory rewards.
 Keep it synchronized with `data/Trainers.c`, `data/trainer_rewards.csv`, and
@@ -47,26 +47,28 @@ expert AI profile.
 | Trainer | ID | Reward | IVs | Party |
 |---|---:|---|---:|---|
 | Bug Catcher Wade | 4 | 6 Carbos S | 31 | Joltik Lv 12 — Moves: Fury Cutter, Electroweb, Bug Bite, String Shot<br>Spinarak Lv 11 — Moves: Poison Sting, String Shot, Absorb, Infestation<br>Pineco Lv 11 — Moves: Tackle, Protect, Self-Destruct, Bug Bite<br>Surskit Lv 12 (Oran Berry) — Moves: Water Gun, Quick Attack, Sweet Scent |
+| Lyra | 738 | Oran Berry (custom story script) | 31 | Whimsicott Lv 13 — Moves: Tailwind, Poison Powder, Leech Seed, Light Screen<br>Rotom-Water Lv 11 — Moves: Double Team, Astonish, Thunder Shock, Confuse Ray<br>Slakoth Lv 12 (Flame Orb, Guts) — Moves: Facade, Yawn, Encore, Substitute |
+| Ethan | 739 | Oran Berry (custom story script) | 31 | Whimsicott Lv 13 — Moves: Tailwind, Poison Powder, Leech Seed, Light Screen<br>Rotom-Water Lv 11 — Moves: Double Team, Astonish, Thunder Shock, Confuse Ray<br>Slakoth Lv 12 (Flame Orb, Guts) — Moves: Facade, Yawn, Encore, Substitute |
 
 ## Sprout Tower
 
 | Trainer | ID | Reward | IVs | Party |
 |---|---:|---|---:|---|
-| Sage Nico | 51 | 6 Zinc S | 31 | Bellsprout Lv 11 — Moves: Vine Whip, Growth, Wrap<br>Growlithe Lv 12 — Moves: Ember, Howl, Bite, Flame Wheel<br>Poliwag Lv 13 (Oran Berry) — Moves: Water Gun, Hypnosis, Pound, Mud Shot |
-| Sage Chow | 43 | 6 Calcium S | 31 | Bellsprout Lv 11 — Moves: Vine Whip, Growth, Wrap<br>Ralts Lv 12 — Moves: Double Team, Confusion, Hypnosis, Draining Kiss<br>Shuppet Lv 13 (Oran Berry) — Moves: Astonish, Screech, Night Shade, Spite |
-| Sage Edmond | 52 | Full Incense | 31 | Bellsprout Lv 11 — Moves: Vine Whip, Growth, Wrap<br>Stunky Lv 12 — Moves: Feint, Smokescreen, Acid Spray, Fury Swipes<br>Sandile Lv 13 (Oran Berry) — Moves: Sand Attack, Hone Claws, Sand Tomb, Scary Face |
-| Sage Jin | 53 | TM00 (Mega Punch) | 31 | Bellsprout Lv 12 — Moves: Vine Whip, Growth, Wrap<br>Emolga Lv 12 — Moves: Nuzzle, Tail Whip, Double Team, Quick Attack<br>Foongus Lv 13 (Oran Berry) — Moves: Astonish, Growth, Stun Spore, Mega Drain |
+| Sage Nico | 51 | 6 Zinc S | 31 | Bellsprout Lv 13 — Moves: Vine Whip, Growth, Wrap, Sleep Powder<br>Growlithe Lv 13 — Moves: Ember, Howl, Bite, Flame Wheel<br>Poliwag Lv 13 (Oran Berry) — Moves: Water Gun, Hypnosis, Pound, Mud Shot |
+| Sage Chow | 43 | 6 Calcium S | 31 | Bellsprout Lv 13 — Moves: Vine Whip, Growth, Wrap, Sleep Powder<br>Ralts Lv 13 — Moves: Double Team, Confusion, Hypnosis, Draining Kiss<br>Shuppet Lv 13 (Oran Berry) — Moves: Astonish, Screech, Night Shade, Spite |
+| Sage Edmond | 52 | Full Incense | 31 | Bellsprout Lv 13 — Moves: Vine Whip, Growth, Wrap, Sleep Powder<br>Stunky Lv 13 — Moves: Feint, Smokescreen, Acid Spray, Fury Swipes<br>Sandile Lv 13 (Oran Berry) — Moves: Sand Attack, Hone Claws, Sand Tomb, Scary Face |
+| Sage Jin | 53 | TM00 (Mega Punch) | 31 | Bellsprout Lv 13 — Moves: Vine Whip, Growth, Wrap, Sleep Powder<br>Emolga Lv 13 — Moves: Nuzzle, Tail Whip, Double Team, Quick Attack<br>Foongus Lv 13 (Oran Berry) — Moves: Astonish, Growth, Stun Spore, Mega Drain |
 | Sage Neal | 55 | Up-Grade | 31 | Bellsprout Lv 13 — Moves: Vine Whip, Growth, Wrap, Sleep Powder<br>Klink Lv 13 — Moves: Vise Grip, Bind, Charge, Charge Beam<br>Tynamo Lv 13 (Oran Berry) — Moves: Tackle, Thunder Wave, Spark, Charge Beam |
 | Sage Troy | 54 | Dubious Disc | 31 | Bellsprout Lv 13 — Moves: Vine Whip, Growth, Wrap, Sleep Powder<br>Sandshrew Lv 13 — Moves: Poison Sting, Sand Attack, Rollout, Fury Cutter<br>Jigglypuff Lv 13 (Oran Berry) — Moves: Covet, Stockpile, Spit Up, Swallow |
-| Sage Li | 290 | None | 31 | Bellsprout Lv 12 — Moves: Vine Whip, Growth, Wrap<br>Vulpix Lv 12 — Moves: Ember, Disable, Quick Attack, Spite<br>Murkrow Lv 12 — Moves: Peck, Astonish, Gust, Haze<br>Croagunk Lv 12 — Moves: Mud-Slap, Astonish, Taunt, Flatter<br>Snover Lv 13 (Oran Berry) — Moves: Leer, Powder Snow, Leafage, Mist |
+| Sage Li | 290 | None | 31 | Bellsprout Lv 13 — Moves: Vine Whip, Growth, Wrap, Sleep Powder<br>Vulpix Lv 13 — Moves: Ember, Disable, Quick Attack, Spite<br>Murkrow Lv 13 — Moves: Peck, Astonish, Gust, Haze<br>Croagunk Lv 13 — Moves: Mud-Slap, Astonish, Taunt, Flatter<br>Snover Lv 13 (Oran Berry) — Moves: Leer, Powder Snow, Leafage, Mist |
 
 ## Violet Gym
 
 | Trainer | ID | Reward | IVs | Party |
 |---|---:|---|---:|---|
-| Bird Keeper Abe | 50 | Razor Fang | 31 | Ducklett Lv 13 — Moves: Water Gun, Defog, Wing Attack, Water Pulse<br>Chatot Lv 13 — Moves: Taunt, Peck, Growl, Sing<br>Venomoth Lv 13 — Moves: Disable, Quiver Dance, Confusion, Poison Powder<br>Pidgeotto Lv 13 — Moves: Gust, Sand Attack, Tackle, Quick Attack |
-| Bird Keeper Rod | 29 | 6 Focus Sashes | 31 | Archen Lv 13 — Moves: Rock Throw, Wing Attack, Dragon Breath, Ancient Power<br>Woobat Lv 13 — Moves: Gust, Attract, Confusion, Endeavor<br>Yanma Lv 13 — Moves: Tackle, Quick Attack, Double Team<br>Pidgeotto Lv 13 — Moves: Gust, Sand Attack, Tackle, Quick Attack |
-| Falkner | 20 | IV Max (custom victory script) | 25 | Staravia Lv 12 — Moves: Tackle, Growl, Quick Attack, Wing Attack<br>Skiploom Lv 12 — Moves: Fairy Wind, Poison Powder, Stun Spore, Sleep Powder<br>Mantyke Lv 12 — Moves: Water Gun, Supersonic, Wing Attack, Water Pulse<br>Drifblim Lv 12 — Moves: Gust, Focus Energy, Minimize, Payback<br>Noibat Lv 12 — Moves: Absorb, Gust, Supersonic, Double Team<br>Aerodactyl Lv 13 (Oran Berry) — Moves: Ancient Power, Bite, Supersonic, Wing Attack |
+| Bird Keeper Abe | 50 | Razor Fang | 31 | Ducklett Lv 13 — Moves: Water Gun, Defog, Wing Attack, Water Pulse<br>Chatot Lv 13 — Moves: Fury Attack, Growl, Sing, Chatter<br>Venomoth Lv 13 — Moves: Confusion, Quiver Dance, Poison Powder, Struggle Bug<br>Pidgeotto Lv 13 — Moves: Wing Attack, Quick Attack, Whirlwind, Twister |
+| Bird Keeper Rod | 29 | 6 Focus Sashes | 31 | Archen Lv 13 — Moves: Rock Throw, Wing Attack, Dragon Breath, Ancient Power<br>Woobat Lv 13 — Moves: Gust, Attract, Confusion, Endeavor<br>Yanma Lv 13 — Moves: Tackle, Quick Attack, Double Team<br>Pidgeotto Lv 13 — Moves: Wing Attack, Quick Attack, Whirlwind, Twister |
+| Falkner | 20 | IV Max (custom victory script) | 25 | Staravia Lv 12 — Moves: Tackle, Growl, Quick Attack, Wing Attack<br>Skiploom Lv 12 — Moves: Fairy Wind, Poison Powder, Stun Spore, Sleep Powder<br>Mantyke Lv 12 — Moves: Water Gun, Supersonic, Wing Attack, Water Pulse<br>Drifblim Lv 12 — Moves: Gust, Focus Energy, Minimize, Payback<br>Noibat Lv 12 — Moves: Tailwind, Wing Attack, Bite, Absorb<br>Aerodactyl Lv 13 (Oran Berry) — Moves: Ancient Power, Bite, Supersonic, Wing Attack |
 
 Falkner's IV Max reward remains not manually verified.
 
@@ -75,13 +77,13 @@ Falkner's IV Max reward remains not manually verified.
 | Trainer | ID | Reward | IVs | Party |
 |---|---:|---|---:|---|
 | Youngster Albert | 49 | TM095 (Leech Life) | 31 | Numel Lv 15 — Moves: Ember, Focus Energy, Bulldoze, Incinerate<br>Corsola Lv 15 — Moves: Tackle, Water Gun, Aqua Ring, Endure<br>Wobbuffet Lv 16 — Moves: Encore, Mirror Coat, Safeguard, Splash<br>Dunsparce Lv 16 (Oran Berry) — Moves: Mud-Slap, Rollout, Glare, Screech |
-| Picnicker Liz | 27 | 6 HP Up S | 31 | Jolteon Lv 17 — Moves: Copycat, Sand Attack, Quick Attack, Baby-Doll Eyes<br>Flareon Lv 17 — Moves: Charm, Sand Attack, Quick Attack, Baby-Doll Eyes<br>Vaporeon Lv 17 — Moves: Charm, Sand Attack, Quick Attack, Baby-Doll Eyes |
+| Picnicker Liz | 27 | 6 HP Up S | 31 | Jolteon Lv 17 — Moves: Sand Attack, Quick Attack, Thunder Shock, Pin Missile<br>Flareon Lv 17 — Moves: Sand Attack, Quick Attack, Ember, Smog<br>Vaporeon Lv 17 — Moves: Sand Attack, Quick Attack, Water Gun, Ice Shard |
 | Camper Roland | 26 | 6 Protein S | 31 | Baltoy Lv 17 — Moves: Confusion, Rock Tomb, Power Trick, Psybeam<br>Blitzle Lv 17 — Moves: Tail Whip, Charge, Shock Wave, Thunder Wave<br>Bunnelby Lv 17 — Moves: Laser Focus, Quick Attack, Mud Shot, Flail |
 | Fisherman Henry | 60 | 6 Iron S | 31 | Omastar Lv 17 — Moves: Rollout, Sand Attack, Withdraw, Water Gun<br>Kabutops Lv 17 — Moves: Sand Attack, Scratch, Slash, Aqua Jet<br>Aerodactyl Lv 17 — Moves: Bite, Supersonic, Wing Attack, Scary Face |
 | Fisherman Justin | 18 | 6 Calcium S | 31 | Poliwag Lv 17 — Moves: Water Gun, Hypnosis, Pound, Mud Shot<br>Remoraid Lv 17 — Moves: Water Pulse, Focus Energy, Psybeam, Aurora Beam<br>Barboach Lv 17 — Moves: Mud-Slap, Rest, Snore, Water Pulse |
 | Fisherman Ralph | 57 | 6 Zinc S | 31 | Horsea Lv 17 — Moves: Water Gun, Smokescreen, Twister, Focus Energy<br>Starmie Lv 17 — Moves: Surf, Swift, Tackle, Water Gun<br>Seel Lv 17 — Moves: Charm, Icy Wind, Encore, Ice Shard |
 | Youngster Gordon | 56 | 6 Carbos S | 31 | Fletchling Lv 17 — Moves: Peck, Quick Attack, Ember, Flail<br>Phanpy Lv 17 — Moves: Defense Curl, Flail, Rollout, Bulldoze<br>Houndour Lv 17 — Moves: Howl, Smog, Roar, Bite |
-| Bird Keeper Peter | 383 | 2 Sitrus Berries | 31 | Natu Lv 15 — Moves: Peck, Stored Power, Teleport, Confuse Ray<br>Delibird Lv 15 — Moves: Present<br>Riolu Lv 16 — Moves: Feint, Metal Claw, Counter, Work Up<br>Skarmory Lv 15 (Oran Berry) — Moves: Peck, Sand Attack, Fury Attack, Metal Claw<br>Vullaby Lv 16 — Moves: Gust, Leer, Flatter, Pluck |
+| Bird Keeper Peter | 383 | Sitrus Berry | 31 | Natu Lv 16 — Moves: Peck, Stored Power, Teleport, Confuse Ray<br>Delibird Lv 16 — Moves: Present<br>Riolu Lv 17 — Moves: Feint, Metal Claw, Counter, Work Up<br>Skarmory Lv 17 (Oran Berry) — Moves: Sand Attack, Fury Attack, Metal Claw, Agility<br>Vullaby Lv 16 — Moves: Gust, Leer, Flatter, Pluck |
 
 ## Union Cave
 
@@ -100,7 +102,7 @@ Falkner's IV Max reward remains not manually verified.
 | Trainer | ID | Reward | IVs | Party |
 |---|---:|---|---:|---|
 | Hiker Leonard | 204 | Zinc | 31 | Aron Lv 16 — Moves: Metal Claw, Rock Tomb, Roar, Headbutt<br>Aipom Lv 16 — Moves: Sand Attack, Astonish, Baton Pass, Tickle<br>Koffing Lv 17 — Moves: Smog, Smokescreen, Clear Smog, Assurance<br>Hitmonlee Lv 17 — Moves: Double Kick, Low Kick, Endure, Sucker Punch |
-| Hiker Phillip | 203 | TM187 (Icicle Spear) | 31 | Rhyhorn Lv 15 — Moves: Tackle, Tail Whip, Bulldoze, Horn Attack<br>Swinub Lv 15 — Moves: Mud-Slap, Powder Snow, Flail, Ice Shard<br>Snover Lv 15 — Moves: Powder Snow, Leafage, Mist, Ice Shard<br>Minccino Lv 17 — Moves: Baby-Doll Eyes, Helping Hand, Sing, Charm<br>Larvesta Lv 16 — Moves: Ember, String Shot, Flame Charge, Struggle Bug |
+| Hiker Phillip | 203 | Oran Berry | 31 | Rhyhorn Lv 15 — Moves: Tackle, Tail Whip, Bulldoze, Horn Attack<br>Swinub Lv 15 — Moves: Mud-Slap, Powder Snow, Flail, Ice Shard<br>Snover Lv 15 — Moves: Powder Snow, Leafage, Mist, Ice Shard<br>Minccino Lv 17 — Moves: Baby-Doll Eyes, Helping Hand, Sing, Charm<br>Larvesta Lv 16 — Moves: Ember, String Shot, Flame Charge, Struggle Bug |
 
 ### B1F (South)
 
@@ -121,25 +123,25 @@ Falkner's IV Max reward remains not manually verified.
 
 | Trainer | ID | Reward | IVs | Party |
 |---|---:|---|---:|---|
-| Hiker Anthony | 61 | TM177 (Spite) | 31 | Amaura Lv 15 — Moves: Growl, Encore, Ancient Power, Icy Wind<br>Hawlucha Lv 15 — Moves: Hone Claws, Wing Attack, Detect, Aerial Ace<br>Goomy Lv 16 — Moves: Absorb, Water Gun, Dragon Breath, Protect<br>Dedenne Lv 16 — Moves: Nuzzle, Tackle, Charge, Thunder Shock<br>Klefki Lv 17 (Oran Berry) — Moves: Astonish, Tackle, Fairy Wind, Torment |
+| Hiker Anthony | 61 | Linking Cord | 31 | Amaura Lv 15 — Moves: Growl, Encore, Ancient Power, Icy Wind<br>Hawlucha Lv 16 — Moves: Wing Attack, Detect, Aerial Ace, Encore<br>Goomy Lv 16 — Moves: Absorb, Water Gun, Dragon Breath, Protect<br>Dedenne Lv 16 — Moves: Nuzzle, Tackle, Charge, Thunder Shock<br>Klefki Lv 17 (Oran Berry) — Moves: Astonish, Tackle, Fairy Wind, Torment |
 
 ## Slowpoke Well
 
 | Trainer | ID | Reward | IVs | Party |
 |---|---:|---|---:|---|
-| Team Rocket Grunt 1 | 12 | Oran Berry | 31 | Klink Lv 17 — Moves: Bind, Charge, Charge Beam, Metal Sound<br>Duskull Lv 17 — Moves: Disable, Shadow Sneak, Confuse Ray, Night Shade<br>Hisuian Voltorb Lv 17 — Moves: Bullet Seed, Rollout, Screech, Charge Beam |
-| Team Rocket Grunt 2 | 101 | Oran Berry | 31 | Jigglypuff Lv 17 — Moves: Covet, Stockpile, Spit Up, Swallow<br>Bronzor Lv 17 — Moves: Confuse Ray, Payback, Imprison, Gyro Ball<br>Deino Lv 17 (Oran Berry) — Moves: Dragon Breath, Bite, Roar, Assurance |
-| Team Rocket Grunt 3 | 13 | Oran Berry | 31 | Furfrou Lv 17 — Moves: Sand Attack, Baby-Doll Eyes, Headbutt, Tail Whip<br>Chansey Lv 17 — Moves: Defense Curl, Tail Whip, Life Dew, Sing<br>Audino Lv 17 (Oran Berry) — Moves: Disarming Voice, Baby-Doll Eyes, Helping Hand, Growl |
-| Executive Proton | 486 | Amulet Coin (custom story script) | 25 | Woobat Lv 15 — Moves: Attract, Confusion, Endeavor, Air Cutter<br>Houndour Lv 16 — Moves: Howl, Smog, Roar, Bite<br>Skiddo Lv 16 — Moves: Tail Whip, Leech Seed, Razor Leaf, Worry Seed<br>Swirlix Lv 16 — Moves: Fairy Wind, Aromatherapy, Draining Kiss, Fake Tears<br>Helioptile Lv 17 (Oran Berry) — Moves: Pound, Thunder Shock, Quick Attack, Charge |
+| Team Rocket Grunt 1 | 12 | Rawst Berry | 31 | Klink Lv 17 — Moves: Bind, Charge, Charge Beam, Metal Sound<br>Duskull Lv 17 — Moves: Disable, Shadow Sneak, Confuse Ray, Night Shade<br>Hisuian Voltorb Lv 17 — Moves: Bullet Seed, Rollout, Screech, Charge Beam |
+| Team Rocket Grunt 2 | 101 | Deep Sea Tooth | 31 | Jigglypuff Lv 17 — Moves: Covet, Stockpile, Spit Up, Swallow<br>Bronzor Lv 17 — Moves: Confuse Ray, Payback, Imprison, Gyro Ball<br>Clobbopus Lv 17 — Moves: Leer, Feint, Bind, Detect<br>Deino Lv 17 (Oran Berry) — Moves: Dragon Breath, Bite, Roar, Assurance |
+| Team Rocket Grunt 3 | 13 | Deep Sea Scale | 31 | Furfrou Lv 17 — Moves: Sand Attack, Baby-Doll Eyes, Headbutt, Tail Whip<br>Chansey Lv 17 — Moves: Defense Curl, Tail Whip, Life Dew, Sing<br>Spinda Lv 17 — Moves: Tackle, Copycat, Teeter Dance, Psybeam<br>Audino Lv 17 (Oran Berry) — Moves: Disarming Voice, Baby-Doll Eyes, Helping Hand, Growl |
+| Executive Proton | 486 | Amulet Coin (custom story script) | 25 | Slowpoke Lv 16 — Moves: Water Gun, Yawn, Confusion, Disable<br>Chimecho Lv 16 — Moves: Astonish, Healing Wish, Yawn, Stored Power<br>Skiddo Lv 16 — Moves: Tail Whip, Leech Seed, Razor Leaf, Worry Seed<br>Swirlix Lv 16 — Moves: Fairy Wind, Aromatherapy, Draining Kiss, Fake Tears<br>Spheal Lv 16 — Moves: Growl, Water Gun, Powder Snow, Rest<br>Tropius Lv 17 (Oran Berry) — Moves: Leaf Storm, Sweet Scent, Stomp, Magical Leaf |
 
 ## Azalea Gym
 
 | Trainer | ID | Reward | IVs | Party |
 |---|---:|---|---:|---|
-| Bug Catcher Al | 68 | Oran Berry | 25 | Butterfree Lv 16 — Moves: Poison Powder, Sleep Powder, Stun Spore, Psybeam<br>Scyther Lv 16 — Moves: Fury Cutter, False Swipe, Wing Attack, Double Team<br>Volbeat Lv 16 — Moves: Double Team, Confuse Ray, Quick Attack, Struggle Bug<br>Dwebble Lv 16 — Moves: Sand Attack, Withdraw, Bug Bite, Flail |
-| Bug Catcher Benny | 67 | Oran Berry | 25 | Parasect Lv 16 — Moves: Poison Powder, Scratch, Stun Spore, Absorb<br>Pinsir Lv 16 — Moves: Focus Energy, Bind, Seismic Toss, Bug Bite<br>Beautifly Lv 16 — Moves: String Shot, Tackle, Absorb, Stun Spore<br>Escavalier Lv 16 — Moves: Fury Cutter, Quick Guard, False Swipe, Acid Spray |
-| Bug Catcher Josh | 69 | Oran Berry | 25 | Ledian Lv 17 — Moves: Light Screen, Reflect, Safeguard, Mach Punch<br>Pineco Lv 16 — Moves: Protect, Self-Destruct, Bug Bite, Take Down<br>Sizzlipede Lv 16 — Moves: Smokescreen, Wrap, Bite, Flame Wheel<br>Accelgor Lv 16 — Moves: Acid Spray, Quick Attack, Mega Drain, Struggle Bug |
-| Twins Amy & Mimi | 10 | Oran Berry | 25 | Ariados Lv 16 — Moves: Focus Energy, Infestation, Scary Face, Night Shade<br>Ninjask Lv 16 — Moves: Sand Attack, Scratch, Screech, Agility<br>Anorith Lv 16 — Moves: Harden, Water Gun, Metal Claw, Ancient Power<br>Dewpider Lv 16 — Moves: Bug Bite, Bite, Bubble Beam, Aqua Ring |
-| Bugsy | 21 | IV Max (custom victory script) | 25 | Heracross Lv 16 — Moves: Arm Thrust, Fury Attack, Endure, Aerial Ace<br>Durant Lv 16 — Moves: Vise Grip, Metal Claw, Beat Up, Bug Bite<br>Shuckle Lv 16 — Moves: Wrap, Rollout, Struggle Bug, Rock Throw<br>Shedinja Lv 16 — Moves: Sand Attack, Scratch, Shadow Claw, Confuse Ray<br>Skorupi Lv 16 — Moves: Fell Stinger, Poison Fang, Bite, Toxic Spikes<br>Beedrill Lv 17 — Moves: Poison Sting, String Shot, Fury Cutter, Laser Focus |
+| Bug Catcher Al | 68 | Persim Berry | 25 | Butterfree Lv 16 — Moves: Poison Powder, Sleep Powder, Stun Spore, Psybeam<br>Scyther Lv 16 — Moves: Fury Cutter, False Swipe, Wing Attack, Double Team<br>Volbeat Lv 16 — Moves: Double Team, Confuse Ray, Quick Attack, Struggle Bug<br>Dwebble Lv 16 — Moves: Sand Attack, Withdraw, Bug Bite, Flail |
+| Bug Catcher Benny | 67 | Lax Incense | 25 | Parasect Lv 17 — Moves: Scratch, Stun Spore, Absorb, Fury Cutter<br>Pinsir Lv 17 — Moves: Focus Energy, Bind, Seismic Toss, Bug Bite<br>Beautifly Lv 17 — Moves: Tackle, Absorb, Stun Spore, Morning Sun<br>Escavalier Lv 17 — Moves: Fury Cutter, Quick Guard, False Swipe, Acid Spray |
+| Bug Catcher Josh | 69 | Lum Berry | 25 | Beedrill Lv 17 — Moves: Poison Sting, String Shot, Fury Cutter, Laser Focus<br>Pineco Lv 17 — Moves: Self-Destruct, Bug Bite, Take Down, Rapid Spin<br>Sizzlipede Lv 17 — Moves: Smokescreen, Wrap, Bite, Flame Wheel<br>Accelgor Lv 17 — Moves: Acid Spray, Quick Attack, Mega Drain, Struggle Bug |
+| Twins Amy & Mimi | 10 | TM187 (Icicle Spear) | 25 | Ariados Lv 17 — Moves: Focus Energy, Infestation, Scary Face, Night Shade<br>Ninjask Lv 17 — Moves: Sand Attack, Scratch, Screech, Agility<br>Anorith Lv 17 — Moves: Harden, Water Gun, Metal Claw, Ancient Power<br>Shedinja Lv 17 — Moves: Sand Attack, Scratch, Shadow Claw, Confuse Ray |
+| Bugsy | 21 | IV Max (custom victory script) | 25 | Heracross Lv 16 — Moves: Arm Thrust, Fury Attack, Endure, Aerial Ace<br>Durant Lv 16 — Moves: Vise Grip, Metal Claw, Beat Up, Bug Bite<br>Shuckle Lv 16 — Moves: Wrap, Rollout, Struggle Bug, Rock Throw<br>Dewpider Lv 16 — Moves: Bug Bite, Bite, Bubble Beam, Aqua Ring<br>Skorupi Lv 16 — Moves: Fell Stinger, Poison Fang, Bite, Toxic Spikes<br>Ledian Lv 17 — Moves: Light Screen, Reflect, Safeguard, Mach Punch |
 
 Bugsy's IV Max reward remains not manually verified.

@@ -1,7 +1,7 @@
 You must be {STRVAR_1 3, 0, 0}.\rIt was I who sent an email\nto Professor Elm earlier.\r
 You must be {STRVAR_1 3, 0, 0}.\rIt was I who sent an email\nto Professor Elm earlier.\r
 Ah, you must be helping\nProfessor Elm with his research!\rI find many unusual Pokémon\non my travels.\rShiny Bait is one of my secrets.\nIt’s how I find so many of them.\rPlease try one for yourself!\r
-Use Shiny Bait where wild\nPokémon live.\rIt lets you catch a Pokémon\nwhere you’ve already caught one.\rBe careful! If its species is\nregistered in your Pokédex,\ryou won’t be able to catch it.\rThe Pokémon it attracts will\nalways be Shiny!\r
+Use Shiny Bait where wild\nPokémon live.\rIt lets you catch a Pokémon\nwhere you’ve already caught one.\rBe careful! If its species is\nregistered in your Pokédex,\ryou won’t be able to catch it.\rWild Pokémon won’t appear Shiny\non their own.\rShiny Bait is the only way to\nattract a Shiny wild Pokémon.\rEvery Pokémon it attracts\nwill be Shiny!\r
 You have a long journey ahead.\rHere. Your Pokémon should have\nsome rest.
 Please take good care of\nyour Pokémon.\rI’m sure Professor Elm will learn\nplenty from your adventure.
 Life is delightful!\nAlways, new discoveries to be made!

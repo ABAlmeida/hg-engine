@@ -575,6 +575,9 @@ releaseall
 end
 gatehouse_battle_won:
 GiveItemNoCheck ITEM_VS_RECORDER, 1
+// This one-off story battle does not run the shared optional-trainer reward
+// script, so award its configured Oran Berry directly on the victory path.
+GiveItemNoCheck ITEM_ORAN_BERRY, 1
 gender_msgbox 4, 5
 // Resume at the original CloseMsg; the gift and message bytes displaced by
 // the six-byte branch above have both been replayed here.

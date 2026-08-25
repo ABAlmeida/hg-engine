@@ -1,6 +1,6 @@
 # Held-Item Reward Availability
 
-Last updated: 2026-08-22
+Last updated: 2026-08-25
 
 This document tracks non-Berry held items as candidates for first-victory
 trainer rewards. A candidate is an item with a nonzero implemented
@@ -17,7 +17,7 @@ checked deliberately.
 | Status | Count |
 |---|---:|
 | Non-Berry held-item candidates | 202 |
-| Assigned as trainer rewards | 7 |
+| Assigned as trainer rewards | 10 |
 | Manually verified trainer rewards | 0 |
 
 ## Updating this tracker
@@ -62,8 +62,8 @@ an implemented held effect, not that the item is an appropriate reward.
 | 223 | Amulet Coin | `ITEM_AMULET_COIN` | `HOLD_EFFECT_MONEY_UP` | Not audited | Executive Proton (ID 486), Slowpoke Well, x1 scripted | Not verified |
 | 224 | Cleanse Tag | `ITEM_CLEANSE_TAG` | `HOLD_EFFECT_ENCOUNTERS_DOWN` | Not audited | Unassigned | Not verified |
 | 225 | Soul Dew | `ITEM_SOUL_DEW` | `HOLD_EFFECT_LATI_SPECIAL` | Not audited | Unassigned | Not verified |
-| 226 | Deep Sea Tooth | `ITEM_DEEP_SEA_TOOTH` | `HOLD_EFFECT_CLAMPERL_SPATK` | Not audited | Unassigned | Not verified |
-| 227 | Deep Sea Scale | `ITEM_DEEP_SEA_SCALE` | `HOLD_EFFECT_CLAMPERL_SPDEF` | Not audited | Unassigned | Not verified |
+| 226 | Deep Sea Tooth | `ITEM_DEEP_SEA_TOOTH` | `HOLD_EFFECT_CLAMPERL_SPATK` | Not audited | Team Rocket Grunt 2 (ID 101), Slowpoke Well, x1 | Not verified |
+| 227 | Deep Sea Scale | `ITEM_DEEP_SEA_SCALE` | `HOLD_EFFECT_CLAMPERL_SPDEF` | Not audited | Team Rocket Grunt 3 (ID 13), Slowpoke Well, x1 | Not verified |
 | 228 | Smoke Ball | `ITEM_SMOKE_BALL` | `HOLD_EFFECT_FLEE` | Not audited | Unassigned | Not verified |
 | 229 | Everstone | `ITEM_EVERSTONE` | `HOLD_EFFECT_NO_EVOLVE` | Not audited | Unassigned | Not verified |
 | 230 | Focus Band | `ITEM_FOCUS_BAND` | `HOLD_EFFECT_MAYBE_ENDURE` | Not audited | Unassigned | Not verified |
@@ -91,7 +91,7 @@ an implemented held effect, not that the item is an appropriate reward.
 | 252 | Up-Grade | `ITEM_UP_GRADE` | `HOLD_EFFECT_EVOLVE_PORYGON` | Not audited | Sage Neal (ID 55), Sprout Tower, x1 | Not verified |
 | 253 | Shell Bell | `ITEM_SHELL_BELL` | `HOLD_EFFECT_HP_RESTORE_ON_DMG` | Not audited | Unassigned | Not verified |
 | 254 | Sea Incense | `ITEM_SEA_INCENSE` | `HOLD_EFFECT_STRENGTHEN_WATER` | Not audited | Unassigned | Not verified |
-| 255 | Lax Incense | `ITEM_LAX_INCENSE` | `HOLD_EFFECT_ACC_REDUCE` | Not audited | Unassigned | Not verified |
+| 255 | Lax Incense | `ITEM_LAX_INCENSE` | `HOLD_EFFECT_ACC_REDUCE` | Not audited | Bug Catcher Benny (ID 67), Azalea Gym, x1 | Not verified |
 | 256 | Lucky Punch | `ITEM_LUCKY_PUNCH` | `HOLD_EFFECT_CHANSEY_CRITRATE_UP` | Not audited | Unassigned | Not verified |
 | 257 | Metal Powder | `ITEM_METAL_POWDER` | `HOLD_EFFECT_DITTO_DEF_UP` | Not audited | Unassigned | Not verified |
 | 258 | Thick Club | `ITEM_THICK_CLUB` | `HOLD_EFFECT_CUBONE_ATK_UP` | Not audited | Unassigned | Not verified |
