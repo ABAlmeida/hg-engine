@@ -4886,7 +4886,6 @@ static const u32 sPokedexAreaRoutesAndCitiesMorning_Farfetchd[] =
     DEX_ROUTE_39,
     DEX_ROUTE_47,
     DEX_ROUTE_48,
-    DEX_ROUTE_46,
     DEX_END_AREA_DATA,
 };
 
@@ -4897,14 +4896,12 @@ static const u32 sPokedexAreaRoutesAndCitiesDay_Farfetchd[] =
     DEX_ROUTE_39,
     DEX_ROUTE_47,
     DEX_ROUTE_48,
-    DEX_ROUTE_46,
     DEX_END_AREA_DATA,
 };
 
 static const u32 sPokedexAreaRoutesAndCitiesNight_Farfetchd[] =
 {
     DEX_ROUTE_29,
-    DEX_ROUTE_46,
     DEX_END_AREA_DATA,
 };
 
@@ -4916,7 +4913,6 @@ static const u32 sPokedexAreaSpecialAreasSpecial_Farfetchd[] =
 static const u32 sPokedexAreaRoutesAndCitiesSpecial_Farfetchd[] =
 {
     DEX_ROUTE_29,
-    DEX_ROUTE_46,
     DEX_END_AREA_DATA,
 };
 
@@ -15325,16 +15321,19 @@ static const u32 sPokedexAreaSpecialAreasNight_Volbeat[] =
 
 static const u32 sPokedexAreaRoutesAndCitiesMorning_Volbeat[] =
 {
+    DEX_ROUTE_31,
     DEX_END_AREA_DATA,
 };
 
 static const u32 sPokedexAreaRoutesAndCitiesDay_Volbeat[] =
 {
+    DEX_ROUTE_31,
     DEX_END_AREA_DATA,
 };
 
 static const u32 sPokedexAreaRoutesAndCitiesNight_Volbeat[] =
 {
+    DEX_ROUTE_31,
     DEX_END_AREA_DATA,
 };
 
@@ -31623,19 +31622,16 @@ static const u32 sPokedexAreaSpecialAreasNight_Scatterbug[] =
 
 static const u32 sPokedexAreaRoutesAndCitiesMorning_Scatterbug[] =
 {
-    DEX_ROUTE_31,
     DEX_END_AREA_DATA,
 };
 
 static const u32 sPokedexAreaRoutesAndCitiesDay_Scatterbug[] =
 {
-    DEX_ROUTE_31,
     DEX_END_AREA_DATA,
 };
 
 static const u32 sPokedexAreaRoutesAndCitiesNight_Scatterbug[] =
 {
-    DEX_ROUTE_31,
     DEX_END_AREA_DATA,
 };
 
@@ -38342,16 +38338,19 @@ static const u32 sPokedexAreaSpecialAreasNight_Wooloo[] =
 
 static const u32 sPokedexAreaRoutesAndCitiesMorning_Wooloo[] =
 {
+    DEX_ROUTE_46,
     DEX_END_AREA_DATA,
 };
 
 static const u32 sPokedexAreaRoutesAndCitiesDay_Wooloo[] =
 {
+    DEX_ROUTE_46,
     DEX_END_AREA_DATA,
 };
 
 static const u32 sPokedexAreaRoutesAndCitiesNight_Wooloo[] =
 {
+    DEX_ROUTE_46,
     DEX_END_AREA_DATA,
 };
 
@@ -38362,6 +38361,7 @@ static const u32 sPokedexAreaSpecialAreasSpecial_Wooloo[] =
 
 static const u32 sPokedexAreaRoutesAndCitiesSpecial_Wooloo[] =
 {
+    DEX_ROUTE_46,
     DEX_END_AREA_DATA,
 };
 

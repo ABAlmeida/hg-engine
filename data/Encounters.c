@@ -277,11 +277,11 @@ const EncounterData __data[] =
 
 #define ROUTE_30_WATER_SLOTS       \
     {                              \
-        { 8, 8, SPECIES_CORSOLA }, \
-        { 8, 8, SPECIES_LUVDISC }, \
-        { 8, 8, SPECIES_WINGULL }, \
-        { 8, 8, SPECIES_LOTAD },   \
-        { 8, 8, SPECIES_DRATINI }, \
+        { 5, 5, SPECIES_CORSOLA }, \
+        { 5, 5, SPECIES_LUVDISC }, \
+        { 5, 5, SPECIES_WINGULL }, \
+        { 5, 5, SPECIES_LOTAD },   \
+        { 5, 5, SPECIES_DRATINI }, \
     }
 
     [ENCDATA_R30_ROUTE_30] = {
@@ -293,7 +293,7 @@ const EncounterData __data[] =
         .rateSuperRod = 75,
         .landSlots = {
             .levels = {
-                8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
+                5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
             },
             .speciesMorning = ROUTE_30_LAND_SPECIES,
             .speciesDay = ROUTE_30_LAND_SPECIES,
@@ -336,7 +336,7 @@ const EncounterData __data[] =
         SPECIES_SEWADDLE,     \
         SPECIES_PETILIL,      \
         SPECIES_MINCCINO,     \
-        SPECIES_SCATTERBUG,   \
+        SPECIES_VOLBEAT,      \
         SPECIES_FLABEBE,      \
     }
 
@@ -349,7 +349,7 @@ const EncounterData __data[] =
         .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
             },
             .speciesMorning = ROUTE_31_LAND_SPECIES,
             .speciesDay = ROUTE_31_LAND_SPECIES,
@@ -403,13 +403,13 @@ const EncounterData __data[] =
 
 #undef ROUTE_31_LAND_SPECIES
 
-#define VIOLET_CITY_WATER_SLOTS       \
-    {                                 \
-        { 10, 10, SPECIES_CLAMPERL }, \
-        { 10, 10, SPECIES_FINNEON },  \
-        { 10, 10, SPECIES_SHELLOS },  \
-        { 10, 10, SPECIES_CORPHISH }, \
-        { 10, 10, SPECIES_SEEL },     \
+#define VIOLET_CITY_WATER_SLOTS     \
+    {                               \
+        { 6, 6, SPECIES_CLAMPERL }, \
+        { 6, 6, SPECIES_FINNEON },  \
+        { 6, 6, SPECIES_SHELLOS },  \
+        { 6, 6, SPECIES_CORPHISH }, \
+        { 6, 6, SPECIES_SEEL },     \
     }
 
     [ENCDATA_T22_VIOLET_CITY] = {
@@ -515,7 +515,7 @@ const EncounterData __data[] =
         .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
             },
             .speciesMorning = SPROUT_TOWER_LAND_SPECIES,
             .speciesDay = SPROUT_TOWER_LAND_SPECIES,
@@ -576,7 +576,7 @@ const EncounterData __data[] =
         .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
+                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
             },
             .speciesMorning = SPROUT_TOWER_LAND_SPECIES,
             .speciesDay = SPROUT_TOWER_LAND_SPECIES,
@@ -646,13 +646,13 @@ const EncounterData __data[] =
         SPECIES_BELDUM,       \
     }
 
-#define ROUTE_32_WATER_SLOTS          \
-    {                                 \
-        { 10, 10, SPECIES_OSHAWOTT }, \
-        { 10, 10, SPECIES_PIPLUP },   \
-        { 10, 10, SPECIES_MUDKIP },   \
-        { 10, 10, SPECIES_SQUIRTLE }, \
-        { 10, 10, SPECIES_FROAKIE },  \
+#define ROUTE_32_WATER_SLOTS        \
+    {                               \
+        { 7, 7, SPECIES_OSHAWOTT }, \
+        { 7, 7, SPECIES_PIPLUP },   \
+        { 7, 7, SPECIES_MUDKIP },   \
+        { 7, 7, SPECIES_SQUIRTLE }, \
+        { 7, 7, SPECIES_FROAKIE },  \
     }
 
     [ENCDATA_R32_ROUTE_32] = {
@@ -664,7 +664,7 @@ const EncounterData __data[] =
         .rateSuperRod = 75,
         .landSlots = {
             .levels = {
-                10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10
+                7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
             },
             .speciesMorning = ROUTE_32_LAND_SPECIES,
             .speciesDay = ROUTE_32_LAND_SPECIES,
@@ -1211,13 +1211,13 @@ const EncounterData __data[] =
         SPECIES_DRILBUR,        \
     }
 
-#define UNION_CAVE_WATER_SLOTS         \
-    {                                  \
-        { 15, 15, SPECIES_QWILFISH },  \
-        { 15, 15, SPECIES_OCTILLERY }, \
-        { 15, 15, SPECIES_PYUKUMUKU }, \
-        { 15, 15, SPECIES_BRUXISH },   \
-        { 15, 15, SPECIES_BINACLE },   \
+#define UNION_CAVE_WATER_SLOTS       \
+    {                                \
+        { 8, 8, SPECIES_QWILFISH },  \
+        { 8, 8, SPECIES_OCTILLERY }, \
+        { 8, 8, SPECIES_PYUKUMUKU }, \
+        { 8, 8, SPECIES_BRUXISH },   \
+        { 8, 8, SPECIES_BINACLE },   \
     }
 
     [ENCDATA_D25R0101_UNION_CAVE_1F] = {
@@ -1229,7 +1229,7 @@ const EncounterData __data[] =
         .rateSuperRod = 75,
         .landSlots = {
             .levels = {
-                15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15
+                8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
             },
             .speciesMorning = UNION_CAVE_LAND_SPECIES,
             .speciesDay = UNION_CAVE_LAND_SPECIES,
@@ -1266,7 +1266,7 @@ const EncounterData __data[] =
         .rateSuperRod = 75,
         .landSlots = {
             .levels = {
-                15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15
+                8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
             },
             .speciesMorning = UNION_CAVE_LAND_SPECIES,
             .speciesDay = UNION_CAVE_LAND_SPECIES,
@@ -1303,7 +1303,7 @@ const EncounterData __data[] =
         .rateSuperRod = 75,
         .landSlots = {
             .levels = {
-                15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15
+                8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
             },
             .speciesMorning = UNION_CAVE_LAND_SPECIES,
             .speciesDay = UNION_CAVE_LAND_SPECIES,
@@ -1343,7 +1343,7 @@ const EncounterData __data[] =
         .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
             },
             .speciesMorning = {
                 SPECIES_ODDISH,
@@ -1428,6 +1428,15 @@ const EncounterData __data[] =
         .fishSwarm = SPECIES_NONE,
     },
 
+#define SLOWPOKE_WELL_WATER_SLOTS   \
+    {                               \
+        { 9, 9, SPECIES_SLOWPOKE }, \
+        { 9, 9, SPECIES_SLOWPOKE }, \
+        { 9, 9, SPECIES_SLOWPOKE }, \
+        { 9, 9, SPECIES_BELDUM },   \
+        { 9, 9, SPECIES_BELDUM },   \
+    }
+
     [ENCDATA_D26R0102_SLOWPOKE_WELL_1F] = {
         .rateWalk = 5,
         .rateSurf = 15,
@@ -1437,7 +1446,7 @@ const EncounterData __data[] =
         .rateSuperRod = 75,
         .landSlots = {
             .levels = {
-                16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
             },
             .speciesMorning = {
                 SPECIES_SLOWPOKE,
@@ -1484,38 +1493,14 @@ const EncounterData __data[] =
         },
         .hoennSoundSpecies = { SPECIES_SLOWPOKE, SPECIES_DROWZEE },
         .sinnohSoundSpecies = { SPECIES_SLOWPOKE, SPECIES_DROWZEE },
-        .surfSlots = {
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_BELDUM },
-            { 16, 16, SPECIES_BELDUM },
-        },
+        .surfSlots = SLOWPOKE_WELL_WATER_SLOTS,
         .rockSmashSlots = {
             { 0, 0, SPECIES_NONE },
             { 0, 0, SPECIES_NONE },
         },
-        .oldRodSlots = {
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_BELDUM },
-            { 16, 16, SPECIES_BELDUM },
-        },
-        .goodRodSlots = {
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_BELDUM },
-            { 16, 16, SPECIES_BELDUM },
-        },
-        .superRodSlots = {
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_BELDUM },
-            { 16, 16, SPECIES_BELDUM },
-        },
+        .oldRodSlots = SLOWPOKE_WELL_WATER_SLOTS,
+        .goodRodSlots = SLOWPOKE_WELL_WATER_SLOTS,
+        .superRodSlots = SLOWPOKE_WELL_WATER_SLOTS,
         .landSwarm = SPECIES_SLOWPOKE,
         .surfSwarm = SPECIES_SLOWPOKE,
         .nightFish = SPECIES_SLOWPOKE,
@@ -1531,7 +1516,7 @@ const EncounterData __data[] =
         .rateSuperRod = 75,
         .landSlots = {
             .levels = {
-                16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9
             },
             .speciesMorning = {
                 SPECIES_SLOWPOKE,
@@ -1578,43 +1563,21 @@ const EncounterData __data[] =
         },
         .hoennSoundSpecies = { SPECIES_SLOWPOKE, SPECIES_DROWZEE },
         .sinnohSoundSpecies = { SPECIES_SLOWPOKE, SPECIES_DROWZEE },
-        .surfSlots = {
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_BELDUM },
-            { 16, 16, SPECIES_BELDUM },
-        },
+        .surfSlots = SLOWPOKE_WELL_WATER_SLOTS,
         .rockSmashSlots = {
             { 0, 0, SPECIES_NONE },
             { 0, 0, SPECIES_NONE },
         },
-        .oldRodSlots = {
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_BELDUM },
-            { 16, 16, SPECIES_BELDUM },
-        },
-        .goodRodSlots = {
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_BELDUM },
-            { 16, 16, SPECIES_BELDUM },
-        },
-        .superRodSlots = {
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_SLOWPOKE },
-            { 16, 16, SPECIES_BELDUM },
-            { 16, 16, SPECIES_BELDUM },
-        },
+        .oldRodSlots = SLOWPOKE_WELL_WATER_SLOTS,
+        .goodRodSlots = SLOWPOKE_WELL_WATER_SLOTS,
+        .superRodSlots = SLOWPOKE_WELL_WATER_SLOTS,
         .landSwarm = SPECIES_SLOWPOKE,
         .surfSwarm = SPECIES_SLOWPOKE,
         .nightFish = SPECIES_SLOWPOKE,
         .fishSwarm = SPECIES_SLOWPOKE,
     },
+
+#undef SLOWPOKE_WELL_WATER_SLOTS
 
     [ENCDATA_D36R0101_ILEX_FOREST] = {
         .rateWalk = 5,
@@ -1625,7 +1588,7 @@ const EncounterData __data[] =
         .rateSuperRod = 75,
         .landSlots = {
             .levels = {
-                18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18
+                10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10
             },
             .speciesMorning = {
                 SPECIES_CATERPIE,
@@ -1673,36 +1636,36 @@ const EncounterData __data[] =
         .hoennSoundSpecies = { SPECIES_CATERPIE, SPECIES_WEEDLE },
         .sinnohSoundSpecies = { SPECIES_CATERPIE, SPECIES_WEEDLE },
         .surfSlots = {
-            { 18, 18, SPECIES_SURSKIT },
-            { 18, 18, SPECIES_CUTIEFLY },
-            { 18, 18, SPECIES_DEWPIDER },
-            { 18, 18, SPECIES_DWEBBLE },
-            { 18, 18, SPECIES_WIMPOD },
+            { 10, 10, SPECIES_SURSKIT },
+            { 10, 10, SPECIES_CUTIEFLY },
+            { 10, 10, SPECIES_DEWPIDER },
+            { 10, 10, SPECIES_DWEBBLE },
+            { 10, 10, SPECIES_WIMPOD },
         },
         .rockSmashSlots = {
             { 0, 0, SPECIES_NONE },
             { 0, 0, SPECIES_NONE },
         },
         .oldRodSlots = {
-            { 18, 18, SPECIES_SURSKIT },
-            { 18, 18, SPECIES_CUTIEFLY },
-            { 18, 18, SPECIES_DEWPIDER },
-            { 18, 18, SPECIES_DWEBBLE },
-            { 18, 18, SPECIES_WIMPOD },
+            { 10, 10, SPECIES_SURSKIT },
+            { 10, 10, SPECIES_CUTIEFLY },
+            { 10, 10, SPECIES_DEWPIDER },
+            { 10, 10, SPECIES_DWEBBLE },
+            { 10, 10, SPECIES_WIMPOD },
         },
         .goodRodSlots = {
-            { 18, 18, SPECIES_SURSKIT },
-            { 18, 18, SPECIES_CUTIEFLY },
-            { 18, 18, SPECIES_DEWPIDER },
-            { 18, 18, SPECIES_DWEBBLE },
-            { 18, 18, SPECIES_WIMPOD },
+            { 10, 10, SPECIES_SURSKIT },
+            { 10, 10, SPECIES_CUTIEFLY },
+            { 10, 10, SPECIES_DEWPIDER },
+            { 10, 10, SPECIES_DWEBBLE },
+            { 10, 10, SPECIES_WIMPOD },
         },
         .superRodSlots = {
-            { 18, 18, SPECIES_SURSKIT },
-            { 18, 18, SPECIES_CUTIEFLY },
-            { 18, 18, SPECIES_DEWPIDER },
-            { 18, 18, SPECIES_DWEBBLE },
-            { 18, 18, SPECIES_WIMPOD },
+            { 10, 10, SPECIES_SURSKIT },
+            { 10, 10, SPECIES_CUTIEFLY },
+            { 10, 10, SPECIES_DEWPIDER },
+            { 10, 10, SPECIES_DWEBBLE },
+            { 10, 10, SPECIES_WIMPOD },
         },
         .landSwarm = SPECIES_CATERPIE,
         .surfSwarm = SPECIES_SURSKIT,
@@ -1719,7 +1682,7 @@ const EncounterData __data[] =
         .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10
             },
             .speciesMorning = {
                 SPECIES_TAUROS,
@@ -6408,7 +6371,7 @@ const EncounterData __data[] =
     {                         \
         SPECIES_EKANS,        \
         SPECIES_DODUO,        \
-        SPECIES_FARFETCHD,    \
+        SPECIES_WOOLOO,       \
         SPECIES_WOOPER,       \
         SPECIES_KRICKETOT,    \
         SPECIES_DARUMAKA,     \
@@ -6429,18 +6392,18 @@ const EncounterData __data[] =
         .rateSuperRod = 0,
         .landSlots = {
             .levels = {
-                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
+                4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
             },
             .speciesMorning = ROUTE_46_LAND_SPECIES,
             .speciesDay = ROUTE_46_LAND_SPECIES,
             .speciesNight = ROUTE_46_LAND_SPECIES,
         },
         .hoennSoundSpecies = {
-            SPECIES_FARFETCHD,
+            SPECIES_WOOLOO,
             SPECIES_WOOPER,
         },
         .sinnohSoundSpecies = {
-            SPECIES_FARFETCHD,
+            SPECIES_WOOLOO,
             SPECIES_WOOPER,
         },
         .surfSlots = {
@@ -6501,11 +6464,11 @@ const EncounterData __data[] =
 
 #define DARK_CAVE_ROUTE_31_WATER_SLOTS \
     {                                  \
-        { 7, 7, SPECIES_LAPRAS },      \
-        { 7, 7, SPECIES_POLIWAG },     \
-        { 7, 7, SPECIES_REMORAID },    \
-        { 7, 7, SPECIES_MANTYKE },     \
-        { 7, 7, SPECIES_SURSKIT },     \
+        { 6, 6, SPECIES_LAPRAS },      \
+        { 6, 6, SPECIES_POLIWAG },     \
+        { 6, 6, SPECIES_REMORAID },    \
+        { 6, 6, SPECIES_MANTYKE },     \
+        { 6, 6, SPECIES_SURSKIT },     \
     }
 
     [ENCDATA_D42R0102_DARK_CAVE_ROUTE_31_ENTRANCE] = {
@@ -6517,7 +6480,7 @@ const EncounterData __data[] =
         .rateSuperRod = 75,
         .landSlots = {
             .levels = {
-                7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
+                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
             },
             .speciesMorning = DARK_CAVE_ROUTE_31_LAND_SPECIES,
             .speciesDay = DARK_CAVE_ROUTE_31_LAND_SPECIES,

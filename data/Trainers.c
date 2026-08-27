@@ -409,7 +409,7 @@ const TrainerData sTrainerData[] = {
     [10] = {
         .name = "Amy & Mimi",
         .data = {
-            .trainerType = TRAINER_DATA_TYPE_NOTHING,
+            .trainerType = TRAINER_DATA_TYPE_MOVES,
             .trainerClass = TRAINERCLASS_TWINS,
             .items = { ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE },
             .aiFlags = F_TRAINER_EXPERT_AI,
@@ -421,6 +421,7 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 17,
                 .species = SPECIES_ARIADOS,
+                .moves = { MOVE_FOCUS_ENERGY, MOVE_INFESTATION, MOVE_SCARY_FACE, MOVE_NIGHT_SHADE },
                 .ballSeal = 0,
             },
             {
@@ -428,6 +429,7 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 17,
                 .species = SPECIES_NINJASK,
+                .moves = { MOVE_SAND_ATTACK, MOVE_SCRATCH, MOVE_SCREECH, MOVE_AGILITY },
                 .ballSeal = 0,
             },
             {
@@ -435,6 +437,7 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 17,
                 .species = SPECIES_ANORITH,
+                .moves = { MOVE_HARDEN, MOVE_WATER_GUN, MOVE_METAL_CLAW, MOVE_ANCIENT_POWER },
                 .ballSeal = 0,
             },
             {
@@ -442,6 +445,7 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 17,
                 .species = SPECIES_SHEDINJA,
+                .moves = { MOVE_CONFUSE_RAY, MOVE_METAL_CLAW, MOVE_SHADOW_CLAW, MOVE_PROTECT },
                 .ballSeal = 0,
             },
         },
@@ -963,7 +967,7 @@ const TrainerData sTrainerData[] = {
     [21] = {
         .name = "Bugsy",
         .data = {
-            .trainerType = TRAINER_DATA_TYPE_NOTHING,
+            .trainerType = TRAINER_DATA_TYPE_MOVES | TRAINER_DATA_TYPE_ITEMS,
             .trainerClass = TRAINERCLASS_LEADER_BUGSY,
             .items = { ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE },
             .aiFlags = F_TRAINER_EXPERT_AI,
@@ -975,6 +979,8 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 16,
                 .species = SPECIES_HERACROSS,
+                .item = ITEM_NONE,
+                .moves = { MOVE_ARM_THRUST, MOVE_FURY_ATTACK, MOVE_ENDURE, MOVE_AERIAL_ACE },
                 .ballSeal = 0,
             },
             {
@@ -982,6 +988,8 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 16,
                 .species = SPECIES_DURANT,
+                .item = ITEM_ORAN_BERRY,
+                .moves = { MOVE_VICE_GRIP, MOVE_METAL_CLAW, MOVE_BEAT_UP, MOVE_BUG_BITE },
                 .ballSeal = 0,
             },
             {
@@ -989,6 +997,8 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 16,
                 .species = SPECIES_SHUCKLE,
+                .item = ITEM_NONE,
+                .moves = { MOVE_WRAP, MOVE_ROLLOUT, MOVE_STRUGGLE_BUG, MOVE_ROCK_THROW },
                 .ballSeal = 0,
             },
             {
@@ -996,6 +1006,8 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 16,
                 .species = SPECIES_DEWPIDER,
+                .item = ITEM_NONE,
+                .moves = { MOVE_BUG_BITE, MOVE_BITE, MOVE_BUBBLE_BEAM, MOVE_AQUA_RING },
                 .ballSeal = 0,
             },
             {
@@ -1003,6 +1015,8 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 16,
                 .species = SPECIES_SKORUPI,
+                .item = ITEM_NONE,
+                .moves = { MOVE_FELL_STINGER, MOVE_POISON_FANG, MOVE_BITE, MOVE_TOXIC_SPIKES },
                 .ballSeal = 0,
             },
             {
@@ -1010,6 +1024,8 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 17,
                 .species = SPECIES_LEDIAN,
+                .item = ITEM_LIGHT_CLAY,
+                .moves = { MOVE_REFLECT, MOVE_LIGHT_SCREEN, MOVE_MACH_PUNCH, MOVE_STRUGGLE_BUG },
                 .ballSeal = 0,
             },
         },
@@ -20694,7 +20710,7 @@ const TrainerData sTrainerData[] = {
     [486] = {
         .name = "Proton",
         .data = {
-            .trainerType = TRAINER_DATA_TYPE_ITEMS,
+            .trainerType = TRAINER_DATA_TYPE_MOVES | TRAINER_DATA_TYPE_ITEMS,
             .trainerClass = TRAINERCLASS_EXECUTIVE_PROTON,
             .items = { ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE },
             .aiFlags = F_TRAINER_EXPERT_AI,
@@ -20707,6 +20723,7 @@ const TrainerData sTrainerData[] = {
                 .level = 16,
                 .species = SPECIES_SLOWPOKE,
                 .item = ITEM_NONE,
+                .moves = { MOVE_WATER_GUN, MOVE_YAWN, MOVE_CONFUSION, MOVE_DISABLE },
                 .ballSeal = 0,
             },
             {
@@ -20715,6 +20732,7 @@ const TrainerData sTrainerData[] = {
                 .level = 16,
                 .species = SPECIES_CHIMECHO,
                 .item = ITEM_NONE,
+                .moves = { MOVE_ASTONISH, MOVE_HEALING_WISH, MOVE_YAWN, MOVE_STORED_POWER },
                 .ballSeal = 0,
             },
             {
@@ -20723,6 +20741,7 @@ const TrainerData sTrainerData[] = {
                 .level = 16,
                 .species = SPECIES_SKIDDO,
                 .item = ITEM_NONE,
+                .moves = { MOVE_TAIL_WHIP, MOVE_LEECH_SEED, MOVE_RAZOR_LEAF, MOVE_WORRY_SEED },
                 .ballSeal = 0,
             },
             {
@@ -20731,6 +20750,7 @@ const TrainerData sTrainerData[] = {
                 .level = 16,
                 .species = SPECIES_SWIRLIX,
                 .item = ITEM_NONE,
+                .moves = { MOVE_FAIRY_WIND, MOVE_AROMATHERAPY, MOVE_DRAINING_KISS, MOVE_FAKE_TEARS },
                 .ballSeal = 0,
             },
             {
@@ -20738,7 +20758,8 @@ const TrainerData sTrainerData[] = {
                 .abilitySlot = TRAINER_POKEMON_ABILITY_1,
                 .level = 16,
                 .species = SPECIES_SPHEAL,
-                .item = ITEM_NONE,
+                .item = ITEM_CHESTO_BERRY,
+                .moves = { MOVE_GROWL, MOVE_WATER_GUN, MOVE_POWDER_SNOW, MOVE_REST },
                 .ballSeal = 0,
             },
             {
@@ -20747,6 +20768,7 @@ const TrainerData sTrainerData[] = {
                 .level = 17,
                 .species = SPECIES_TROPIUS,
                 .item = ITEM_ORAN_BERRY,
+                .moves = { MOVE_GUST, MOVE_GROWTH, MOVE_STOMP, MOVE_MAGICAL_LEAF },
                 .ballSeal = 0,
             },
         },

@@ -1,6 +1,6 @@
 # Pokémon Encounters
 
-Last updated: 2026-08-14
+Last updated: 2026-08-25
 
 This document tracks the intended wild encounter content by area. Keep it
 synchronized with the source-controlled encounter tables whenever an area,
@@ -47,13 +47,13 @@ workflow.
 
 ## Route 46
 
-- Level: 6 only.
+- Level: 4 only.
 
 | Slot | Probability | Species |
 |---:|---:|---|
 | 0 | 20% | Ekans |
 | 1 | 20% | Doduo |
-| 2 | 10% | Farfetch'd |
+| 2 | 10% | Wooloo |
 | 3 | 10% | Wooper |
 | 4 | 10% | Kricketot |
 | 5 | 10% | Darumaka |
@@ -94,7 +94,7 @@ workflow.
 
 ### Land
 
-- Level: 8 only.
+- Level: 5 only.
 
 | Slot | Probability | Species |
 |---:|---:|---|
@@ -125,7 +125,7 @@ workflow.
 
 ## Route 31
 
-- Level: 9 only.
+- Level: 6 only.
 - Remove all rod and Surf encounters.
 
 | Slot | Probability | Species |
@@ -147,7 +147,7 @@ workflow.
 
 ### Land
 
-- Level: 7 only.
+- Level: 6 only.
 
 | Slot | Probability | Species |
 |---:|---:|---|
@@ -180,7 +180,7 @@ workflow.
 
 ## Violet City
 
-- Level: 10 only.
+- Level: 6 only.
 - Methods: all rods and Surf.
 
 | Slot | Surf probability | Fishing Rod probability | Species |
@@ -194,7 +194,7 @@ workflow.
 ## Sprout Tower
 
 - Floors: all.
-- Level: 9 only.
+- Level: 6 only.
 
 | Slot | Probability | Species |
 |---:|---:|---|
@@ -215,7 +215,7 @@ workflow.
 
 ### Land
 
-- Level: 10 only.
+- Level: 7 only.
 
 | Slot | Probability | Species |
 |---:|---:|---|
@@ -240,13 +240,13 @@ workflow.
 |---:|---:|---:|---|
 | 0 | 60% | 40% | Oshawott |
 | 1 | 30% | 30% | Piplup |
-| 2 | 5% | 15% | Pyukumuku |
-| 3 | 4% | 10% | Bruxish |
-| 4 | 1% | 5% | Binacle |
+| 2 | 5% | 15% | Mudkip |
+| 3 | 4% | 10% | Squirtle |
+| 4 | 1% | 5% | Froakie |
 
 ## Route 33
 
-- Level: 16 only.
+- Level: 8 only.
 
 | Slot | Probability | Species |
 |---:|---:|---|
@@ -266,7 +266,7 @@ workflow.
 ## Slowpoke Well
 
 - Floors: all.
-- Level: 16 only.
+- Level: 9 only.
 
 | Slot | Probability | Species |
 |---:|---:|---|
@@ -283,19 +283,19 @@ workflow.
 | 10 | 1% | Natu |
 | 11 | 1% | Chimecho |
 
-All rods and Surf use level-16 Slowpoke, Slowpoke, Slowpoke, Beldum, and
+All rods and Surf use level-9 Slowpoke, Slowpoke, Slowpoke, Beldum, and
 Beldum at the standard method-specific 5-slot probabilities.
 
 ## Azalea Town Headbutt
 
-- Level: 16 only.
+- Level: 9 only.
 - The 12 weighted Headbutt slots contain only Pinsir, Scyther, Shuckle,
   Beldum, and Heracross; the five-species draft list repeats to fill the fixed
   archive layout.
 
 ## Ilex Forest
 
-- Level: 18 only.
+- Level: 10 only.
 - Headbutt encounters are disabled.
 
 | Slot | Probability | Species |
@@ -313,12 +313,12 @@ Beldum at the standard method-specific 5-slot probabilities.
 | 10 | 1% | Anorith |
 | 11 | 1% | Yanma |
 
-All rods and Surf use level-18 Surskit, Cutiefly, Dewpider, Dwebble, and
+All rods and Surf use level-10 Surskit, Cutiefly, Dewpider, Dwebble, and
 Wimpod at the standard method-specific 5-slot probabilities.
 
 ## Route 34
 
-- Level: 16 only.
+- Level: 10 only.
 - Rod and Surf encounters are disabled.
 
 | Slot | Probability | Species |
@@ -352,7 +352,7 @@ Wimpod at the standard method-specific 5-slot probabilities.
 ### Land
 
 - Floors: all.
-- Level: 15 only.
+- Level: 8 only.
 
 | Slot | Probability | Species |
 |---:|---:|---|
@@ -377,6 +377,6 @@ Wimpod at the standard method-specific 5-slot probabilities.
 |---:|---:|---:|---|
 | 0 | 60% | 40% | Qwilfish |
 | 1 | 30% | 30% | Octillery |
-| 2 | 5% | 15% | Mudkip |
-| 3 | 4% | 10% | Squirtle |
-| 4 | 1% | 5% | Froakie |
+| 2 | 5% | 15% | Pyukumuku |
+| 3 | 4% | 10% | Bruxish |
+| 4 | 1% | 5% | Binacle |
