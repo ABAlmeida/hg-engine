@@ -2,6 +2,11 @@
 
 Last updated: 2026-08-09
 
+> **Superseded on 2026-08-29.** This optional extension was written against the
+> removed fair-information AI. The replacement TDD keeps doubles and other
+> unsupported formats on original HGSS AI. Rework this plan from that future
+> implementation only if doubles is explicitly brought back into scope.
+
 ## Status
 
 Deferred and optional. Do not implement as part of the fair-information

@@ -71,12 +71,10 @@ complete.
   menu and dialogue map-local. Each Egg has 25 in all six IVs; Sandile has
   Moxie, Tinkatink has Mold Breaker, and Swinub has Thick Fat.
 - Use `F_TRAINER_EXPERT_AI` everywhere the exact Super Effective, Evaluate
-  Attacks, and Expert Attacks combination is intended. Treat that alias as the
-  opt-in profile for a strong fair-information AI, so future profile changes
-  automatically reach every expert trainer. The AI may learn only information
-  revealed during battle and may predict unrevealed level-up moves and normal
-  abilities, but never unrevealed party species, held items, TM/HM moves, or
-  hidden abilities. See `TRAINER_AI_PLAN.md`.
+  Attacks, and Expert Attacks combination is intended. The alias currently
+  selects those original HGSS modules. It remains the content opt-in for the
+  replacement expert singles AI specified in
+  `TRAINER_AI_TECHNICAL_DESIGN.md`.
 
 ## Status
 
@@ -115,7 +113,7 @@ complete.
 | Battle Item acquisition removal | Planned | Remove or replace marts, visible and hidden pickups, gifts, prizes, and other sources of every Battle Items-pocket item. Keep the item IDs and records intact, and audit existing saves only for harmless unusable leftovers. |
 | Trainer and wild content rebalance | In progress | Early-area land and water tables are being rebuilt around the finalized cap curve. Redesigned tables default to fixed morning/day/night content, and radio, swarm, and night-fishing replacements must not introduce species outside the reviewed area list unless explicitly planned otherwise. |
 | Fishing Rod consolidation | Complete; manually verified | The Old Rod is presented as the Fishing Rod and every active ordinary encounter table gives it a 90% bite rate. The Good Rod and Super Rod IDs/data remain for compatibility but their only acquisition gifts now award one Shiny Bait instead. Olivine reuses its original completion flag; Route 12 uses verified-unused persistent variable `0x416F` so its consumable replacement remains one-time. |
-| Trainer AI changes | Contextual layer built; reusable-support and entry-commitment corrections implemented but not built; manual verification pending | Exact three-module trainers now use `F_TRAINER_EXPERT_AI`. The guarded picker records only public information and contextually evaluates attacks, support, legal reserves, and likely player attacks/switches. Reserve candidates receive discounted value for their best next-turn action, while Tailwind and screens account for living teammates. Command caching follows the active slot, and a newly entered Pokemon must choose one non-switch command before voluntarily switching again, preventing zero-progress replacement/switch chains. Unknown effects use a fair whole-action fallback rather than fake power or silent removal. Pre-evolution learnset prediction, exhaustive reveal sources, timing diagnostics, and tuning remain follow-up work. Coordinated doubles remains separately deferred. See `TRAINER_AI_PLAN.md` and `TRAINER_AI_DOUBLES_PLAN.md`. |
+| Trainer AI changes | Legacy contextual layer removed; clean HGSS-AI source baseline established; replacement implementation pending | Expert trainer content retains `F_TRAINER_EXPERT_AI`, which currently expands to the original HGSS Super Effective, Evaluate Attacks, and Expert Attacks modules. The removed fair-information evaluator, hooks, observations, and state are retained only as historical regression evidence. The replacement is an exact-information, action-blind expert singles AI; doubles and unsupported formats remain on original HGSS AI. A fresh size measurement and ROM build remain pending explicit authorization. See `TRAINER_AI_TECHNICAL_DESIGN.md` and `TRAINER_AI_LEGACY_ROLLBACK_CHANGELIST.md`. |
 | Graphics and presentation | Pending | Replace the temporary Bait icons, redesign rival battle/overworld graphics, add challenge messages, and consider title-screen changes after core systems stabilize. |
 | Full-game regression pass | Pending | Perform milestone, save/reload, encounter, progression, and hardware/emulator checks after the remaining systems and content are integrated. |
 

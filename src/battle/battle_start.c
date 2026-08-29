@@ -18,10 +18,6 @@
 #include "test_battle.h"
 #endif // DEBUG_BATTLE_SCENARIOS
 
-#ifdef IMPLEMENT_FAIR_TRAINER_AI
-#include "trainer_ai.h"
-#endif
-
 /********************************************************************************************************************/
 /********************************************************************************************************************/
 //                                                战斗前准备
@@ -59,11 +55,6 @@ struct BattleStruct *ServerInit(struct BattleSystem *bw) {
     sp->original_terrain = bw->terrain;
     sp->original_bgId = bw->bgId;
     bw->sp = sp;
-#ifdef IMPLEMENT_FAIR_TRAINER_AI
-    // The AI knowledge model is battle-local and must never survive into the
-    // next battle, even if the battle heap reuses the same addresses.
-    FairTrainerAI_Reset(bw);
-#endif
     BattleBgExpansionLoader(bw);
 
     gBattleSystem = bw;

@@ -306,9 +306,9 @@ F_EXPERT_ATTACKS
 
 Whenever a trainer needs exactly these three modules, write
 `F_TRAINER_EXPERT_AI` instead of spelling out the three flags. Future changes
-to the expert profile must propagate through this single alias. During the
-trainer-AI implementation, migrate existing exact three-flag entries to the
-alias without changing trainers that deliberately include additional modules.
+to the expert profile must propagate through this single alias. Existing exact
+three-flag entries have already been migrated without changing trainers that
+deliberately include additional modules.
 
 This is a sensible default for Gym Leaders, Elite Four members, the Champion,
 and important late rival battles. Enabling every strategy flag is not
@@ -318,8 +318,10 @@ modules should match the trainer's actual team and intended behavior.
 There is currently no separate implemented AI-profile system. Trainer class
 does not automatically grant a difficulty profile; each trainer's `.aiFlags`
 selects its AI modules. Heartless Gold treats `F_TRAINER_EXPERT_AI` as the
-central opt-in profile for the planned fair-information strategic AI described
-in `documentation/TRAINER_AI_PLAN.md`.
+central content opt-in for the replacement exact-information, action-blind
+expert singles AI described in
+`documentation/TRAINER_AI_TECHNICAL_DESIGN.md`. Until that replacement is
+implemented, the alias selects its three original HGSS AI modules normally.
 
 ## Silver 1 checklist
 

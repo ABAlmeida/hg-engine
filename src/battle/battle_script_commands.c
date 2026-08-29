@@ -5,9 +5,6 @@
 #include "constants/battle_message_constants.h"
 #include "constants/battle_script_constants.h"
 #include "constants/file.h"
-#ifdef IMPLEMENT_FAIR_TRAINER_AI
-#include "trainer_ai.h"
-#endif
 #include "constants/hold_item_effects.h"
 #include "constants/item.h"
 #include "constants/move_effects.h"
@@ -1911,9 +1908,6 @@ BOOL btl_scr_cmd_87_tryknockoff(void *bw UNUSED, struct BattleStruct *sp)
         sp->mp.param[0] = CreateNicknameTag(sp, sp->attack_client);
         sp->mp.param[1] = CreateNicknameTag(sp, sp->defence_client);
         sp->mp.param[2] = item;
-#ifdef IMPLEMENT_FAIR_TRAINER_AI
-        FairTrainerAI_ObserveHeldItem(bw, sp, sp->defence_client, item);
-#endif
         sp->battlemon[sp->defence_client].item = 0;
         // update:  no longer render further items unusable--just set the item to 0 here
         // sp->scw[side].knockoff_item |= No2Bit(sp->sel_mons_no[sp->defence_client]);
@@ -4844,12 +4838,6 @@ BOOL btl_scr_cmd_116_abilitypopup(void *bw, struct BattleStruct *sp)
             if (ability == -1) {
                 ability = sp->battlemon[battler].ability;
             }
-
-#ifdef IMPLEMENT_FAIR_TRAINER_AI
-            // AbilityPopup is public information; record it when the message
-            // is created, not by reading an unrevealed opponent ability later.
-            FairTrainerAI_ObserveAbility(bw, sp, battler, ability);
-#endif
 
             sp->abilityPopupWork = work;
             work->bsys = bw;

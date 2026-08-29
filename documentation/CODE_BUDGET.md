@@ -152,13 +152,17 @@ After a user-requested successful code or ROM build:
 | Unsafe first capture/permanent-death lifetime split | 31,295 | 32,672 | 1,377 | Built on 2026-08-07, but startup testing failed because ARM9 hook targets were placed in an extension that was not loaded yet. Historical measurement only. |
 | Safe capture-only lifetime split | 31,699 | 32,672 | 973 | Successful `quick-rom` build on 2026-08-07. Permanent-death code remains resident; capture field and battle logic remain relocated. |
 
-### Fair trainer-AI battle-extension comparison
+### Historical fair trainer-AI battle-extension comparison
+
+The custom evaluator represented below was removed from source on 2026-08-29.
+These values remain historical evidence only. The clean rollback baseline has
+not been rebuilt or remeasured.
 
 | Configuration | Used | Capacity | Free | Result |
 | --- | ---: | ---: | ---: | --- |
-| Current code with `IMPLEMENT_FAIR_TRAINER_AI` disabled | 69,496 | 81,920 | 12,424 | Successful controlled `make code` link on 2026-08-09. |
-| Current contextual code with `IMPLEMENT_FAIR_TRAINER_AI` enabled | 77,196 | 81,920 | 4,724 | Successful `quick-rom` build on 2026-08-09; increase is 7,700 bytes. |
-| Current source after reusable-support, entry-commitment, and legacy-fallback corrections | 77,668 | 81,920 | 4,252 | Successful `quick-rom` build on 2026-08-09. `trainer_ai.o` contains 7,832 bytes of code and 288 bytes of BSS; both original HGSS AI calls use odd Thumb addresses through `BLX`. |
+| Historical code with `IMPLEMENT_FAIR_TRAINER_AI` disabled | 69,496 | 81,920 | 12,424 | Successful controlled `make code` link on 2026-08-09. |
+| Historical contextual code with `IMPLEMENT_FAIR_TRAINER_AI` enabled | 77,196 | 81,920 | 4,724 | Successful `quick-rom` build on 2026-08-09; increase was 7,700 bytes. |
+| Historical source after reusable-support, entry-commitment, and legacy-fallback corrections | 77,668 | 81,920 | 4,252 | Successful `quick-rom` build on 2026-08-09. `trainer_ai.o` contained 7,832 bytes of code and 288 bytes of BSS; both original HGSS AI calls used odd Thumb addresses through `BLX`. |
 
 ### Extension-overlay impact of the safe split
 

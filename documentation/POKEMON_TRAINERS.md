@@ -18,9 +18,10 @@ duplicates, and retains the four most recently learned moves.
 
 - Use `F_TRAINER_EXPERT_AI` for the expert AI profile. This alias replaces the
   former explicit combination of `F_PRIORITIZE_SUPER_EFFECTIVE`,
-  `F_EVALUATE_ATTACKS`, and `F_EXPERT_ATTACKS` so future profile changes reach
-  every configured expert trainer.
-- Trainers use no Bag items during battle.
+  `F_EVALUATE_ATTACKS`, and `F_EXPERT_ATTACKS`. It currently selects those
+  original HGSS modules and remains the content opt-in for the replacement AI.
+- Configured trainer Bag items may remain. The original HGSS baseline may use
+  them; the planned expert singles AI will never generate or select ITEM.
 
 ## New Bark Town
 

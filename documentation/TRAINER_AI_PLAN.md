@@ -2,14 +2,20 @@
 
 Last updated: 2026-08-09
 
+> **Superseded on 2026-08-29.** The implementation described here has been
+> removed from source. This file is retained only as historical design and
+> regression evidence. It must not override
+> `TRAINER_AI_TECHNICAL_DESIGN.md`, which specifies the replacement
+> exact-information, action-blind singles AI.
+
 ## Status
 
-Contextual fair strategic layer implemented on 2026-08-09. The initial
-`quick-rom` build succeeded; the subsequent reusable-support correction is
-implemented in source but not built because that change was not accompanied by
-an explicit build request. Focused manual verification is pending. Doubles-specific
-coordination is deliberately excluded and tracked in
-`TRAINER_AI_DOUBLES_PLAN.md`.
+Historical status: contextual fair strategic layer implemented on 2026-08-09.
+The initial `quick-rom` build succeeded; the subsequent reusable-support
+correction was implemented in source but not built because that change was not
+accompanied by an explicit build request. Focused manual verification was
+pending. Doubles-specific coordination was deliberately excluded and tracked
+in `TRAINER_AI_DOUBLES_PLAN.md`.
 
 The implemented layer covers the verified command/move hook sites, central
 profile gate, battle-local reset, public active-Pokemon/move/ability/item
