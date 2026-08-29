@@ -1,12 +1,10 @@
-#include "../include/types.h"
-
 #include "../include/summary.h"
-#include "../include/battle.h"
 
+#include "../include/battle.h"
+#include "../include/types.h"
 
 // file is from LheaRachel on github who adapted it from Bubble
 // i just adapted it to hgss and added the +/- handling and such
-
 
 static void UpdatePokemonData(struct SummaryState *summary, u8 mode)
 {
@@ -25,7 +23,7 @@ static void UpdatePokemonData(struct SummaryState *summary, u8 mode)
 
     // Pokemon struct orders current HP before max HP, so need to handle mode == 0 as a special case
     if (mode == 0) {
-        summary->pokemonData.hp = (u16) GetMonData(pokemon, MON_DATA_HP, NULL);
+        summary->pokemonData.hp = (u16)GetMonData(pokemon, MON_DATA_HP, NULL);
     } else {
         if (mode == 1) {
             paramStart = MON_DATA_HP_EV;
@@ -33,17 +31,16 @@ static void UpdatePokemonData(struct SummaryState *summary, u8 mode)
             paramStart = MON_DATA_HP_IV;
         }
 
-        summary->pokemonData.hp = (u16) GetMonData(pokemon, paramStart, NULL);
+        summary->pokemonData.hp = (u16)GetMonData(pokemon, paramStart, NULL);
     }
 
     // Pokemon struct orders all data parameters as such:
     // Attack -> Defense -> Speed -> SpAttack -> SpDefense
-    summary->pokemonData.attack    = (u16) GetMonData(pokemon, paramStart + 1, NULL);
-    summary->pokemonData.defense   = (u16) GetMonData(pokemon, paramStart + 2, NULL);
-    summary->pokemonData.speed     = (u16) GetMonData(pokemon, paramStart + 3, NULL);
-    summary->pokemonData.spAttack  = (u16) GetMonData(pokemon, paramStart + 4, NULL);
-    summary->pokemonData.spDefense = (u16) GetMonData(pokemon, paramStart + 5, NULL);
-
+    summary->pokemonData.attack = (u16)GetMonData(pokemon, paramStart + 1, NULL);
+    summary->pokemonData.defense = (u16)GetMonData(pokemon, paramStart + 2, NULL);
+    summary->pokemonData.speed = (u16)GetMonData(pokemon, paramStart + 3, NULL);
+    summary->pokemonData.spAttack = (u16)GetMonData(pokemon, paramStart + 4, NULL);
+    summary->pokemonData.spDefense = (u16)GetMonData(pokemon, paramStart + 5, NULL);
 
     if (summary->baseData->dataType == 2) { // free it if it was allocated
         sys_FreeMemoryEz(pokemon);
@@ -55,12 +52,12 @@ static void UpdatePokemonData(struct SummaryState *summary, u8 mode)
 //   s == index of the color to use for the shadow of the letter
 //   g == index of the color to use for the background of the letter (0 == transparent)
 #define COLOR(l, s, g) ((u32)(((l & 0xFF) << 16) | ((s & 0xFF) << 8) | ((g & 0xFF) << 0)))
-#define BLACK          (COLOR(1,  2, 0))
-#define BLUE_INVERT    (COLOR(4,  3, 0))
-#define RED_INVERT     (COLOR(6,  5, 0))
-#define BLUE           (COLOR(3,  4, 0))
-#define RED            (COLOR(5,  6, 0))
-#define PINK           (COLOR(7,  8, 0))
+#define BLACK          (COLOR(1, 2, 0))
+#define BLUE_INVERT    (COLOR(4, 3, 0))
+#define RED_INVERT     (COLOR(6, 5, 0))
+#define BLUE           (COLOR(3, 4, 0))
+#define RED            (COLOR(5, 6, 0))
+#define PINK           (COLOR(7, 8, 0))
 #define GREEN          (COLOR(9, 10, 0))
 #define WHITE          (COLOR(0xE, 0xF, 0))
 
@@ -141,7 +138,7 @@ static void PrintStatNumberWithColor(struct SummaryState *summary, u8 windowIdx,
     Summary_PrintString(summary, &summary->addlWindows[windowIdx], color, justify);
 }
 
-static void Summary_ColorizeStatScreen(
+static void Summary_ColorizeStatScreenWithData(
     struct SummaryState *summary,
     u32 mode,
     struct BoxPokemon *pokemon,
@@ -162,7 +159,7 @@ static void Summary_ColorizeStatScreen(
     PrintStatNumberWithColor(summary, 5, JUSTIFY_RIGHT, nature);
 
     for (int i = 0; i < 6; i++) {
-        FillWindowPixelBuffer(&summary->defnWindows[0xF+i], 0);
+        FillWindowPixelBuffer(&summary->defnWindows[0xF + i], 0);
         if (i != 0) // print a possibly colored text and append +/-
         {
             u32 msgId = 110;
@@ -170,31 +167,40 @@ static void Summary_ColorizeStatScreen(
             s32 effect = Summary_GetNatureStatEffect(nature, i);
 
             if (effect > 0) {
-                msgId = 196-1; // Stat+
+                msgId = 196 - 1; // Stat+
                 color = RED_INVERT;
             } else if (effect < 0) {
-                msgId = 201-1; // Stat-
+                msgId = 201 - 1; // Stat-
                 color = BLUE_INVERT;
             }
 
-            //Summary_PrintStatStringAccountForStat(summary, 0xF+i, msgId+i, i-1, JUSTIFY_LEFT);
-            Summary_PrintStringGeneric(summary, 0xF+i, msgId+i, color, JUSTIFY_LEFT);
+            // Summary_PrintStatStringAccountForStat(summary, 0xF+i, msgId+i, i-1, JUSTIFY_LEFT);
+            Summary_PrintStringGeneric(summary, 0xF + i, msgId + i, color, JUSTIFY_LEFT);
         } else if (mode == 0) { // raw stat
             Summary_PrintStringGeneric(summary, 0xF, 110, WHITE, JUSTIFY_LEFT);
         } else if (mode == 1) { // ev's
             Summary_PrintStringGeneric(summary, 0xF, 206, WHITE, JUSTIFY_LEFT);
-        } else {                // iv's
+        } else { // iv's
             Summary_PrintStringGeneric(summary, 0xF, 207, WHITE, JUSTIFY_LEFT);
         }
-        CopyWindowToVram(&summary->defnWindows[0xF+i]);
+        CopyWindowToVram(&summary->defnWindows[0xF + i]);
     }
+}
+
+void Summary_ColorizeStatScreen(struct SummaryState *summary, u32 mode)
+{
+    struct BoxPokemon *pokemon = Summary_GetPokemonData(summary);
+
+    Summary_ColorizeStatScreenWithData(
+        summary,
+        mode,
+        pokemon,
+        GetBoxMonNatureCountMints(pokemon));
 }
 
 void Summary_ColorizeStatScreen_Wrap(struct SummaryState *summary)
 {
-    struct BoxPokemon *pokemon = Summary_GetPokemonData(summary);
-
-    Summary_ColorizeStatScreen(summary, 0, pokemon, GetBoxMonNatureCountMints(pokemon));
+    Summary_ColorizeStatScreen(summary, 0);
 }
 
 void Summary_ChangeStatScreenState(struct SummaryState *summary, u8 mode)
@@ -220,26 +226,28 @@ void Summary_ChangeStatScreenState(struct SummaryState *summary, u8 mode)
         Summary_PrintCurrentOverMax(
             summary,
             0,
-            117, 119, 118,
+            117,
+            119,
+            118,
             summary->pokemonData.hp,
             summary->pokemonData.maxHP,
             3,
-            xsize / 2, 0
-        );
+            xsize / 2,
+            0);
     }
 
-    Summary_ColorizeStatScreen(summary, mode, pokemon, nature);
+    Summary_ColorizeStatScreenWithData(summary, mode, pokemon, nature);
 
     for (int i = 0; i < 6; i++) {
         CopyWindowToVram(&summary->addlWindows[i]);
     }
 
-    UpdatePokemonData(summary, 0);      // Recover old data for page change
+    UpdatePokemonData(summary, 0); // Recover old data for page change
 }
 
-
 // change this to possibly take a BoxPokemon structure but be compatible with vanilla handling just in case
-u16 ModifyStatByNature(u32 nature, u16 n, u8 statIndex) {
+u16 ModifyStatByNature(u32 nature, u16 n, u8 statIndex)
+{
     u32 retVal;
 
     // Dont modify HP, Accuracy, or Evasion by nature
@@ -247,8 +255,7 @@ u16 ModifyStatByNature(u32 nature, u16 n, u8 statIndex) {
         return n;
     }
 
-    if (nature & 0x02000000)
-    {
+    if (nature & 0x02000000) {
         nature = GetBoxMonNatureCountMints(&((struct PartyPokemon *)nature)->box);
     }
 

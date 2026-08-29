@@ -1,6 +1,8 @@
 #ifndef SPECIES_DATA_H
 #define SPECIES_DATA_H
 
+#include "config.h"
+
 #include <stdint.h>
 
 #include "constants/ability.h"

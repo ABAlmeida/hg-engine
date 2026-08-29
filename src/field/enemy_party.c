@@ -1,7 +1,7 @@
-#include "bag.h"
-#include "bait.h"
-#include "battle.h"
 #include "config.h"
+#include "debug.h"
+#include "types.h"
+
 #include "constants/ability.h"
 #include "constants/file.h"
 #include "constants/game.h"
@@ -10,13 +10,15 @@
 #include "constants/moves.h"
 #include "constants/species.h"
 #include "constants/weather_numbers.h"
-#include "debug.h"
+
+#include "bag.h"
+#include "bait.h"
+#include "battle.h"
 #include "pokemon.h"
 #include "rtc.h"
 #include "save.h"
 #include "script.h"
 #include "trainer_data.h"
-#include "types.h"
 
 #ifdef DEBUG_BATTLE_SCENARIOS
 #include "test_battle.h"

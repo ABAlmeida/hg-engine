@@ -7,8 +7,8 @@ generated ROM or an emulator save.
 ## Repository layout and upstream
 
 - Run project commands from this directory (`hg-engine`), not its parent.
-- The project is based on hg-engine commit
-  `b38bce6a76196111219275f248e57f7a9ece4448`. Do not treat that upstream base
+- The latest integrated hg-engine upstream is commit
+  `dacca858e9f917607a20090a76f26df8e53849ed`. Do not treat that upstream
   commit as the current Heartless Gold `main` revision.
 - The configured `origin` is `https://github.com/ABAlmeida/hg-engine.git`.
   hg-engine's canonical upstream is `https://github.com/BluRosie/hg-engine.git`,
