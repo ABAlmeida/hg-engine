@@ -19,7 +19,7 @@ env:
 
 jobs:
   build:
-    if: ${{ github.repository == 'BluRosie/hg-engine' }}
+    if: ${{ github.repository == 'BluRosie/hg-engine' || github.repository == 'ABAlmeida/hg-engine' }}
     runs-on: ubuntu-22.04
 
     steps:
