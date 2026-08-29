@@ -18,9 +18,9 @@ typedef struct EncounterTaskData {
     BattleSetup *setup;
 } EncounterTaskData;
 
-typedef char EncounterTaskDataSetupOffsetCheck[(offsetof(EncounterTaskData, setup) == 0x10) ? 1 : -1];
-typedef char BattleSetupWinFlagOffsetCheck[(offsetof(BattleSetup, winFlag) == 0x14) ? 1 : -1];
-typedef char BattleSetupTrainerIdOffsetCheck[(offsetof(BattleSetup, trainerId) == 0x18) ? 1 : -1];
+_Static_assert(__builtin_offsetof(EncounterTaskData, setup) == 0x10, "EncounterTaskData setup offset changed");
+_Static_assert(__builtin_offsetof(BattleSetup, winFlag) == 0x14, "BattleSetup winFlag offset changed");
+_Static_assert(__builtin_offsetof(BattleSetup, trainerId) == 0x18, "BattleSetup trainerId offset changed");
 
 BOOL LONG_CALL SetNewLevelCap(u8 newCap)
 {
