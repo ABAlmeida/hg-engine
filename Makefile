@@ -332,6 +332,7 @@ endif
 # Generated headers only invalidate the source files that include them.
 $(BUILD)/field/move_tutor.o \
 $(BUILD)/field/script_commands.o \
+$(BUILD)/individual/InheritMovesInternal.o \
 $(BUILD)/individual/PartyMenu_HandleUseItemOnMon.o \
 $(BUILD)/pokemon.o: $(LEARNSETS_HEADER)
 
