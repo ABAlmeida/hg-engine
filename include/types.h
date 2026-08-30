@@ -193,7 +193,7 @@ void LONG_CALL RemoveWindow(void *);
 void LONG_CALL GfGfx_SetBanks(void *);
 void LONG_CALL OS_ResetSystem(u32);
 
-void *memcpy(void *dest, void *src, u32 size);
+void *memcpy(void *dest, const void *src, u32 size);
 void *memset(void *dest, u8 fill, u32 size);
 void sprintf(u8 *buf, char *str, ...);
 void debugsyscall(u8 *buf);

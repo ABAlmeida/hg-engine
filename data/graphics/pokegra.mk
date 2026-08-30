@@ -45944,6 +45944,12 @@ build/pokemonicon/1_1475.NCGR: data/graphics/sprites/mega_baxcalibur/icon.png
 ICONGFX_OBJS += build/pokemonicon/1_1475.NCGR
 
 
+$(POKEGRA_BUILD_DIR) $(ICONGFX_DIR):
+	@mkdir -p $@
+
+$(POKEGRA_DEPENDENCIES): | $(POKEGRA_BUILD_DIR)
+$(ICONGFX_OBJS): | $(ICONGFX_DIR)
+
 $(POKEGRA_NARC): $(POKEGRA_DEPENDENCIES)
 	$(NARCHIVE) create $@ $(POKEGRA_BUILD_DIR) -nf
 

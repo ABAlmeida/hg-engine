@@ -168,7 +168,13 @@ ICONGFX_RAWDATA_DIR := rawdata/files_from_a020
         output.write(convertedIcon + ".NCGR: data/graphics/sprites/" + speciesName + "/icon.png\n" + icon_format.format(convertedIcon))
 
 # footer
-    output.write("""$(POKEGRA_NARC): $(POKEGRA_DEPENDENCIES)
+    output.write("""$(POKEGRA_BUILD_DIR) $(ICONGFX_DIR):
+	@mkdir -p $@
+
+$(POKEGRA_DEPENDENCIES): | $(POKEGRA_BUILD_DIR)
+$(ICONGFX_OBJS): | $(ICONGFX_DIR)
+
+$(POKEGRA_NARC): $(POKEGRA_DEPENDENCIES)
 	$(NARCHIVE) create $@ $(POKEGRA_BUILD_DIR) -nf
 
 NARC_FILES += $(POKEGRA_NARC)
