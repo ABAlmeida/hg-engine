@@ -216,11 +216,6 @@
 // Heartless Gold opening documented in OPENING_SEQUENCE_PLAN.md.
 #define IMPLEMENT_REVISED_OPENING
 
-// HEARTLESS_GOLD_DEMO ends the current public demo after Bugsy's victory
-// sequence and returns to the normal game startup. Comment it out to allow
-// progression beyond Azalea Gym.
-#define HEARTLESS_GOLD_DEMO
-
 // Start Professor Oak's introduction through the existing "No Info Needed"
 // path instead of showing the Control Info / Adventure Info choice.
 #define SKIP_NEW_GAME_INFO_MENU
@@ -238,6 +233,11 @@
 
 // DISABLE_ITEMS_IN_TRAINER_BATTLE rejects player Bag item selections in trainer battles.
 #define DISABLE_ITEMS_IN_TRAINER_BATTLE
+
+// Resident, exact-information expert singles AI. Unsupported battle formats
+// continue to use the original HGSS AI. This feature never enables trainer
+// Bag commands and must not add a transient overlay without explicit approval.
+#define IMPLEMENT_EXPERT_TRAINER_AI
 
 // DISABLE_TRAINER_LINE_OF_SIGHT prevents field trainers from automatically
 // approaching the player. The shared first-time talk script previews their

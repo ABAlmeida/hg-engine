@@ -3676,7 +3676,8 @@ BOOL LONG_CALL BattleContext_CheckMoveHealBlocked(struct BattleSystem *bsys UNUS
     return ret;
 }
 
-u32 LONG_CALL StruggleCheck(struct BattleSystem *bsys, struct BattleStruct *ctx, int battlerId, u32 nonSelectableMoves, u32 struggleCheckFlags)
+static u32 StruggleCheckInternal(struct BattleSystem *bsys, struct BattleStruct *ctx, int battlerId,
+    u32 nonSelectableMoves, u32 struggleCheckFlags, BOOL allowMutation)
 {
     // u8 buf[64];
     // sprintf(buf, "In StruggleCheck\n");
@@ -3684,6 +3685,23 @@ u32 LONG_CALL StruggleCheck(struct BattleSystem *bsys, struct BattleStruct *ctx,
 
     int movePos;
     int item = HeldItemHoldEffectGet(ctx, battlerId);
+    u16 choiceMove = ctx->battlemon[battlerId].moveeffect.moveNoChoice;
+
+    if ((struggleCheckFlags & STRUGGLE_CHECK_CHOICED)
+        && BattleMon_GetMoveIndex(&ctx->battlemon[battlerId], choiceMove) == 4 && choiceMove != MOVE_STRUGGLE) {
+        choiceMove = MOVE_NONE;
+        if (allowMutation) {
+            ctx->battlemon[battlerId].moveeffect.moveNoChoice = MOVE_NONE;
+        }
+    }
+    if ((struggleCheckFlags & STRUGGLE_CHECK_GORILLA_TACTICS)
+        && GetBattlerAbility(ctx, battlerId) == ABILITY_GORILLA_TACTICS
+        && ctx->waza_no_old[battlerId] != MOVE_NONE) {
+        choiceMove = ctx->waza_no_old[battlerId];
+        if (allowMutation) {
+            ctx->battlemon[battlerId].moveeffect.moveNoChoice = choiceMove;
+        }
+    }
 
     for (movePos = 0; movePos < 4; movePos++) {
         if (!(ctx->battlemon[battlerId].move[movePos]) && (struggleCheckFlags & STRUGGLE_CHECK_NO_MOVES)) {
@@ -3715,16 +3733,11 @@ u32 LONG_CALL StruggleCheck(struct BattleSystem *bsys, struct BattleStruct *ctx,
             nonSelectableMoves |= No2Bit(movePos);
         }
         if ((item == HOLD_EFFECT_CHOICE_ATK || item == HOLD_EFFECT_CHOICE_SPEED || item == HOLD_EFFECT_CHOICE_SPATK) && (struggleCheckFlags & STRUGGLE_CHECK_CHOICED)) {
-            if (BattleMon_GetMoveIndex(&ctx->battlemon[battlerId], ctx->battlemon[battlerId].moveeffect.moveNoChoice) == 4 && ctx->battlemon[battlerId].moveeffect.moveNoChoice != MOVE_STRUGGLE) {
-                ctx->battlemon[battlerId].moveeffect.moveNoChoice = 0;
-            } else if (ctx->battlemon[battlerId].moveeffect.moveNoChoice && ctx->battlemon[battlerId].moveeffect.moveNoChoice != ctx->battlemon[battlerId].move[movePos]) {
+            if (choiceMove && choiceMove != ctx->battlemon[battlerId].move[movePos]) {
                 nonSelectableMoves |= No2Bit(movePos);
             }
         }
         if (struggleCheckFlags & STRUGGLE_CHECK_GORILLA_TACTICS && GetBattlerAbility(ctx, battlerId) == ABILITY_GORILLA_TACTICS) {
-            if (ctx->waza_no_old[battlerId] != 0) {
-                ctx->battlemon[battlerId].moveeffect.moveNoChoice = ctx->waza_no_old[battlerId];
-            }
             if (ctx->waza_no_old[battlerId] != ctx->battlemon[battlerId].move[movePos] && ctx->waza_no_old[battlerId] != 0) {
                 nonSelectableMoves |= No2Bit(movePos);
             }
@@ -3762,6 +3775,16 @@ u32 LONG_CALL StruggleCheck(struct BattleSystem *bsys, struct BattleStruct *ctx,
 #endif
     }
     return nonSelectableMoves;
+}
+
+u32 LONG_CALL StruggleCheck(struct BattleSystem *bsys, struct BattleStruct *ctx, int battlerId, u32 nonSelectableMoves, u32 struggleCheckFlags)
+{
+    return StruggleCheckInternal(bsys, ctx, battlerId, nonSelectableMoves, struggleCheckFlags, TRUE);
+}
+
+u32 TrainerAI_StruggleCheckReadOnly(struct BattleSystem *bsys, struct BattleStruct *ctx, int battlerId)
+{
+    return StruggleCheckInternal(bsys, ctx, battlerId, 0, ~0u, FALSE);
 }
 
 // Buffer messages related to being unable to select moves?

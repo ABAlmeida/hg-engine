@@ -1,6 +1,7 @@
 #include "../include/pokemon_storage_system.h"
 
 #include "../include/config.h"
+#include "../include/constants/moves.h"
 #include "../include/constants/species.h"
 #include "../include/debug.h"
 #include "../include/message.h"
@@ -12,6 +13,15 @@
 
 #ifdef ALLOW_SAVE_CHANGES
 #ifdef EXPAND_PC_BOXES
+
+#ifdef DEBUG_CHEATS
+static const u16 sDebugRayquazaMoves[] = {
+    MOVE_DRAGON_PULSE,
+    MOVE_EXTREME_SPEED,
+    MOVE_CRUNCH,
+    MOVE_OUTRAGE,
+};
+#endif
 
 u32 PCStorage_sizeof(void)
 {
@@ -45,11 +55,17 @@ void PCStorage_InitializeBoxes(PCStorage *storage)
 
 #ifdef DEBUG_CHEATS
     enum { DEBUG_CHEAT_RAYQUAZA_LEVEL = 100 };
+    u32 move;
 
     // Put the test Pokemon in the first ordinary Bill's PC slot so it can be
     // withdrawn through the normal storage interface.
     CreateBoxMonData(&storage->boxes[0].mons[0], SPECIES_RAYQUAZA,
         DEBUG_CHEAT_RAYQUAZA_LEVEL, MAX_IVS, FALSE, 0, FALSE, 0);
+    for (i = 0; i < NELEMS(sDebugRayquazaMoves); i++) {
+        move = sDebugRayquazaMoves[i];
+        SetBoxMonData(&storage->boxes[0].mons[0], MON_DATA_MOVE1 + i, &move);
+    }
+    RestoreBoxMonPP(&storage->boxes[0].mons[0]);
 #endif
 
     for (i = 0, j = 0; i < NUM_PC_BOXES; i++) {

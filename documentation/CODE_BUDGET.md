@@ -68,7 +68,7 @@ attributed safely, so they are lower bounds rather than exact totals.
 | Expanded save/PC support | `save.o`: 3,033; `pokemon_storage_system.o`: 2,152 gross | Unattributed | Foundational shared code required by several features. Exact incremental cost needs a configuration-off comparison; save correctness takes priority over byte reduction. |
 | No battle EXP and no battle EVs | Modified battle-script command object | Unattributed | Implemented inside a large linked battle routine rather than a dedicated object. It should be measured with controlled configuration-on/off builds. |
 | Trainer-battle active-item restriction | Modified player battle-controller object | Unattributed | Implemented inside a large linked overlay routine. Held items are unaffected. Measure as a conditional build delta rather than charging the full object. |
-| Debug item/Rayquaza seeding | `bag.o` and `pokemon_storage_system.o` conditional blocks | Currently disabled | It contributes no active build cost while `DEBUG_CHEATS` is undefined. Measure only when temporarily enabled. |
+| Debug item/Rayquaza seeding | `bag.o` and `pokemon_storage_system.o` conditional blocks | Currently enabled | Includes Bag supplies and the fixed four-move Rayquaza seed. Measure its linked cost in the next authorized build. |
 
 ## Large shared objects in the injected region
 

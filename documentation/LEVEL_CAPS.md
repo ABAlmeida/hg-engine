@@ -61,6 +61,11 @@ usable field move without removing either a field move or the leveling action.
 | Blue | 86 |
 | Red | 100 |
 
+The required event order is Bugsy before Silver fight 2. Silver 2 is currently
+reachable before the Azalea Gym victory and must be gated behind the verified
+Bugsy/Hive Badge progression state. The cap reward table records the rewards
+for victories but does not enforce when those battles become reachable.
+
 Every listed milestone has an independent reward-table entry even when its
 current cap is unchanged. This lets future balancing change one fight without
 altering the battle hook or progression code.

@@ -6783,12 +6783,6 @@ RunNewCommand NEW_COMMAND_PERMANENT_DEATH_SHOULD_END, var
 RunNewCommand NEW_COMMAND_PERMANENT_DEATH_FINISH, endRun
 .endmacro
 
-// Reuse the verified field-safe terminal reset path without exposing its
-// permanent-death-specific name to unrelated scripts.
-.macro ResetGame
-FinishPermanentDeathNotification 1
-.endmacro
-
 // Pack a 5-bit IV and 9-bit ability into a script variable for the configured
 // Egg helper. All six IVs receive the same value.
 .macro SetGiftEggConfig,var,iv,ability

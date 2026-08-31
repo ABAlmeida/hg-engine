@@ -116,7 +116,7 @@ and rematch flow:
 
 ## Debug-cheat availability
 
-`DEBUG_CHEATS` is currently disabled. When enabled, a new save starts with 10
+`DEBUG_CHEATS` is currently enabled. A new save starts with 10
 of every S, regular, L, and Max vitamin in the Medicine pocket. Existing saves
 are not seeded again merely by enabling the option.
 

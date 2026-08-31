@@ -13,6 +13,9 @@
 #include "battle.h"
 #include "overlay.h"
 #include "pokemon.h"
+#ifdef IMPLEMENT_EXPERT_TRAINER_AI
+#include "trainer_ai.h"
+#endif
 
 #ifdef DEBUG_BATTLE_SCENARIOS
 #include "test_battle.h"
@@ -1029,6 +1032,10 @@ void BattleEndRevertFormChange(struct BattleSystem *bw)
     u16 monsno;
     u16 form;
     u16 newItems[6] = { 0, 0, 0, 0, 0, 0 };
+
+#ifdef IMPLEMENT_EXPERT_TRAINER_AI
+    FairTrainerAI_BattleEnd(bw);
+#endif
 
     newBS.SideMega[0] = 0;
     newBS.SideMega[1] = 0;

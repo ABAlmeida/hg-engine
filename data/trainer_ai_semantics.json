@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "effectClasses": {
+    "poison": ["MOVE_EFFECT_STATUS_POISON"],
+    "toxic": ["MOVE_EFFECT_STATUS_BADLY_POISON"],
+    "burn": ["MOVE_EFFECT_STATUS_BURN"],
+    "paralysis": ["MOVE_EFFECT_STATUS_PARALYZE"],
+    "sleep": ["MOVE_EFFECT_STATUS_SLEEP"],
+    "delayedSleep": ["MOVE_EFFECT_STATUS_SLEEP_NEXT_TURN"],
+    "leechSeed": ["MOVE_EFFECT_STATUS_LEECH_SEED"],
+    "recoverHalf": [
+      "MOVE_EFFECT_RESTORE_HALF_HP",
+      "MOVE_EFFECT_HEAL_HALF_DIFFERENT_IN_WEATHER",
+      "MOVE_EFFECT_HEAL_HALF_REMOVE_FLYING_TYPE"
+    ],
+    "protect": ["MOVE_EFFECT_PROTECT"],
+    "rest": ["MOVE_EFFECT_RECOVER_HEALTH_AND_SLEEP"],
+    "trickRoom": ["MOVE_EFFECT_TRICK_ROOM"],
+    "attackDefenseUp": ["MOVE_EFFECT_ATK_DEF_UP"],
+    "defenseSpecialDefenseUp": ["MOVE_EFFECT_DEF_SP_DEF_UP"],
+    "specialAttackSpecialDefenseUp": ["MOVE_EFFECT_SP_ATK_SP_DEF_UP"],
+    "attackSpeedUp": ["MOVE_EFFECT_ATK_SPEED_UP"],
+    "flee": ["MOVE_EFFECT_FLEE_FROM_WILD_BATTLE"],
+    "flinch": [
+      "MOVE_EFFECT_FLINCH_HIT",
+      "MOVE_EFFECT_CHARGE_TURN_HIGH_CRIT_FLINCH",
+      "MOVE_EFFECT_FLINCH_DOUBLE_DAMAGE_FLY_OR_BOUNCE",
+      "MOVE_EFFECT_FLINCH_MINIMIZE_DOUBLE_HIT",
+      "MOVE_EFFECT_ALWAYS_FLINCH_FIRST_TURN_ONLY",
+      "MOVE_EFFECT_FLINCH_BURN_HIT",
+      "MOVE_EFFECT_FLINCH_FREEZE_HIT",
+      "MOVE_EFFECT_FLINCH_PARALYZE_HIT",
+      "MOVE_EFFECT_HIT_TWICE_AND_FLINCH"
+    ]
+  },
+  "moveClasses": {
+    "tailwind": ["MOVE_TAILWIND"],
+    "lightScreen": ["MOVE_LIGHT_SCREEN"],
+    "reflect": ["MOVE_REFLECT"],
+    "spikes": ["MOVE_SPIKES"],
+    "toxicSpikes": ["MOVE_TOXIC_SPIKES"],
+    "stealthRock": ["MOVE_STEALTH_ROCK"],
+    "stickyWeb": ["MOVE_STICKY_WEB"],
+    "substitute": ["MOVE_SUBSTITUTE"],
+    "randomAction": ["MOVE_METRONOME", "MOVE_ASSIST", "MOVE_SLEEP_TALK"]
+  },
+  "moveTransitions": {
+    "forceRepeatScaling": ["MOVE_ROLLOUT", "MOVE_ICE_BALL"],
+    "repeatScaling": ["MOVE_FURY_CUTTER"]
+  },
+  "abilityTypeRules": [
+    {"ability": "ABILITY_LEVITATE", "type": "TYPE_GROUND", "behavior": "immune"},
+    {"ability": "ABILITY_FLASH_FIRE", "type": "TYPE_FIRE", "behavior": "absorbBoost"},
+    {"ability": "ABILITY_WATER_ABSORB", "type": "TYPE_WATER", "behavior": "absorbHeal"},
+    {"ability": "ABILITY_STORM_DRAIN", "type": "TYPE_WATER", "behavior": "absorbSpecialAttack"},
+    {"ability": "ABILITY_DRY_SKIN", "type": "TYPE_WATER", "behavior": "absorbHeal"},
+    {"ability": "ABILITY_DRY_SKIN", "type": "TYPE_FIRE", "behavior": "multiply125"},
+    {"ability": "ABILITY_VOLT_ABSORB", "type": "TYPE_ELECTRIC", "behavior": "absorbHeal"},
+    {"ability": "ABILITY_LIGHTNING_ROD", "type": "TYPE_ELECTRIC", "behavior": "absorbSpecialAttack"},
+    {"ability": "ABILITY_MOTOR_DRIVE", "type": "TYPE_ELECTRIC", "behavior": "absorbSpeed"},
+    {"ability": "ABILITY_SAP_SIPPER", "type": "TYPE_GRASS", "behavior": "absorbAttack"},
+    {"ability": "ABILITY_THICK_FAT", "type": "TYPE_FIRE", "behavior": "multiply50"},
+    {"ability": "ABILITY_THICK_FAT", "type": "TYPE_ICE", "behavior": "multiply50"}
+  ]
+}

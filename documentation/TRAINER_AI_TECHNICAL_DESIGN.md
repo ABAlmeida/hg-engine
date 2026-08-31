@@ -5,17 +5,19 @@ Pokémon HeartGold hg-engine.
 
 | Field | Value |
 |---|---|
-| Status | Restart-ready implementation design (v0.5) |
+| Status | Complete and accepted for the current release (v0.6) |
 | Scope | Expert singles trainer battles only |
 | Production profile | `F_TRAINER_EXPERT_AI` |
 | Primary goals | Strong tactics, smart switching, multi-turn planning, player-action prediction, bounded runtime, measurable size |
 | Explicit non-goals | Doubles AI, full battle-script simulation, deep game-tree search, runtime machine learning, reading the player's selected command |
-| Source baseline | Current post-legacy-rollback source worktree: original HGSS AI plus preserved Heartless Gold engine/content fixes; generated size output still requires a fresh authorized build |
+| Source baseline | Accepted resident implementation with original HGSS fallback; future work is reopened only for demonstrated defects or repeatable exploits |
 
-> **Document status:** Proposed types, functions and parameters are design
-> guidance. Section 3 inventories the removed committed legacy AI as regression
-> and integration evidence. It is not the current implementation. The
-> exact source rollback is specified in
+> **Document status:** The resident expert-singles AI is complete and accepted
+> for the current release. This document retains both the implemented contract
+> and intentionally deferred future refinements; a deferred item is not open
+> project work unless gameplay demonstrates a defect or repeatable exploit.
+> Section 3 inventories the removed committed legacy AI as regression and
+> integration evidence. The exact historical rollback is specified in
 > `TRAINER_AI_LEGACY_ROLLBACK_CHANGELIST.md`.
 
 # 0. Restart and revision policy
@@ -35,7 +37,7 @@ Preserve only:
   legacy AI did not yet use them; and
 - lessons learned from the discarded attempt.
 
-Three states must remain distinct in implementation notes and size reports:
+Four states must remain distinct in implementation notes and size reports:
 
 1. **Removed committed legacy AI:** the fair-information implementation
    introduced by `ad0d002a1f4dc2eb20782391bdfb39ec58ebee17`.
@@ -43,13 +45,13 @@ Three states must remain distinct in implementation notes and size reports:
    preserved trainer flags, plus unrelated Heartless Gold fixes and content.
 3. **Discarded attempt:** the v0.4 overlay/lookahead scaffold that produced the
    battle-entry and per-turn performance investigation.
-4. **v0.5 target:** the design in this document.
+4. **v0.6 target:** the design in this document.
 
 No generated file, stale object or ROM output is evidence that a reverted
-source tree implements v0.5. Phase 0 establishes a fresh source and size
+source tree implements v0.6. Phase 0 establishes a fresh source and size
 baseline after both AI rollbacks.
 
-## 0.1 Major v0.5 changes
+## 0.1 Major replacement-design changes
 
 - Replace the old fair-information belief model with an
   **exact-information, action-blind** contract. The AI may know the player's
@@ -61,28 +63,94 @@ baseline after both AI rollbacks.
   calculated stats instead of retaining raw IVs, EVs or nature.
 - Keep uncertainty only where it is real and useful: which legal action the
   player will choose and how likely each action is.
-- Retain the transient planner architecture. Overlay 130 holds the smallest
-  safe resident shell; the complex evaluator belongs in the transient overlay.
-  Exact-information simplification should increase resident headroom, not
-  justify consuming the 1 KiB reserve.
-- Do not add an “obvious decision” fast path in the first v0.5 implementation.
-  One cached non-forced expert decision may make one transient call.
-- Make overlay-load time, resident request-building time and transient search
-  time separate performance measurements. The discarded attempt did not do
-  this and therefore cannot establish which component caused its pause.
+- Implement the complete expert AI in resident overlay 130 first. Exact
+  information, compact shared mechanics handlers and generated coverage data
+  must be used to preserve the 500-byte reserve.
+- A transient overlay is an unapproved contingency, not an implementation
+  phase or automatic fallback. If a measured resident implementation cannot
+  fit, stop and obtain explicit user approval before reserving an overlay ID,
+  adding a linker image or loader, or moving any evaluator code transient.
+- Do not add an “obvious decision” fast path in the first v0.6 implementation.
+  One cached non-forced expert decision runs the resident planner once.
+- Separately measure snapshot construction, tactical primitives, switch
+  screening and search. The discarded attempt did not do this and therefore
+  cannot establish which component caused its pause.
 - Add analytic multi-turn plan evaluation for setup, stat changes, recovery and
   support. A six-turn payoff must not require a six-ply search tree.
-- Screen every legal trainer reserve cheaply, fully evaluate the best three
-  role-distinct candidates, and admit at most two switches to the final four
-  searched AI actions.
+- Screen every legal trainer reserve on one compact resulting-position score,
+  then admit at most the best two distinct reserves to the final scored action
+  set. The score combines entry survival, best pressure, incoming threat and
+  remaining HP, so pivots and attackers compete without resident role arrays.
+  Setup/support is evaluated normally once that Pokémon is active. Three
+  reserve branches crowded out moves, increased runtime and amplified switch
+  over-selection.
 - Make coverage and maximum regret enforceable selection constraints. A
   damaging move into an immunity is not a safe action merely because it is
   strong against one predicted switch.
-- Treat an evaluator-unknown action individually. One move that lacks a
-  strategic scoring case must never randomize the entire decision.
-- Implement the prediction commitment, resolution, trainer-local memory and
-  global calibration described here. They existed in v0.4 documentation but
-  not in either the committed legacy AI or the discarded implementation.
+- Track semantic coverage for every implemented move reachable by either an
+  expert trainer or the player in
+  `documentation/TRAINER_AI_SEMANTICS_COVERAGE.md`. Missing or deliberately
+  conservative mappings never block an ordinary build and never randomize
+  understood actions; the report is the prioritized evaluator backlog.
+- Implement prediction commitment/resolution, recent-battle adaptation and the
+  32-case abstract persistent memory described here. They did not exist in
+  either the committed legacy AI or the discarded implementation.
+- Treat Bag use as disabled battle functionality for both sides. The expert AI
+  neither generates trainer ITEM actions nor predicts player ITEM actions;
+  configured trainer-item data may remain inert in content.
+- Evaluate every specific legal player move and switch in the immediate
+  prediction/coverage pass. Four player branches limit only expensive future
+  simulation, not action awareness.
+- Generate compact move-semantics data at build time and include it through one
+  resident implementation unit. JSON parsing and descriptive names never
+  enter the ROM. Coverage auditing is a separate nonblocking maintenance task.
+- Put all preference, breadth and risk tuning in `include/ai_config.h`. Battle
+  mechanics remain fixed and cannot be changed by tuning parameters.
+
+## 0.2 Accepted resident implementation
+
+The current source implements the guarded expert-singles hooks, exact party
+snapshot, resident battle-owned state, command/move cache, original-HGSS
+fallback, post-KO selector, compact flinch class, tactical evaluator,
+voluntary switching and prediction-case storage. The latest evaluator revision
+also:
+
+- uses deterministic priority/Speed order except for true ties;
+- permits a switch immediately after any entry and contains no switch-loop
+  penalty or cooldown;
+- predicts a move from the current matchup before applying its damage to a
+  proposed switch-in;
+- uses one continuation horizon for move/move, move/switch, switch/move and
+  switch/switch pairs, rather than granting future value only to switches;
+- admits at most two highest-position voluntary switches, rejects an entry that
+  is expected to faint immediately and requires an ordinary switch to improve
+  the resulting matchup by the configured margin unless the active Pokémon is
+  already in immediate KO danger;
+- selects post-KO replacements with the same attack/support/threat position
+  score used by voluntary-switch screening rather than HP/asset value alone;
+- resolves status, flinch, type interaction and consecutive-move classes
+  through generated mechanics tables, with direct shared handlers for the few
+  priority/status/item rules where a table would cost more;
+- values Sleep accuracy/miss exposure and switchable target effects
+  independently;
+- scores every admitted action against the same concrete player-action
+  distribution and applies probability-weighted downside risk;
+- retains each move's uncapped, accuracy-adjusted damage pressure separately
+  from capped HP-loss utility and uses it only to break exact primary-score
+  ties;
+- selects the best current prediction/risk policy without arbitrary near-best
+  RNG; and
+- confines incomplete semantics to the affected action.
+
+The current implementation is the accepted v0.6 release scope. Probability
+calibration, fuller move mechanics, duration-aware support sequences and
+calculated mixed strategies remain documented in
+`TRAINER_AI_SEMANTICS_COVERAGE.md` as optional future hardening, not unfinished
+release work. Gameplay evaluation showed that some short manipulation sequences
+could initially influence the AI, after which its prediction memory recognized
+and countered the pattern. Reopen tactical work only if a manipulation remains
+repeatably exploitable after adaptation or another concrete regression is
+demonstrated.
 
 # 1. Executive summary
 
@@ -95,20 +163,23 @@ chooses a specialized read.
 
 The design has five layers:
 
-1. A resident integration shell validates the battle format/profile, snapshots
+1. A resident integration layer validates the battle format/profile, snapshots
    exact state, generates legal actions, caches decisions and provides a legal
    tactical fallback.
 2. A compact tactical model calculates damage, KO timing, speed, survival,
    hazards, status and other immediate effects from exact sanitized values.
 3. A plan evaluator compares multi-turn attack, setup, recovery, support and
    switch plans without expanding a deep game tree.
-4. A player-action model assigns probabilities to exact legal moves and switch
-   destinations, retaining four primary branches plus compact tail identities.
-5. A transient zero-import overlay performs pairwise coverage, bounded future
-   evaluation, prediction commitment generation and final ranking.
+4. A player-action model assigns probabilities to every exact legal move and
+   switch destination. Every branch participates in immediate coverage; only
+   the most relevant four are candidates for expensive future simulation.
+5. A resident bounded planner performs pairwise coverage, future evaluation,
+   prediction commitment generation and final ranking.
 
-The AI never returns ITEM. Configured trainer Bag items may remain in trainer
-data. Doubles and unsupported formats delegate to the original HGSS AI.
+Bag commands are disabled for both the player and trainer in the supported
+battles. The expert AI never generates, predicts or returns ITEM. Configured
+trainer Bag-item data may remain but is inert. Doubles and unsupported formats
+delegate to the original HGSS AI.
 
 # 2. Goals, non-goals and invariants
 
@@ -122,8 +193,9 @@ data. Doubles and unsupported formats delegate to the original HGSS AI.
   warrants it, without using a universal hard-coded preference.
 - Select useful defensive pivots, attackers and support/setup reserves.
 - Predict player actions without reading the selected command.
-- Remember genuine read outcomes and avoid blindly repeating failed reads.
-- Preserve at least 1,024 linked bytes in overlay 130.
+- Remember genuine read outcomes and adapt probability/mixup behavior without
+  an automatic failed-read repeat penalty.
+- Preserve at least 500 linked bytes in overlay 130.
 - Keep runtime bounded and ordinary decision latency below two video frames.
 - Measure strength, size and runtime at every implementation phase.
 
@@ -131,12 +203,14 @@ data. Doubles and unsupported formats delegate to the original HGSS AI.
 
 - Doubles, multi, tag or other multi-battler strategy.
 - Full battle-script execution in the evaluator.
-- Exact simulation of every unusual move effect on the first pass.
 - Deep minimax over every future player response.
 - Runtime learning of move mechanics or trainer data.
 - Reading a player's current selected move, switch, target or command.
-- Retaining player-specific identities across unrelated trainers.
+- Retaining trainer, Pokémon, move, item, ability, slot or matchup identities
+  in persistent prediction memory.
 - A large release diagnostic or explanation framework.
+- Modelling player or trainer Bag actions; both are disabled and outside the
+  action space.
 
 ## 2.3 Non-negotiable invariants
 
@@ -144,27 +218,27 @@ data. Doubles and unsupported formats delegate to the original HGSS AI.
 |---|---|
 | Command blindness | The AI may read exact loadout/state but never current player command, selected move slot, switch destination or target. |
 | No indirect command leak | No helper used before selection may infer the current player command from battle-controller fields. |
-| Exact snapshot boundary | Transient code receives pointer-free value data, never live battle, battler or party pointers. |
+| Exact snapshot boundary | Strategic evaluation consumes the sanctioned exact snapshot and derived public mechanics, not selected-command fields or unrestricted live battle pointers. |
 | Legal action only | Every returned move/switch index is validated resident-side before use. |
 | Unsupported-format fallback | Doubles and unsupported formats delegate before singles-only state is accessed. |
 | One production profile | Only `F_TRAINER_EXPERT_AI` selects the advanced path. |
-| No trainer Bag action | Expert singles never generates or selects ITEM. |
-| Cached decision | Command and move hooks consume the same decision; stochastic work runs once. |
+| No Bag action | Bag use is disabled for both sides; expert singles never generates, predicts or selects ITEM. |
+| Cached decision | Command and move hooks consume the same decision; decision work runs once. |
 | Coverage is enforceable | Coverage and regret thresholds affect eligibility, not merely a small score bonus. |
-| Per-action evaluator fallback | An unscored action cannot randomize other understood actions. |
+| Tracked reachable coverage | Implemented move semantics are classified in the nonblocking Markdown backlog; any fallback remains action-local. |
 | Prediction honesty | Robust actions create no read record; unavoidable losses create no false player-win record. |
-| Scoped memory | Trainer-specific cases clear between trainers; only two abstract calibration bytes may persist. |
-| Resident headroom | Overlay 130 retains at least 1,024 linked bytes. |
-| Bounded state | Resident AI BSS/workspace is at most 768 bytes; worst nested AI stack is below 1 KiB. |
-| Overlay safety | Transient code cannot import resident functions, nest another individual-overlay load, yield or retain transient addresses. |
-| Determinism | Search consumes no production battle RNG; final safe near-best sampling is the only decision RNG use. |
+| Scoped memory | A small recent-battle window clears between trainers; 32 abstract player-behaviour cases persist without trainer, species, move, item or slot identity. |
+| Resident headroom | Overlay 130 retains at least 500 linked bytes. |
+| Bounded state | Battle-owned AI state/workspace is at most 768 bytes; overlay BSS remains minimal and separately measured; worst nested AI stack is below 1 KiB. |
+| Transient approval | No transient overlay ID, linker image, loader or evaluator placement may be created without explicit user approval after measured resident overflow. |
+| Purposeful variation | Evaluation consumes no production battle RNG; selection samples only a calculated non-dominated mixed strategy when prediction warfare justifies one. |
 
 # 3. Removed legacy AI inventory and rollback boundary
 
 This section documents the removed fair-information AI from commit
 `ad0d002a1f4dc2eb20782391bdfb39ec58ebee17`: its evaluator, interface, hooks
 and battle-start reset. Its covered mechanics and verified seams remain
-evidence for v0.5 requirements, not code in the current baseline.
+evidence for v0.6 requirements, not code in the current baseline.
 
 ## 3.1 Verified integration evidence to retain in the design
 
@@ -177,21 +251,21 @@ evidence for v0.5 requirements, not code in the current baseline.
   0012 FairTrainerAI_PickMove    0225E43E bl
   ```
 
-- The legacy hook lines are removed for the clean rollback baseline, then v0.5
+- The legacy hook lines are removed for the clean rollback baseline, then v0.6
   reintroduces guarded wrappers at the verified addresses with instruction
   assertions.
 - The original HGSS picker addresses and fallback behavior are known. Linker
-  exports are removed if unused during rollback and re-added only when v0.5
+  exports are removed if unused during rollback and re-added only when v0.6
   needs them.
 - `F_TRAINER_EXPERT_AI` is preserved. It predates the legacy implementation,
   expands to the three original HGSS expert modules and remains the production
   content profile.
-- The v0.5 command and move selections must share a cache keyed by turn and
+- The v0.6 command and move selections must share a cache keyed by turn and
   active party slot.
   This prevents two independent decisions for one turn and protects against a
   replacement inheriting a fainted Pokémon's decision.
 - The legacy ability/held-item observation calls are removed. Exact-information
-  v0.5 refreshes its value snapshot through one central sanitizer instead of
+  v0.6 refreshes its value snapshot through one central sanitizer instead of
   preserving the old observation subsystem.
 - The general `GetMoveData(..., MOVE_DATA_PSS_SPLIT)` correction is an engine
   fix, not AI-owned behavior. Do not revert it with the AI feature.
@@ -214,12 +288,15 @@ The old AI already provided:
 - protection against zero-progress chains where a newly entered trainer
   Pokémon immediately switches again before taking an action;
 - a coarse player-switch model and safe near-best randomization; and
-- quantized player HP rather than exact player HP, which v0.5 intentionally
+- quantized player HP rather than exact player HP, which v0.6 intentionally
   replaces with exact sanitized state.
 
 These algorithms are removed with the legacy runtime. They are not
 automatically correct, but their covered mechanics form a regression inventory
-for the replacement.
+for the replacement. v0.6 explicitly rejects the listed recent-switch penalty,
+mandatory action after entry and safe-near-best randomization; they are retained
+above only as historical evidence of the behavior that produced the observed
+tactical failures.
 
 ## 3.3 Legacy behavior to replace
 
@@ -241,7 +318,7 @@ The old AI also had important limitations:
   cross-battle calibration.
 - It had no dedicated post-KO replacement override.
 - The production wrappers checked the expert profile but did not establish the
-  v0.5 singles/unsupported-format gate before accessing the custom evaluator.
+  v0.6 singles/unsupported-format gate before accessing the custom evaluator.
 - Its switch/move scenario model was not a four-branch coverage search.
 
 ## 3.4 Verified seam not present in the legacy behavior
@@ -293,9 +370,10 @@ the removable runtime with the preserved move-split correction and trainer
 profile normalization, while later trainer-balance commits depend on the
 profile assignments.
 
-Configured trainer Bag items remain. The temporary original-HGSS baseline may
-use them; the v0.5 expert singles wrapper is responsible for never generating
-or selecting ITEM.
+Configured trainer Bag-item data may remain, but Bag use is disabled for both
+sides. The v0.6 expert-singles action generators do not create trainer ITEM or
+player ITEM branches, and no prediction, evaluator or output path handles
+them.
 
 # 4. Capacity and memory budgets
 
@@ -313,7 +391,7 @@ The final `build/output_battle.bin` length, or the highest end of every
 allocated linked section, is the capacity measurement. `__end__` alone is not
 valid because orphan allocated sections may follow it.
 
-Recorded evidence, not a post-legacy-rollback measurement:
+Recorded evidence and the current authorized implementation measurement:
 
 | Source state | Overlay 130 used | Free | Notes |
 |---|---:|---:|---|
@@ -321,23 +399,31 @@ Recorded evidence, not a post-legacy-rollback measurement:
 | Estimated committed legacy AI feature | 8,172 B | — | Prior controlled delta; historical only |
 | Estimated clean rollback baseline | ~69,600 B | — | Consistent with the dated 69,496-byte disabled build; replace with a fresh post-rollback build |
 | Discarded attempt artifact | 80,120 B | 1,800 B | Latest generated artifact inspected during the performance investigation |
+| Last authorized pre-amendment resident build | 81,364 B | 556 B | Historical `make quick-rom -j8` result; `trainer_ai.o` contained 10,804 B text, 30 B generated read-only tables and 4 B BSS. The current source is intentionally unbuilt and must not be assumed to have this size. |
+| User-run intermediate semantics/switch build | 81,936 B | -16 B | Link failed by 16 B. Its `trainer_ai.o` contained 11,288 B text, 116 B read-only data and 4 B BSS. This measurement triggered removal of duplicated party-asset scans, role arrays and unused tiny tables; the resulting source has not yet been built. |
 
 The discarded attempt also produced a 384-byte AI BSS object and a 676-byte
 transient overlay. These numbers describe an incomplete scaffold and are not
-v0.5 targets.
+v0.6 targets.
 
 The hard resident gate is:
 
 ```text
-output_battle.bin <= 81,920 - 1,024 = 80,896 bytes
+output_battle.bin <= 81,920 - 500 = 81,420 bytes
 ```
 
-The 1 KiB is linker headroom for future resident fixes and integration—not
-battle heap. v0.5 should use exact-information simplification to increase that
-headroom. Do not move transient planner code resident merely to remove the
-transient overlay.
+The 500 bytes are linker headroom for resident fixes and integration—not
+battle heap. The estimated clean baseline permits approximately 11.8 KiB of
+resident replacement AI while retaining that reserve; the value remains an
+estimate until measured by an authorized build. Stop before the hard gate
+rather than consuming the reserve.
 
-## 4.2 Transient planner region
+The battle linker region is deliberately capped at `0x13E0C` (81,420 bytes),
+500 bytes below the physical `0x14000` region, so the reserve is enforced by
+the linker rather than only by a post-link report. The budget script retains a
+second check on the produced binary.
+
+## 4.2 Unapproved transient contingency
 
 ```text
 Start:    0x023C0400
@@ -346,24 +432,38 @@ End:      0x023C4000
 Capacity: 15,360 bytes
 ```
 
-The transient planner target is 6–9 KiB and must remain below 15,360 bytes.
-This is a separate budget from overlay 130, BSS, stack, battle heap, save data
-and total ROM size.
+This existing individual-overlay region is documented only so a future
+capacity discussion has an accurate upper bound. v0.6 does not reserve an ID,
+link an image, install a loader or place code here. If the complete measured
+resident implementation cannot fit while preserving 500 bytes, implementation
+must stop and present the resident map, largest symbols and reduction options.
+A transient design may begin only after explicit user approval. Approval to
+implement the AI or build the ROM does not imply approval to create it.
 
 ## 4.3 Other hard budgets
 
 | Memory class | Gate |
 |---|---:|
-| Resident AI state/workspace | <=768 B of overlay-130 BSS |
+| Battle-owned AI state/workspace | <=768 B on the owning battle heap; lifetime is one battle |
+| Overlay-130 AI BSS | No large matrices or duplicate party snapshots; measure separately at every phase |
 | Worst nested AI stack | <1 KiB |
-| Persistent calibration | Two logical bytes; measure aligned save growth |
+| Persistent prediction memory | 32 abstract cases at 6–8 B each (192–256 B) plus a small versioned header; hard target <=272 logical bytes and measure aligned save growth |
 | Release diagnostics | No strings or retained score-component arrays |
+
+Initial battle-heap targets are approximately 72–108 bytes for at most nine
+concrete player branches, 64–96 bytes for four streamed action summaries and
+at most 64 bytes for eight compact recent cases. Damage/plan scratch uses the
+remaining bounded workspace and is reused between stages; do not retain a 9x9
+or 4x9 matrix. These are design estimates until compile-time `sizeof` reports
+and battle-heap headroom are measured. Generated semantic tables consume
+overlay `.rodata`, while persistent cases consume save space; neither is part
+of the 768-byte battle-owned workspace.
 
 # 5. Architecture and ownership
 
 ## 5.1 Resident overlay 130
 
-Resident code owns:
+Resident code owns the complete production implementation:
 
 - profile and singles-format gating;
 - battle lifecycle and state clearing;
@@ -371,30 +471,33 @@ Resident code owns:
 - legal move/switch enumeration and compact move/state descriptor generation;
 - decision cache and final engine output;
 - a compact, competent tactical fallback;
-- construction and validation of pointer-free request/result buffers;
-- transient overlay collision preflight and lifetime; and
-- resolving prior prediction commitments after the actual action is known.
+- player action probabilities and switch-destination ranking;
+- trainer switch shortlisting and dynamic role comparison;
+- tactical mechanics, secondary-effect outcomes and analytic plans;
+- pairwise action/branch outcomes and bounded future-state evaluation;
+- coverage, regret, robust eligibility and final action ranking;
+- resolving prior prediction commitments after the actual action is known; and
+- loading and updating the versioned persistent prediction-case store.
 
-Resident code should not own the full prediction/search implementation merely
-because it is callable every turn.
+Battle-local cache, commitment, recent-case and bounded scratch ownership lives
+in an `AIExpertBattleState` appended to the end of `BattleStruct` after Phase 1
+verifies every allocation/clear site and any assembly size assumption. Appending
+preserves existing member offsets. Its allocation and clearing follow the
+existing battle lifetime; it is not save data and no pointer to it survives
+battle teardown. Do not place a large permanent planner matrix in overlay BSS.
 
-## 5.2 Transient planner
+## 5.2 Placement rule
 
-Transient code owns pure calculations for:
+Keep the implementation resident and centralize shared mechanics rather than
+duplicating per-move code. If measurement proves that the complete release
+implementation cannot fit under the overlay-130 hard gate, stop. Do not create
+a transient overlay as an optimization experiment or quiet response to linker
+pressure. A separately approved transient amendment must define ownership,
+safety, build enforcement, runtime cost and fallback before code is added.
 
-- player action probabilities;
-- player switch-destination ranking;
-- trainer switch shortlisting and role comparison;
-- analytic setup/support/recovery plans;
-- pairwise action/branch outcomes;
-- bounded future-state evaluation;
-- coverage, regret and robust eligibility;
-- prediction commitment generation; and
-- final action ranking.
-
-The discarded attempt inverted this boundary: resident code performed most
-damage, threat, switch and pair construction, while the 676-byte overlay mostly
-ranked precomputed scores. v0.5 must not repeat that architecture.
+The discarded attempt split work across resident and a 676-byte transient image
+without first identifying the real performance cost. v0.6 avoids that boundary
+and measures one resident pipeline before considering another placement.
 
 ## 5.3 Runtime flow
 
@@ -402,15 +505,59 @@ ranked precomputed scores. v0.5 must not repeat that architecture.
 battle state
     -> resident exact-state sanitizer
     -> legal AI/player actions plus compact Pokémon/move descriptors
-    -> pointer-free planner request
-    -> one synchronous transient call
-        -> player distribution and trainer switch screening
-        -> tactical caches, plans, pairwise coverage and ranking
-    -> resident result validation
-    -> safe near-best final sample
+    -> player distribution and trainer switch screening
+    -> tactical caches, secondary outcomes and analytic plans
+    -> pairwise coverage and bounded ranking
+    -> dominated-action removal and prediction/coverage policy
+    -> optional calculated mixed-strategy sample
     -> cached command/move output
     -> later commitment resolution
 ```
+
+## 5.4 Configuration ownership
+
+`include/config.h` owns only the feature gate that enables the expert-AI
+integration. `include/ai_config.h` is the single source of truth for build-time
+planner tuning and is included only by AI implementation modules. It contains
+compile-time constants rather than a runtime profile object so normal tuning
+does not consume battle heap or persistent memory and the compiler may fold
+the values into comparisons.
+
+`ai_config.h` owns:
+
+- immediate and future search breadth;
+- plan horizon and future discount;
+- utility scale and preference weights;
+- coverage, acceptable-outcome and regret thresholds;
+- comfortable, even, losing and desperate risk tolerances;
+- specialized-read admission and payoff thresholds;
+- probability smoothing, calibration and safe-mixup breadth;
+- switch screening/shortlisting limits; and
+- fixed resident scratch, stack and save-memory gates.
+
+It does not own move legality, the damage formula, type effectiveness, status
+rules, effect applicability or any other mechanical truth. Those are evaluator
+correctness requirements and cannot be tuned away. Use `AI_CFG_*` names and
+compile-time range/relationship checks; for example, the future 3x3 limits
+cannot exceed the retained four AI/four player deep candidates. There is one
+production configuration for `F_TRAINER_EXPERT_AI`, not per-trainer profiles.
+
+## 5.5 Source ownership
+
+- `include/trainer_ai.h` exposes only engine hooks and lifecycle functions.
+- `include/ai_config.h` owns build-time tuning constants.
+- `src/battle/trainer_ai.c` is the sole resident implementation unit. It owns
+  the raw battle bridge, compact private value types, generated-table
+  resolvers, evaluation, planning, prediction, switching, memory and fallback.
+  Keeping one unit permits file-local sharing and avoids duplicated interfaces
+  and call veneers under the overlay-130 budget. Keep those concerns in named
+  function groups rather than splitting them unless a measured build proves a
+  split has no size cost.
+
+Pure strategic modules consume sanitized value types and do not include
+`battle.h`. A static include/field audit enforces that selected-command fields
+and unrestricted `BattleSystem *`/`BattleStruct *` pointers remain confined to
+the bridge and lifecycle/save owners.
 
 # 6. Exact-information, action-blind contract
 
@@ -473,24 +620,26 @@ typedef struct {
     u8 level;
     u8 partySlot;
     u8 flags;
+    u8 semanticState; /* compact live activations such as Flash Fire */
     u32 condition;
     u32 condition2;
 } AIMonView;
 ```
 
 This is guidance, not a frozen ABI. Order fields deliberately and enforce a
-compile-time size check. A request should contain only the active and shortlisted
-views needed for that decision, not two complete six-member parties when compact
-derived descriptors are sufficient.
+compile-time size check. The resident planner should retain only active and
+shortlisted views needed by a stage of the decision, not permanent duplicate
+copies of two complete parties when compact derived descriptors are sufficient.
+The view remains an information firewall even though caller and evaluator are
+resident: strategic helpers accept sanctioned values instead of unrestricted
+live battle pointers that could expose the selected command.
 
-The transient interface contains no pointers except the resident caller's two
-entrypoint arguments to the top-level request and result objects.
-
-Move IDs alone are insufficient for a zero-import evaluator. The resident
-sanitizer must also provide compact immutable move descriptors containing the
-fields the planner needs, such as power, type, split, accuracy, priority,
-targeting, effect class and supported effect parameters. The transient planner
-must not call the live move table or a resident move-data helper.
+Move IDs alone are insufficient. Combine the existing move table's power,
+type, split, accuracy, effect chance, priority, targeting and flags with a
+compact AI semantics registry keyed primarily by `MOVE_EFFECT_*`. Use a sparse
+move-ID override table only where one effect ID does not fully distinguish
+legality or strategic behavior. Do not duplicate numeric move data already
+available resident-side.
 
 # 7. Actions, legality and evaluator coverage
 
@@ -509,64 +658,308 @@ typedef struct {
 } AIAction;
 ```
 
-Generate every legal move and voluntary switch. ITEM is intentionally absent.
-Forced Struggle and forced replacement use dedicated legal paths.
+Generate every legal move and voluntary switch. ITEM does not exist in either
+side's action space because Bag use is disabled. Forced Struggle and forced
+replacement use dedicated legal paths.
 
 ## 7.2 Evaluator coverage
 
-“Evaluator-unknown” means the battle engine implements the action but v0.5 has
-no strategic scoring model for its full effect. It does not mean the move is
-unimplemented or that trainers are allowed to learn invalid content.
+Unimplemented moves are outside the evaluator scope and must be filtered using
+the same configuration/runtime rules as party construction and move learning.
+Do not spend code or table space modelling them.
 
-Rules:
+For implemented content, maintain the source-controlled
+`documentation/TRAINER_AI_SEMANTICS_COVERAGE.md` report. Each move/effect is
+classified as Exact, Generic, Conservative, Ignored, Unimplemented, Needs work
+or Investigate. Exact and Generic entries document:
 
-- A known damaging component is still scored when a secondary effect is not.
-- An unknown strategic component receives a named conservative adjustment.
-- An evaluator-unknown action remains an individual candidate.
-- It may use a narrow original-AI/tactical fallback score if that interface is
-  deterministic and action-local.
-- It must never set a global flag that makes every legal action uniformly
-  random.
-- Maintain a static report of trainer moves whose strategic effect lacks an AI
-  model so coverage work is explicit.
+- a mechanics descriptor;
+- a generic semantic handler or deliberate move-specific override;
+- legality/failure, timing, cost and persistence behavior;
+- damaging and secondary components where applicable; and
+- a deterministic action-local score or outcome model.
+
+Missing semantics do not fail an ordinary build. They are recorded as Needs
+work or Investigate and prioritized from trainer/player reachability and battle
+testing. Compile-time checks still validate the bounds and handler IDs of data
+that is present. An `AI_EFFECT_FALLBACK` path scores only the affected action
+with its documented conservative policy; it never randomizes, discards or
+changes understood actions. Some effects may remain deliberately Ignored or
+Conservative when bespoke logic would not change a useful tactical decision.
+
+### 7.2.1 Generated-semantics build path
+
+`data/trainer_ai_semantics.json` is readable source data. The ROM never parses
+it. `tools/generate_trainer_ai_semantics.py` converts reviewed semantic classes
+to compact runtime data. A normal dependency rule regenerates:
+
+- `include/constants/generated/trainer_ai_semantics_generated.h`, containing only compact
+  runtime mapping/recipe data and compile-time bounds; and
+- no coverage gate. The Markdown coverage report is maintained separately so
+  incomplete classifications remain visible without blocking normal builds.
+
+The generated header is included exactly once by `src/battle/trainer_ai.c`.
+It must not be included by public headers or multiple translation units because
+its file-local tables would be duplicated. The evaluator exposes no table
+pointers outside that implementation unit.
+
+The generated runtime data contains:
+
+1. sparse packed `u16` effect/class entries for the configured effect-ID range
+   (the current base range is `0..405`);
+2. sparse effect-ID lists for conditional secondary families such as flinch;
+3. packed sparse move-ID class entries only where the effect ID and existing numerical
+   move table do not fully determine behavior;
+4. packed sparse ability/type entries; and
+5. sparse consecutive-move transition entries.
+
+Very small priority, status-prevention and held-effect families remain direct
+shared comparisons until their cardinality makes a table smaller. This is a
+representation choice only; it does not permit Pokémon- or moveset-specific
+scoring code.
+
+Do not duplicate power, type, split, accuracy, PP, effect chance, priority,
+targeting or flags already present in the resident move table. At generation
+time compare dense packed descriptors, effect-to-recipe indices and sparse
+encodings; select the smallest representation that preserves complete
+semantics, and report its linked `.rodata` cost. For reference, a frozen
+two-byte entry for the current 406 base effects would cost 812 bytes before overrides,
+but 812 bytes is an estimate, not a required representation.
+
+### 7.2.2 Runtime semantic dispatch
+
+For one evaluated move:
+
+1. the sanitizer/bridge supplies its ID and existing numerical move data;
+2. `AI_GetMoveSemantics()` maps the move effect to a generated shared recipe;
+3. a move-specific override, if present, refines that recipe;
+4. `AI_ApplyMoveSemantics()` dispatches a handwritten mechanics handler
+   against the isolated simulated state; and
+5. the planner values the resulting damage, status, stages, field changes,
+   costs and persistence in the current action pair.
+
+The generated data says what state transitions a move requires; handwritten
+handlers implement those transitions; the planner decides whether the result
+is useful. Coverage strings, JSON keys and the readable report are not linked
+into release output.
+
+Static source audit evidence from the rollback worktree establishes the
+starting backlog, not the final generated gate:
+
+- 232 expert trainer entries and 740 trainer Pokémon resolved to 400 distinct
+  runtime-reachable implemented moves;
+- none of those 400 were engine-unimplemented after applying runtime filtering;
+- the removed legacy strategic evaluator fully modelled 129 of the 400;
+- 48 status moves (47 effect families) had no strategic model; and
+- 223 damaging moves (106 effect families) had ordinary damage modelled but
+  their strategic effect semantics omitted.
+
+The broader implemented move catalog contained additional gaps, so the tracked
+report must eventually cover the actual player-obtainable move surface rather
+than assuming expert-trainer coverage is sufficient. Resolve the recorded
+shared-learnset/form caveat as part of that work. These counts are a backlog
+baseline, not a build or release gate.
+
+## 7.3 Strategic semantics and dynamic roles
+
+Do not assign a permanent role to a species. Derive independent capability
+scores from its exact current moves, stats, ability, item, health, field,
+teammates and opponent branches. At minimum derive defensive-pivot, immediate-
+attacker, setup, recovery/support and sacrifice/tempo capabilities. A Pokémon
+may satisfy several roles; the common resulting-position screen lets those
+capabilities compete without fixed role labels. Shortlisting never overrides
+the unified final action utility.
+
+The semantics registry describes what an action does. The planner decides
+whether that result is useful. For example, a Defense drop descriptor supplies
+the stage delta and switch-removal behavior; the planner determines whether
+Leer plus stronger attacks beats immediate attacks after survival and likely
+switching are included.
 
 # 8. Tactical evaluation and caching
 
 ## 8.1 Tactical primitives
 
-The core must represent:
+Use signed 16-bit utility with values clamped away from a dedicated invalid
+sentinel. Use Q8 probabilities `0..255`; do not use floating point. Normalize
+HP exchange so 100 utility points represent one complete HP bar. Preserve raw
+HP damage as well, because KO thresholds and turns-to-KO must not be inferred
+from normalized percentages alone.
 
-- expected and conservative damage;
-- type immunity/resistance/weakness and STAB;
-- accuracy, priority and effective speed order;
-- current HP and KO thresholds;
-- fixed-damage and common variable-power moves;
-- status legality and immediate value;
-- recovery and survival;
-- entry hazards and switch-in survival;
-- supported items and abilities; and
-- current stages, weather, terrain/field effects and screens where implemented.
+The core represents expected/conservative damage, all sixteen standard damage
+rolls when a KO threshold matters, accuracy, priority, effective speed, fixed
+and variable power, current HP, status/stage legality, recovery, residuals,
+hazards, screens, weather/field state and reachable item/ability interactions.
+The production battle RNG is never consumed by evaluation.
 
-The production battle RNG is never consumed by evaluation. Use expected or
-bounded conservative values.
+### 8.1.1 Legality and effective move
 
-## 8.2 Per-decision cache
+Before scoring, reject an action that cannot execute because of PP, disabled or
+locked state, trapping/switch legality, target legality, status, Taunt-like
+restrictions or another reachable mechanic. Forced Struggle is a dedicated
+legal action. Impossible actions receive the invalid sentinel, not a low
+preference score.
+
+For a legal move resolve split, effective type, variable/fixed power, priority,
+accuracy rules, target and any move-specific precondition through existing
+numeric data plus the generated semantic recipe. This step also identifies
+whether critical, multi-hit, recoil/drain, charge/recharge, pivot, phasing or
+other non-ordinary handling is required.
+
+### 8.1.2 Damage and KO calculation
+
+For ordinary damage, calculate effective offensive and defensive stats from
+the exact snapshot and stages, select the physical/special path, then apply the
+engine's integer base formula:
+
+```text
+base = (((2 * level / 5 + 2) * power * attack / defense) / 50) + 2
+```
+
+Use audited 32-bit intermediates and reproduce modifier order where integer
+rounding changes the result. Apply critical-stage rules, burn/comparable
+penalties, STAB, type immunity/effectiveness, weather, screens, ability, held
+item and move-specific modifiers. Reachable fixed-damage and variable-power
+moves use semantic handlers rather than fabricated ordinary power.
+
+When a KO threshold matters, calculate the sixteen 85–100% damage rolls and
+derive minimum, maximum, expected damage and exact roll-count KO probability,
+multiplied by effective hit probability. Fast screening may use bounded
+expected/conservative summaries; retained pairs use the threshold result.
+Immunity is resolved before damage and remains an explicit catastrophic
+stay-branch outcome where appropriate.
+
+The current compact resident pass does not yet enumerate those sixteen rolls.
+It calculates one accuracy-adjusted damage estimate, caps only the HP actually
+lost when producing primary utility, and retains the uncapped estimate as a
+compact signed value, saturated only at the representation limit. Pressure is
+not overkill utility: it is consulted only when two actions have exactly the
+same final primary score. This prevents two
+apparently lethal attacks from collapsing to an arbitrary move-slot choice
+while preserving the utility scale and resident budget.
+
+### 8.1.3 Deterministic action-pair transition
+
+Evaluate a trainer action and one specific player action in an isolated compact
+state:
+
+1. apply voluntary switches before ordinary moves, including hazards and
+   switch-triggered state;
+2. if both switch, evaluate the resulting matchup without inventing an attack;
+3. otherwise order moves by priority, effective Speed, Trick Room and supported
+   modifiers;
+4. treat known unequal Speed as deterministic and represent only a true Speed
+   tie or an explicitly stochastic order mechanic as weighted outcomes;
+5. apply the first action's miss/hit/effect branches;
+6. omit the second action if its user fainted or became unable to act;
+7. apply the second action; and
+8. apply supported end-of-turn recovery, status, weather, seed and comparable
+   residual effects.
+
+A player switch means the trainer's selected move is evaluated against the
+specific incoming Pokémon. A trainer switch means the player's selected move
+is evaluated against the incoming trainer Pokémon. The simulator mutates only
+its local state and never executes production battle scripts.
+
+The resident implementation represents consecutive mechanics with one generic
+active move state: forced move, previous move, forced progress, repeat progress
+and flags. Move IDs are mapped by generated semantics to normal,
+force-repeat-scaling or repeat-scaling transitions. It does not add a field for
+each exceptional move. Rollout and Ice Ball use the forced scaling transition;
+Fury Cutter uses the freely selectable repeat-scaling transition. Only active
+simulated battlers carry this state, so party size does not multiply it.
+
+### 8.1.4 Common utility scale
+
+The immediate HP component is:
+
+```text
+damage dealt  =  256 * playerHpLost / playerMaxHp
+damage taken  = -256 * trainerHpLost / trainerMaxHp
+```
+
+Add positional changes for fainting, remaining usable party members, action
+denial, status, stages, hazards/screens, recovery, residuals, switching tempo
+and the resulting matchup. Avoid flat bonuses where a mechanic can instead be
+valued through the damage, survival or actions it changes. For example, a
+Defense boost is worth its reduction in future incoming damage and increased
+survival, not an unconditional `+Defense` constant. KO/party terms still exist
+because equal HP percentages do not make losing a Pokémon strategically
+neutral.
+
+Each retained outcome supplies immediate utility, resulting state, survival
+margin and enough flags for coverage/catastrophe classification. The analytic
+plan evaluator in Section 9 supplies the discounted continuation; it does not
+double-count the first-turn HP/state delta.
+
+Final deterministic selection is lexicographic. Higher primary utility always
+wins. If primary scores are exactly equal, prefer the action with greater
+uncapped active-target damage pressure, then retain stable action order. The
+pressure tie-break does not replace concrete switch-branch coverage: pairwise
+utility still decides whether a safer coverage move or switch is strategically
+better.
+
+## 8.2 Conditional secondary effects
+
+Secondary effects are probabilistic state transitions, not flat move bonuses.
+For each AI-action/player-branch pair calculate the applicability and
+probability of each effect from:
+
+- hit probability and the move's `effectChance`;
+- effective priority/speed order, including Trick Room and supported modifiers;
+- whether the target survives and still has an action to lose;
+- target state, immunity and effect-prevention ability/item rules;
+- effect amplification or suppression such as Serene Grace or Sheer Force;
+- whether the player attacks, uses support or switches; and
+- whether the effect benefits the current turn, future turns or the user's
+  resulting state.
+
+Classify timing explicitly. Action denial such as flinch has value only when
+the user acts first and the surviving target still has an action. Current-turn
+mitigation such as an Attack drop has an immediate component only before the
+attack, but may retain future value afterward. Persistent status retains future
+value whenever it is legal and the target survives. User-side boosts may retain
+value even when the target is KOed.
+
+Fast scoring uses bounded expected value. Retained expensive pairs may branch
+into effect/no-effect/miss transitions and weight their resulting utilities
+without consuming production battle RNG. For example, ordinary faster Rock
+Slide starts from `90% * 30% = 27%` flinch probability before modifiers;
+slower Rock Slide, a KO, or a player switch gives the flinch component zero
+value while preserving its damage result.
+
+Random-selection actions such as Metronome, Assist or Sleep Talk receive a low
+but positive bounded score only when legal and capable of producing an action.
+They normally rank below reliable useful choices, but variance/desperation
+weighting may admit them when conventional lines are unlikely to avoid defeat.
+Do not expand every possible called move into the main search. A move that
+cannot function in the current state is invalid, not positive.
+
+## 8.3 Per-decision cache
 
 Exact player data removes belief expansion but not repeated arithmetic. The
-transient planner uses small fixed per-invocation caches keyed by sanitized
+resident planner uses small fixed per-decision caches keyed by sanitized
 view/action identity:
 
 - damage for retained attacker/target/move combinations;
-- incoming threat for retained player branches;
+- incoming threat for concrete player branches;
 - effective speed/priority relationships;
 - hazard damage for shortlisted switches; and
 - post-stage best damage used by plan summaries.
 
-Use compact transient stack/static workspace or tightly bounded resident
-request/result scratch where lifetime requires it. Do not add a large
-permanent matrix to overlay-130 BSS.
+Use compact stack or tightly bounded battle-owned scratch where lifetime
+requires it. Do not add a large permanent matrix to overlay-130 BSS.
 
-## 8.3 Immunity and tactical-safety rules
+The command hook computes one complete decision and the move hook consumes it.
+Cache identity is the turn, battler, active party slot and decision mode. Do
+not add a `stateFingerprint`: no battle mechanics should execute between the
+paired hooks, a 16-bit checksum can collide and hashing adds unnecessary code.
+If Phase 1 proves a legal same-turn/same-slot mutation path, introduce an
+explicit monotonically controlled decision generation instead. Cache scratch
+is overwritten at the next decision, cleared at battle teardown and never
+persisted.
+
+## 8.4 Immunity and tactical-safety rules
 
 - A damaging move that deals zero to the current target records a catastrophic
   stay-branch outcome, not a neutral zero.
@@ -574,9 +967,10 @@ permanent matrix to overlay-130 BSS.
   switch branch is sufficiently credible and no safe alternative satisfies the
   configured coverage/regret constraints.
 - If a safe legal action covers the current target and the likely switch, an
-  immunity gamble cannot enter safe near-best sampling.
-- The same failed specialized prediction receives a short-term repeat penalty
-  unless new state materially changes its probability or payoff.
+  immunity gamble cannot enter the robust policy or a calculated mixed
+  strategy.
+- Prior read outcomes influence branch probabilities and mixup breadth through
+  learned cases; do not apply an automatic identical-read repeat penalty.
 
 # 9. Multi-turn plan evaluation
 
@@ -657,12 +1051,63 @@ The exact representation should be smaller if the same semantics can be
 derived. The planner evaluates only the best follow-up action for a simulated
 state; it does not branch over another complete player response after that.
 
+## 9.4 Plan generation and survival accounting
+
+For each promising first action, apply bounded state transitions and retain
+effect ownership, duration and removal rules rather than assigning a flat
+setup bonus. Relevant continuations include:
+
+- repeat the best direct attack;
+- setup once or repeatedly while another use improves the projected result,
+  then use the best post-setup attack/support continuation;
+- apply a target drop/status, then exploit it;
+- recover, then attack/setup if survival changes;
+- use support/screens/hazards, then exploit their remaining turns;
+- switch, then take the incoming Pokémon's best plan; and
+- use a pivot/phasing action, then value the resulting matchup.
+
+Cap summaries at `AI_CFG_PLAN_TURN_CAP`. For each template calculate trainer
+turns to payoff, opposing actions received before payoff, expected and
+conservative trainer HP remaining, accuracy/effect success, residuals, likely
+switch clearing, and resulting position after a KO or switch. Recovery receives
+value only for HP actually restored and the additional actions/survival it
+creates; setup that cannot survive to use its benefit is rejected.
+
+This also applies defensively. If the active player Pokémon can deal only
+5–10%, the trainer compares using that low-pressure window for self setup with
+switching immediately to a reserve that dies in three hits. Setup is favored
+only when the current trainer survives the setup sequence, retains the boost,
+and its post-setup damage/speed/survival against credible current or reserve
+targets exceeds the best switch/direct plan. The evaluator does not award
+setup merely because the current incoming damage is low.
+
+Classify strategic state by where it persists:
+
+- side-duration effects such as Light Screen, Reflect and Tailwind survive
+  switching and retain their exact remaining turns; known removal such as
+  Brick Break is a concrete player response with its own opportunity cost;
+- user-bound boosts survive player switches but disappear when the trainer
+  leaves;
+- target-bound drops, seed and volatile control may deliver immediate value
+  and switch-forcing tempo even when the player can clear them next turn; and
+- entry hazards are valued over the actual living reserves, their HP/types,
+  entry cost, removal options and probability of entering.
+
+For a target-bound effect, value the guaranteed current-turn change, expected
+retained turns and the position created by a forced switch. A healthy free
+counter-switch sharply reduces future drop value; depleted reserves, hazards,
+fainted counters, trapping and last-Pokémon states increase it. Persistent
+side effects are valued through the damage, action order and viable team plans
+they change, not merely because they are difficult to remove. The planner is
+receding-horizon: it evaluates the resulting real state again next turn rather
+than blindly committing to the remainder of a setup sequence.
+
 # 10. Trainer switching and post-KO selection
 
 ## 10.1 Cheap screen of all reserves
 
-The transient planner scores every legal reserve using inexpensive exact-state
-descriptors supplied by resident code:
+The resident planner scores every legal reserve using inexpensive exact-state
+descriptors:
 
 - hazard damage and survival after entry;
 - expected incoming damage, resistance or immunity;
@@ -670,28 +1115,58 @@ descriptors supplied by resident code:
 - speed and revenge-KO pressure;
 - best direct attack;
 - recovery, setup, status, screens or other support value; and
-- recent-switch/zero-progress penalties.
+- resulting utility against every retained player response.
 
-## 10.2 Fully evaluate three role-distinct candidates
+Do not add a mandatory action after entry, recent-switch penalty, switch
+cooldown or speculative loop breaker. Switching competes normally on every
+turn. If repeated switching is ever observed as a real pathology, investigate
+the prediction and state evaluation that makes each switch optimal before
+adding any special-case restriction.
 
-Retain up to three distinct candidates:
+## 10.2 Admit the two strongest resulting positions
 
-1. safest defensive pivot;
-2. strongest immediate attacker/revenge killer; and
-3. best setup/support option.
+Use one shared screen combining entry survival, best immediate pressure,
+expected opposing pressure and remaining HP. These components naturally admit
+defensive pivots and immediate attackers without three parallel role-winner
+arrays. A support Pokémon can still qualify through its safe resulting
+matchup, but the cheap shortlist does not rescan all of its status moves;
+their exact utility is evaluated when the Pokémon becomes active. This is a
+deliberate resident-size tradeoff with small expected player-visible impact.
 
-Deduplicate when one Pokémon fills multiple roles. Fully evaluate those three
-against the retained player branches. At most two switch actions enter the
-final four searched AI actions, leaving room for at least two move actions.
+Retain at most the two highest-value distinct reserves and fully evaluate them against every
+concrete player branch during the first-turn pass. At most two switch actions
+enter the final searched action set, leaving room for move actions.
+
+The applied shortlist keeps the two best unified screening scores while
+walking every legal reserve. An ordinary switch-in must
+survive predicted entry damage and improve the common resulting-position score
+by `AI_CFG_SWITCH_MIN_IMPROVEMENT`, except when the active Pokémon is already
+expected to faint. This is matchup eligibility, not a recent-switch cooldown.
 
 Post-KO replacement uses the same role and plan model but has no “switch costs
 this turn” penalty. It enters through the guarded seam in Section 3.4 and has
 its own cache mode/generation.
 
+## 10.3 Engine switch handoff
+
+For a legal voluntary switch, the resident integration bridge writes the
+validated party slot to `BattleStruct::ai_reshuffle_sel_mons_no[battler]` and
+returns `SELECT_POKEMON_COMMAND`. This field is the existing HGSS handoff for
+the AI's selected reserve; writing it does not perform the switch or mutate the
+active slot. The ordinary battle controller consumes it and executes normal
+switch processing.
+
+Validate the slot immediately before writing: it must exist, be alive, not be
+the active slot, remain switch-legal and match the cached selected action.
+Post-KO replacement uses the separate guarded selector in Section 3.4 rather
+than pretending to be a voluntary turn switch.
+
 # 11. Player action prediction
 
 The AI knows exactly which actions the player possesses but not which action
 the player chose. Possession inference is removed; choice prediction remains.
+Prediction produces a calibrated distribution over concrete actions, not one
+unqualified guessed action. Bag actions are absent because Bag use is disabled.
 
 ## 11.1 Candidate generation
 
@@ -701,41 +1176,111 @@ Generate:
 - every legal player switch destination; and
 - forced actions where applicable.
 
-Cheaply score candidates from the player's perspective using exact state.
-Retain four primary branches and up to twelve compact total identities. Low
-probability but legal actions remain identifiable tail actions; “tail” no
-longer means an unknown move.
+Keep each move and each destination distinct during immediate evaluation. In
+ordinary singles this is at most four moves plus five switch destinations, so
+discarding branches before cheap coverage analysis provides little benefit.
+Strategic classes support learning but never replace concrete move/switch
+identities in the current decision.
 
-## 11.2 Initial probability model
+## 11.2 Visible trainer threat envelope
 
-Weights may consider:
+Avoid circularly predicting the player against the trainer's not-yet-selected
+action. First construct a small visible threat envelope from cheap trainer
+scores: strongest immediate/priority attack, credible coverage, credible
+setup/support and best obvious switch. Score player choices against that set,
+representing what a skilled player could reasonably anticipate from public
+state rather than leaking the eventual hidden trainer selection.
+
+A player switch is scored by its survival against credible trainer attacks,
+entry hazards, speed, threat back, recovery/setup opportunity and value of
+preserving the active Pokémon. Do not choose a predicted destination merely by
+highest HP.
+
+## 11.3 Probability model
+
+Each concrete action receives:
+
+```text
+weight = rational tactical weight
+       * recent-battle behaviour adjustment
+       * persistent abstract-behaviour adjustment
+```
+
+The rational component considers:
 
 - KO and damage value;
-- survival and speed;
+- priority, survival and speed;
 - setup/recovery/status value;
 - switch matchup, hazard cost and remaining HP;
 - whether the active Pokémon is threatened with a KO;
-- trainer-local cases; and
-- abstract global read/surprise calibration.
+- preserving a valuable low-health Pokémon; and
+- whether the choice covers several credible trainer threats.
 
-Do not pick the predicted switch merely by highest HP. Rank every legal player
-reserve by its ability to survive the trainer's likely attacks, threaten back,
-support another switch or create setup pressure.
+Apply the eight recent-battle cases and 32 abstract persistent cases only after
+the rational baseline. Convert adjusted scores to Q8 probabilities with a
+small fixed-point weighting function owned by `ai_config.h`. Give every viable
+action a nonzero smoothing floor, normalize to 255 and prevent one observation
+from creating certainty. Calibration changes distribution sharpness; it never
+invents or removes a legal action.
 
-Use smoothing so a single observation cannot create certainty.
+The resident baseline assigns move and switch probability mass separately,
+distributes each mass across its concrete actions by tactical weight and gives
+integer-normalization remainder to the strongest member of that group. A
+mechanically forced move is the sole action with probability 255. Later
+calibration work adjusts these weights rather than replacing this legal-action
+distribution.
+
+## 11.4 Cheap complete response scan
+
+Before shortlisting trainer actions, cheaply scan every legal trainer action
+against every concrete player action—normally no more than roughly 9x9 in
+singles. Stream the results rather than retaining a matrix. For each player
+branch identify its best trainer reply, safest reply, specialized high-upside
+reply and consequence if uncovered.
+
+Build the four-action trainer shortlist from distinct needs, then deduplicate:
+
+1. best expected-value action;
+2. best robust/minimum-regret action;
+3. best response to the highest-probability branch;
+4. best response to the most dangerous credible branch; and
+5. best credible switch or strategic action.
+
+This prevents an unconditional top-four score from deleting the one coverage
+move or pivot required to answer the predicted switch.
+
+## 11.5 Reaction and anti-exploitation
+
+After the player's actual action becomes public, resolve the previous
+prediction before constructing the next distribution. Update the matching
+recent case and bounded abstract persistent tendency using only information
+already revealed by play. Examples include switching when threatened by a KO,
+using an immunity pivot, preserving low HP, recovering at a threshold, setting
+up into low pressure or repeatedly countering the trainer's apparent threat.
+
+Variation is not a presentation feature. Remove dominated actions and select
+the best prediction/coverage policy. A mixed strategy is permitted only among
+non-dominated actions when its calculated distribution reduces exploitability
+or responds to evidence that the player is counter-reading the trainer. Its
+weights come from player-action probabilities and pairwise payoffs, not an
+arbitrary near-best randomizer. Do not apply a blind repeat or switch penalty:
+clearly superior actions may repeat.
 
 # 12. Pairwise evaluation, coverage and selection
 
 ## 12.1 Bounded search
 
-- Fast-score all legal AI actions.
-- Retain at most four AI actions, including the best move and a switch when
-  each class has a credible candidate.
-- Retain four primary player branches.
-- Calculate direct pairwise utility for all retained pairs.
-- Apply the more expensive future-plan evaluation to at most a relevant 3x3
-  subset.
-- Unsupported simulated mechanics retain their direct pairwise value.
+- Generate and probability-score every concrete legal player move/switch.
+- Run the cheap complete trainer-action/player-action response scan.
+- Retain at most four role/response-distinct trainer actions, including a move
+  and switch when each class has a credible candidate.
+- Calculate full first-turn pairwise utility for all four retained trainer
+  actions against every concrete player branch (normally at most 4x9).
+- Select at most four highest-relevance player branches as deep candidates and
+  apply expensive future-plan evaluation to at most a relevant 3x3 subset.
+- Mechanics intentionally approximated in the bounded future transition retain
+  their complete direct pairwise value; this is not permission for an unknown
+  move effect.
 - Stream results into per-action summaries; do not retain a production matrix
   after the decision.
 
@@ -747,18 +1292,76 @@ For each AI action and player branch, calculate:
 - regret relative to the best available response to that branch; and
 - whether the outcome meets both minimum utility and maximum regret.
 
+```text
+expected(a) = sum(probability(b) * utility(a, b))
+regret(a,b) = utility(best reasonable response to b, b) - utility(a,b)
+robust(a)   = expected(a)
+            - riskWeight * expectedDownside(a)
+            - regretWeight * maximumCredibleRegret(a)
+```
+
+The applied first resident pass implements the probability-weighted portion
+without an absolute-worst shortcut:
+
+```text
+expectedDownside(a) = sum(p(b) * max(0, expected(a) - utility(a,b)))
+score(a) = expected(a) - riskWeight * expectedDownside(a)
+```
+
+Every nonterminal first-turn pair then receives the same discounted next-turn
+best-action evaluation. This equal horizon is applied to all four move/switch
+pair shapes; no action receives extra future depth merely because it is a
+switch. Forced consecutive-move state is carried only on the hit branch.
+
+Utilities for at most nine concrete player branches are retained only in one
+reused 18-byte stack array while scoring an action. Regret and mixed-strategy
+selection remain later tuning work; deterministic maximum score is used in
+the meantime.
+
+Forced continuations and speculative continuations use separate discounts. A
+successful Rollout switch-in branch carries the lock and progression into the
+following comparison; a miss clears it. If the next trainer Pokémon is faster
+and KOs first, the forced attack contributes no invented damage. An unlocked
+opponent receives its normal switch choices, including after a trainer
+sacrifice, so replacement pressure is not treated as a guaranteed revenge KO.
+
+Use the cheap complete response scan to establish the best reasonable response
+for regret; comparing only the four retained trainer actions would understate
+regret when shortlisting omitted a necessary counter.
+
 Covered mass is the sum of probabilities for covered branches. Selection:
 
 1. If one or more actions meet `robustCoverageTarget`, only those actions are
    robust-eligible.
-2. Choose among safe near-best robust actions unless configured payoff clearly
-   justifies a specialized prediction.
-3. If no action meets the coverage target, compare weighted value, worst
+2. Remove actions dominated across all credible branches. Applicable
+   secondary effects, accuracy, priority, PP, contact consequences and switch
+   coverage participate in dominance, so an otherwise-equivalent attack with
+   a usable flinch dominates one with no compensating benefit.
+3. Select the best robust action unless configured payoff clearly justifies a
+   specialized prediction.
+4. If no action meets the coverage target, compare weighted value, worst
    credible outcome and regret explicitly.
-4. An immunity or other catastrophic credible branch cannot be hidden by a
+5. An immunity or other catastrophic credible branch cannot be hidden by a
    small coverage bonus.
-5. Random sampling occurs only among actions that already satisfy the same
-   tactical-safety class.
+6. Sample only when a calculated non-dominated mixed strategy improves
+   prediction warfare or reduces exploitability. An exact tie may use a stable
+   deterministic tie-break when no mixed strategy is justified.
+
+Match position selects configuration bands rather than changing mechanics.
+When comfortably ahead, require high coverage and strongly veto catastrophic
+credible or low-probability outcomes. In an even battle, allow calculated
+mixups. When behind, accept more prediction risk. When conventional lines are
+very unlikely to avoid defeat, admit narrow hard reads and low-positive
+random-selection move effects whose upside can recover the game. This does not
+authorize random selection among ordinary AI actions.
+
+A specialized prediction is eligible only when its probability-weighted
+payoff exceeds the best robust line by the configured margin, its uncovered
+risk fits the current position band and the supporting behavioural evidence is
+sufficient. Thus an Electric move into an active Ground Pokémon is normally
+rejected when safe coverage protects a winning position, but can be selected
+as a deliberate switch read when the predicted destination/payoff and losing
+position justify the risk.
 
 This corrects the discarded overlay evaluator, which accepted a
 `coverageTarget` field but did not use it as an eligibility constraint.
@@ -774,7 +1377,7 @@ creates no commitment.
 ```c
 typedef struct {
     u16 chosenActionKey;
-    u16 coveredPrimaryMask;
+    u16 coveredBranchMask;
     u8 active;
     u8 situationClass;
     u8 predictedClass;
@@ -794,43 +1397,77 @@ end.
 | Chosen action failed, and another reasonable action could have covered it | Player read win |
 | No reasonable action could cover it | Neutral/unavoidable |
 | Robust action was chosen | No read |
-| Actual legal action was retained only in tail and was counterable | Counterable surprise |
-| Tail action was not counterable | Neutral surprise |
+| Actual low-probability legal action was counterable | Counterable surprise |
+| Low-probability action was not counterable | Neutral surprise |
 
 Exact loadout knowledge removes the old “newly revealed unknown move” class.
 
-## 13.3 Trainer-local cases
+## 13.3 Recent-battle cases
 
-Retain eight compact situation/action/outcome cases for the current trainer.
-They may influence repeated choices in similar situations and are cleared
-before an unrelated trainer battle. Target eight bytes per case and enforce the
-compiled size.
+Retain a small fixed recent-history window for the current battle, initially up
+to eight compact situation/action/outcome entries. It supports immediate
+adaptation and is cleared before an unrelated trainer battle. It does not apply
+an automatic penalty to repeating a failed read; repetition changes only when
+the learned action distribution, match position, coverage or mixup value makes
+another choice better.
 
-## 13.4 Cross-battle calibration
+## 13.4 Persistent cross-battle cases
 
-Only two abstract clamped bytes may persist:
+Persist 32 abstract player-behaviour cases shared across battles. Each case is
+targeted at 6–8 bytes and may encode only strategic classes such as situation,
+predicted action, actual action, result, confidence and recency. It may not
+encode trainer, species, form, move, item, ability, party-slot or matchup
+identity. Examples include switching when threatened by a KO, attacking into a
+setup opportunity, preserving a low-health Pokémon or selecting an immunity
+pivot.
 
-```c
-typedef struct {
-    s8 readBalance;
-    u8 surpriseTendency;
-} AIPredictionCalibration;
-```
+A small versioned header may retain aggregate `readBalance`,
+`surpriseTendency`, count and replacement cursor fields. The cases occupy
+192–256 bytes and the complete logical store targets at most 272 bytes before
+measured save-block alignment. Save
+layout, serialization, checksum behavior, initialization, migration and corrupt
+data handling must be reviewed before enabling persistence. Invalid or unknown
+versions reset only this AI store to neutral defaults.
 
-They may adjust probability sharpness, robust-versus-specialized tolerance,
-tail mass and safe mixup breadth. They may not encode species, move, item,
-ability, slot, trainer or matchup identity.
+Cases adjust action-probability sharpness, robust-versus-specialized tolerance,
+low-probability mass, desperation variance and safe mixup breadth. They do not
+force a particular counteraction or impose a repeat ban.
 
-A failed specialized read applies both the normal commitment outcome and a
-short-term trainer-local penalty against immediately repeating the identical
-read. New evidence or a materially changed state may clear that penalty.
+Resolve and update the in-memory working copy after an action is revealed, but
+write the versioned persistent store through the audited save owner rather than
+performing ad-hoc save writes from the decision hot path. Battle end resolves
+the final outstanding commitment before the store is finalized. Save failure
+or invalid version resets/ignores only AI calibration and never blocks battle
+progress.
 
-# 14. Transient overlay contract
+# 14. Resident placement and transient approval gate
 
-The transient overlay is code and local static data loaded into a fixed reusable
-EWRAM region. It is not a temporary heap allocation.
+The production target is entirely resident in overlay 130. A transient overlay
+is not part of the approved architecture. Running out of resident capacity is a
+stop condition, not authorization to create one.
 
-## 14.1 Link/build enforcement
+## 14.1 Resident fit enforcement
+
+- Measure final `output_battle.bin`, every allocated section end, AI object
+  text/data/BSS, largest symbols, stack and battle-heap workspace at each phase.
+- Preserve at least 500 bytes of linked overlay-130 headroom.
+- Reduce duplicated mechanics, tables, literals and workspace before proposing
+  another placement; do not weaken correctness or coverage silently.
+- If the complete design still cannot fit, stop implementation and present the
+  measurements, attempted reductions, remaining options and expected transient
+  runtime cost to the user.
+
+## 14.2 Required explicit approval
+
+Before any transient work, ask the user explicitly. General authorization to
+implement the TDD, fix the AI, continue work or build the ROM is not approval.
+Without a specific affirmative answer, do not reserve an overlay ID, add a
+linker region/image, add loader or unload code, create a fixed entrypoint, or
+move any evaluator function or table into the individual-overlay region.
+
+## 14.3 Conditional safety contract after approval
+
+Only if a later TDD amendment and implementation are explicitly approved:
 
 - Reserve a unique ID, expected to be 150, only after a fresh uniqueness check.
 - Link at `0x023C0400` with region length `0x3C00`.
@@ -845,7 +1482,7 @@ EWRAM region. It is not a temporary heap allocation.
 These constraints make accidental resident/helper calls a build failure. They
 do not replace source review of inline assembly or raw addresses.
 
-## 14.2 Resident wrapper
+## 14.4 Conditional resident wrapper
 
 One resident wrapper:
 
@@ -861,7 +1498,7 @@ One resident wrapper:
 Never add overlay 150 to an automatic priority list that unloads another
 overlay. If the region is occupied, skip the planner and preserve the owner.
 
-## 14.3 Critical prohibitions
+## 14.5 Conditional critical prohibitions
 
 While executing at `0x023C0400`, transient code must never:
 
@@ -885,30 +1522,29 @@ Development measurement must separately time:
 - exact snapshot refresh;
 - legal action generation;
 - tactical primitive/cache construction;
+- move-semantics and conditional-secondary evaluation;
 - trainer switch screening;
-- request construction;
-- overlay load;
-- transient plan/search evaluation;
-- unload/result validation; and
+- player distribution and plan/search evaluation;
+- final validation/sampling; and
 - total decision time.
 
 The discarded attempt's visible pause cannot be attributed to overlay loading
 alone: its overlay was only 676 bytes while resident code repeatedly performed
-damage, personal-data, threat, reserve and pair calculations. Conversely, the
-load is synchronous fixed cost and must still be measured rather than assumed
-cheap.
+damage, personal-data, threat, reserve and pair calculations. The resident
+design removes the load entirely and must still eliminate repeated mechanics
+work through the per-decision caches.
 
 ## 15.2 Runtime gates
 
 - Ordinary decisions target at most two video frames total.
-- Forced actions do not load the planner.
-- Command and move hooks load at most once through the decision cache.
-- No initial “obvious decision” fast path is required by v0.5.
+- Forced actions skip unnecessary planning.
+- Command and move hooks evaluate at most once through the decision cache.
+- No initial “obvious decision” fast path is required by v0.6.
 - If runtime exceeds the target, optimize duplicated primitives and reduce the
-  expensive 3x3 subset before removing player prediction breadth.
-- If measured overlay load alone prevents the target, stop and reconsider the
-  placement/lifetime architecture; do not consume the overlay-130 reserve as
-  an unmeasured workaround.
+  expensive 3x3 subset before removing complete immediate player-action
+  coverage.
+- Runtime pressure does not authorize a transient overlay; any such proposal
+  follows the explicit approval gate in Section 14.
 
 # 16. Decision pipeline
 
@@ -920,17 +1556,19 @@ AI_ThinkExpertSingles
     refresh exact sanitized state
     enumerate legal AI/player moves and switches
     build compact Pokémon, move and field descriptors
-    build pointer-free request
-    synchronously run transient planner once
-        build compact tactical caches
-        cheaply screen all trainer reserves
-        retain up to three reserve roles
-        fast-score all AI actions
-        retain four AI actions (at most two switches)
-        generate the player action distribution
-        evaluate plans, coverage and ranking
-    validate result resident-side
-    select one safe near-best action with battle RNG
+    build compact tactical caches
+    cheaply screen all trainer reserves
+    retain the two best distinct reserve positions
+    generate every legal player move/switch and its probability
+    build the visible trainer threat envelope
+    cheaply scan every legal trainer action x player action
+    retain every legal move plus up to two highest-position switches
+    fully evaluate retained actions x every concrete player branch
+    deeply evaluate only the relevant 3x3 future subset
+    calculate plans, coverage, regret and ranking
+    validate the selected action
+    remove dominated actions and select the best prediction/coverage policy
+    sample only if a calculated mixed strategy is justified
     cache decision and any genuine prediction commitment
     write command/move/switch fields expected by HGSS
 ```
@@ -951,10 +1589,11 @@ decision.
 - Record the exact source revision and dirty state.
 - Build the clean original-HGSS-AI baseline only when explicitly authorized.
 - Measure `output_battle.bin`, allocated section ends, AI object text/BSS,
-  largest symbols and exact 1 KiB headroom.
+  largest symbols and exact 500-byte headroom.
 - Verify the legacy hooks and runtime references are absent. Retain their
   verified addresses as documentation for Phase 1.
-- Verify overlay ID availability and the fixed transient region.
+- Generate the initial implemented/reachable move-semantics coverage inventory,
+  applying the engine's unimplemented-move filters.
 - Create a regression inventory from Section 3.
 
 **Exit:** baseline behavior and all memory budgets are measured rather than
@@ -963,6 +1602,9 @@ estimated.
 ## Phase 1 — Integration shell and command-blind boundary
 
 - Add the singles/unsupported-format gate before custom state access.
+- Audit every `BattleStruct` allocation/clear and assembly size assumption,
+  append the bounded `AIExpertBattleState`, and prove existing member offsets
+  remain unchanged.
 - Reintroduce command/move wrappers at the verified hook sites, original
   fallback, a new battle reset and active-slot cache protection.
 - Reintroduce the guarded post-KO seam.
@@ -984,34 +1626,54 @@ without reading the player's selected action.
 **Exit:** no possession inference or repeated personal-data lookup is required
 inside evaluator loops.
 
-**Resident BSS/code and stack checkpoints required.**
+**Battle-heap state, resident BSS/code and stack checkpoints required.**
 
-## Phase 3 — Transient shell
-
-- Add the explicit ID/linker region, entry assertion and zero-import build.
-- Add static poison/undefined-symbol checks.
-- Implement collision, load, invalid-result and unload-once handling.
-- Measure load/unload independently with a trivial request.
-
-**Exit:** safe round trip and fallback are proven before planner complexity.
-
-## Phase 4 — Tactical core and evaluator coverage
+## Phase 3 — Resident tactical core and coverage foundation
 
 - Implement exact damage, KO, immunity, speed, priority, accuracy, recovery and
   status legality.
-- Define compact move/field descriptors and implement transient per-decision
-  primitive caching without resident mechanics imports.
-- Add individual conservative fallback for evaluator-unknown strategic
-  effects and generate the coverage report.
+- Add `include/ai_config.h` with one production configuration, compile-time
+  range/relationship checks and no configurable mechanical truths.
+- Define the compact semantics registry, its single-translation-unit generated
+  header inclusion, sparse move overrides, dynamic role capabilities and
+  resident per-decision primitive caches.
+- Implement the integer/Q8 utility model, sixteen-roll KO thresholds, ordered
+  action-pair transitions and streamed outcome summaries from Section 8.
+- Maintain the nonblocking semantics coverage report for implemented moves
+  reachable by an expert trainer or player; ignore engine-unimplemented moves.
+- Retain an action-local defensive fallback and record incomplete or deliberate
+  conservative handling in the report without blocking ordinary builds.
 - Make immunity outcomes tactically catastrophic where appropriate.
 
 **Exit:** obvious KOs, immunities and legal tactical choices order correctly.
 
+**Resident code/data/BSS, battle-heap scratch and stack checkpoint required.**
+
+## Phase 4 — Complete move semantics and probabilistic outcomes
+
+- Implement reusable handlers for all reachable variable power, fixed damage,
+  multi-hit, recoil/drain/sacrifice, charge/recharge/locking, priority,
+  conditional, reactive, status, stage, recovery, field, trapping, phasing,
+  pivoting, copy and random-selection mechanics.
+- Implement conditional secondary-effect applicability, probability and
+  effect/no-effect/miss outcomes without production battle RNG.
+- Give legal random-selection actions low positive desperation-aware value;
+  invalid instances remain invalid.
+- Add narrow move-specific overrides only where the effect ID is insufficient.
+
+**Exit:** reachable gaps are classified in the Markdown report, high-impact
+Needs-work entries are prioritized, and no fallback can affect another action.
+
+**Resident size checkpoint required. If the hard gate is exceeded, stop and
+ask before any transient-overlay work.**
+
 ## Phase 5 — Switching
 
 - Add hazard/survival screening for every reserve.
-- Retain three role-distinct candidates and fully evaluate them.
-- Admit at most two switches to final search.
+- Score every reserve on the common resulting-position scale and retain two.
+- Admit up to two switches to final scoring.
+- Permit switching immediately after any entry and rely on ordinary
+  prediction/state utility rather than loop penalties or cooldowns.
 - Add voluntary-switch and post-KO regression scenarios.
 
 ## Phase 6 — Multi-turn plans
@@ -1019,35 +1681,44 @@ inside evaluator loops.
 - Implement analytic attack/setup/drop/recovery/support plan summaries.
 - Account for turns to KO, incoming actions, survival and effect persistence.
 - Model player and trainer switching when valuing self boosts and target drops.
+- Retain duration/removal semantics for screens, Tailwind and hazards; include
+  immediate drain/tempo for seed and other target-bound effects.
+- Permit repeated setup and side-effect-to-switch sequences while each bounded
+  continuation improves the projected state.
 
 **Exit:** relational scenarios such as Leer plus four Tackles versus six
 Tackles produce positionally sensible choices.
 
 ## Phase 7 — Prediction, coverage and bounded planner
 
-- Generate probabilities over exact legal player actions.
-- Retain four primary branches plus compact tail identities.
-- Integrate the transient tactical, switch and plan modules into pairwise
-  branch evaluation and coverage ranking.
+- Generate smoothed probabilities over every exact legal player move/switch
+  using the visible trainer threat envelope.
+- Cheaply scan all trainer/player action pairs and use expected, robust,
+  highest-probability-counter and dangerous-branch-counter needs to construct
+  the trainer shortlist.
+- Integrate tactical, switch and plan modules into full first-turn evaluation
+  of four retained trainer actions against every concrete player branch.
 - Enforce robust coverage and regret.
-- Evaluate 4x4 direct pairs and at most a 3x3 future subset.
+- Restrict only expensive future planning to the relevant 3x3 subset.
 
-**Exit:** the overlay performs meaningful planner work rather than only ranking
-resident-precomputed pairs.
+**Exit:** the resident planner produces bounded action-aware rankings within the
+runtime and memory gates.
 
 ## Phase 8 — Commitments and calibration
 
 - Implement genuine specialized-read commitments.
 - Resolve AI win, player win, neutral and surprise outcomes.
-- Add eight trainer-local cases and failed-read repeat handling.
-- Add two abstract persistent calibration bytes only after save-layout review.
+- Add the small recent-battle case window without an automatic repeat penalty.
+- Add 32 persistent abstract player-behaviour cases and the versioned aggregate
+  header only after save-layout, serialization and migration review.
 
 ## Phase 9 — Optimization and tuning
 
-- Measure resident/transient bytes, state, stack, save growth and each timing
-  component.
-- Require the 1 KiB resident reserve, 15,360-byte transient maximum, 768-byte
-  state maximum, sub-1 KiB stack and two-frame ordinary decision target.
+- Measure resident code/data/BSS, battle-heap state, stack, aligned save growth
+  and each timing component.
+- Require the 500-byte resident reserve, 768-byte battle-owned-state maximum,
+  minimal separately reported overlay BSS, sub-1 KiB stack, <=272-byte logical
+  persistent store and two-frame ordinary decision target.
 - Tune relationships with deterministic scenarios before adding rare special
   cases.
 
@@ -1059,7 +1730,8 @@ When separately authorized, verification must cover the following.
 ## 18.1 Integration
 
 - Non-expert trainers and unsupported formats use original HGSS behavior.
-- Expert singles never selects ITEM.
+- Bag use is disabled for both sides; expert singles neither generates,
+  predicts nor selects ITEM.
 - Command and move hooks return the same cached decision.
 - Post-KO selection cannot trigger during initial setup or reuse stale state.
 - Repeated battles clear trainer-specific state.
@@ -1069,7 +1741,8 @@ When separately authorized, verification must cover the following.
 - Changing only the player's preselected command/move/switch/target fields does
   not change an AI decision with identical sanitized state and RNG.
 - Changing exact loadout or calculated stats may change the decision.
-- No transient request contains live pointers or selected-command fields.
+- No strategic helper receives selected-command fields or an unrestricted live
+  pointer capable of bypassing the sanitizer.
 
 ## 18.3 Tactical and strategic preferences
 
@@ -1083,28 +1756,39 @@ When separately authorized, verification must cover the following.
   can freely switch;
 - target drop retains full value against the last/trapped opponent;
 - useful switch-forcing tempo/hazard value is recognized;
-- evaluator-unknown action does not randomize understood actions.
+- semantics gaps are classified in the tracked coverage report and remain
+  action-local;
+- conditional secondaries have zero value when they cannot apply and retain
+  only their mechanically valid current/future value otherwise;
+- legal random-selection moves are low-positive desperation options, while
+  currently unusable instances are invalid.
 
 ## 18.4 Prediction
 
+- Every legal player move and switch remains represented in immediate
+  coverage/regret evaluation; only expensive future simulation is narrowed.
+- The trainer shortlist contains counters needed by high-probability and
+  dangerous credible branches rather than only unconditional top scores.
 - Coverage target and regret alter eligibility.
 - Robust choices create no prediction commitment.
-- Failed specialized predictions are resolved and are not blindly repeated.
+- Failed specialized predictions are resolved and influence learned action
+  probabilities without an automatic repeat ban.
 - Counterfactual-unavoidable outcomes remain neutral.
-- Trainer-local cases do not leak to unrelated trainers.
-- Global calibration contains no identifying battle data.
+- Recent-battle cases clear between unrelated trainers.
+- The 32 persistent cases contain no trainer, Pokémon, move, item, ability,
+  slot or matchup identity.
 
-## 18.5 Capacity, overlay and runtime
+## 18.5 Capacity, placement and runtime
 
-- Overlay 130 retains at least 1,024 bytes by final linked output/highest
+- Overlay 130 retains at least 500 bytes by final linked output/highest
   allocated section end.
-- Resident state/workspace is at most 768 bytes.
+- Battle-owned state/workspace is at most 768 bytes and is cleared with the
+  owning battle; overlay BSS is reported separately.
 - Worst nested AI stack is below 1 KiB.
-- Transient output is below 15,360 bytes and its entrypoint assertion passes.
-- Undefined-symbol and forbidden-call checks pass.
-- Occupied region, rejected load and invalid result preserve the existing owner
-  and select resident fallback.
-- One cached decision loads at most once and unloads exactly once after success.
+- No transient overlay artifact, ID, linker image, loader or evaluator placement
+  exists unless separately and explicitly approved after a measured resident
+  fit failure.
+- One cached decision evaluates at most once for command/move consumption.
 - Ordinary total decision time is within two video frames, with each timing
   component reported separately.
 
@@ -1113,41 +1797,60 @@ When separately authorized, verification must cover the following.
 | Risk | Mitigation |
 |---|---|
 | AI reads the selected command indirectly | Central sanitizer, explicit denylist, helper audit and command-blindness tests |
-| Overlay-130 exhaustion | Replace old AI, remove belief/inference code in favor of exact snapshots, keep planner transient, enforce 1 KiB reserve |
-| Transient nested load overwrites itself | Zero-import link, forbidden API poison, undefined-symbol check and source review |
-| Transient region is occupied | Preflight and resident fallback; never auto-unload another owner |
-| Overlay load causes visible pause | Measure load separately; ensure complex work is transient; optimize before changing architecture |
-| Resident request building dominates runtime | Exact cached stats, compact descriptors and per-decision memoization |
-| Search explodes | Four player branches/four AI actions, analytic plans, maximum 3x3 future subset |
+| Overlay-130 exhaustion | Compact shared semantics, remove inference/duplication, enforce the 500-byte reserve, stop with measurements and ask before proposing transient placement |
+| Transient overlay is introduced casually | Explicit approval gate; general implementation/build authority is insufficient |
+| Resident snapshot/evaluation dominates runtime | Exact cached stats, compact descriptors and per-decision memoization |
+| Search explodes | Stream a bounded <=9x9 cheap scan and <=4x9 full first-turn evaluation; use analytic plans and a maximum 3x3 expensive future subset |
 | Unsafe prediction chooses an immunity | Enforced coverage/regret, catastrophic credible branch and safe-action eligibility |
-| Failed predictions repeat | Commitment resolution plus short-term identical-read penalty |
-| Strategic evaluator lacks a move case | Per-action conservative fallback and coverage report, never global randomization |
+| AI becomes predictably repetitive | Persistent abstract cases, current match position and a calculated mixed strategy among non-dominated actions when counter-reading evidence justifies it |
+| Strategic evaluator lacks a move case | Track it in the nonblocking Markdown backlog and apply only the documented action-local conservative behavior |
 | Stat drops are overvalued | Weight by opponent stay probability, switch tempo and last/trapped status |
 | Self boosts are overvalued | Weight by trainer survival and probability it remains active |
-| Save calibration shares trainer identity | Persist only two clamped abstract bytes |
+| Saved prediction memory captures identities | Persist 32 strategic-class cases only; reject trainer/species/move/item/ability/slot keys and version the store |
 | Doubles reaches singles logic | Gate format before state access and delegate to original HGSS |
 | Debug payload consumes release space | Compile diagnostics out or omit them |
 
 # 20. Initial tuning parameters
 
-Values are placeholders. Prefer relational tests over exact expected totals.
+These build-time values live in `include/ai_config.h` under `AI_CFG_*` names.
+Values marked Tune are deliberately unresolved until deterministic scenarios
+and measured runtime exist. Prefer relational tests over memorizing one score.
 
 | Parameter | Initial value/target | Meaning |
 |---|---:|---|
-| `robustCoverageTarget` | 90% | Required covered primary probability mass when achievable |
-| `coverageMaxRegret` | Tune | Maximum branch loss for “covered” |
-| `coverageMinOutcome` | Tune | Minimum acceptable branch utility |
-| `maxPlayerPrimary` | 4 | Expensive player branches |
-| `maxPlayerIdentities` | 12 | Primary plus compact tail identities |
-| `maxSearchAiActions` | 4 | Directly compared AI actions |
-| `maxFullSwitchCandidates` | 3 | Trainer reserves receiving contextual evaluation |
-| `maxSearchedSwitchActions` | 2 | Switches admitted to final four AI actions |
-| `maxFutureAiActions` | 3 | Expensive future subset |
-| `maxFuturePlayerActions` | 3 | Expensive future subset |
-| `futureValuePercent` | 50–60% | Discount for the best follow-up action |
-| `planTurnCap` | 6 | Saturation cap for analytic turns-to-KO comparison |
-| `failedReadRepeatPenaltyTurns` | 1–2 | Short-term identical-read dampening |
-| `readBalanceClamp` | -8..+8 | Prevent global calibration runaway |
+| `AI_CFG_PROBABILITY_SCALE` | 255 | Q8-style normalized probability total |
+| `AI_CFG_HP_BAR_UTILITY` | 256 | Utility represented by one complete HP bar |
+| `AI_CFG_ROBUST_COVERAGE_TARGET` | ~230/255 | Required covered probability mass when achievable |
+| `AI_CFG_COVERAGE_MAX_REGRET` | Tune | Maximum branch loss for “covered” |
+| `AI_CFG_COVERAGE_MIN_OUTCOME` | Tune | Minimum acceptable branch utility |
+| `AI_CFG_MAX_FUTURE_PLAYER_CANDIDATES` | 4 | Branches eligible for deep selection; immediate evaluation retains every legal move/switch |
+| `AI_CFG_MAX_PLAYER_MOVE_SWITCH_ACTIONS` | 9 | Singles bound: four moves plus five destinations |
+| `AI_CFG_MAX_SEARCH_AI_ACTIONS` | 4 | Trainer actions receiving full first-turn evaluation |
+| `AI_CFG_MAX_FULL_SWITCH_CANDIDATES` | 3 | Role-distinct reserves receiving contextual evaluation |
+| `AI_CFG_MAX_SEARCHED_SWITCH_ACTIONS` | 3 | Role-distinct switches admitted to final scoring |
+| `AI_CFG_MAX_FUTURE_AI_ACTIONS` | 3 | Expensive future subset |
+| `AI_CFG_MAX_FUTURE_PLAYER_ACTIONS` | 3 | Expensive future subset |
+| `AI_CFG_FORCED_FUTURE_PERCENT` | 95 initial | Retained value for mechanically forced continuations such as a successful Rollout lock |
+| `AI_CFG_SPECULATIVE_FUTURE_PERCENT` | 56 initial | Retained value when the opponent receives another unrestricted decision |
+| `AI_CFG_PLAN_TURN_CAP` | 6 | Saturation cap for analytic turns-to-KO comparison |
+| `AI_CFG_READ_COMMITMENT_GAP` | 10 initial | Minimum stay-branch sacrifice before a selected switch read creates a prediction commitment |
+| `AI_CFG_COMFORTABLE_RISK_WEIGHT` | Tune/high | Protect an established winning position |
+| `AI_CFG_EVEN_RISK_WEIGHT` | Tune | Permit calculated mixups |
+| `AI_CFG_DESPERATE_RISK_WEIGHT` | Tune/low | Permit variance when robust lines lose |
+| `AI_CFG_HARD_READ_MIN_PAYOFF` | Tune | Required gain before sacrificing meaningful coverage |
+| `AI_CFG_READ_BALANCE_CLAMP` | -8..+8 | Prevent aggregate calibration runaway |
+| `AI_CFG_PERSISTENT_PREDICTION_CASES` | 32 | Abstract cross-battle player-behaviour cases |
+| `AI_CFG_RECENT_BATTLE_CASES` | <=8 | Volatile immediate-adaptation window |
+| `AI_CFG_RANDOM_ACTION_BASE_VALUE` | Low positive | Keeps legal random-selection actions available mainly for desperate positions |
+| `AI_CFG_SWITCHABLE_TARGET_EFFECT_PERCENT` | 40% initial | Future value retained for target-bound effects when a legal switch can clear them; immediate effect and forced-switch tempo are evaluated separately |
+| `AI_CFG_UNKNOWN_ACTION_BASE_VALUE` | Low positive | Individual conservative value for a documented evaluator gap; never global decision randomness |
+| `AI_CFG_TEAM_ASSET_WEIGHT` | 48 initial | Base value of retaining a healthy trainer Pokémon |
+| `AI_CFG_UNIQUE_COVERAGE_WEIGHT` | 24 initial | Marginal value for matchups no surviving teammate covers as well |
+| `AI_CFG_UNIQUE_DEFENSE_WEIGHT` | 16 initial | Marginal value for irreplaceable defensive responses |
+
+Compile-time checks enforce action/deep-search relationships, valid Q8 ranges,
+case-count/storage limits and the resident scratch/stack gates. Tuning must not
+change the no-Bag action space or enable a transient overlay.
 
 # Appendix A. Proposed narrow API
 
@@ -1164,13 +1867,17 @@ void AI_BuildExactSnapshot(const struct BattleSystem *bsys,
                            u8 aiBattler,
                            AIExactSnapshot *out);
 
-/* Resident owner of transient lifetime. */
-BOOL AI_RunTransientPlanner(const AIPlannerRequest *request,
-                            AIPlannerResult *result);
+/* Handwritten interface over the generated semantics data. */
+BOOL AI_GetMoveSemantics(u16 moveId,
+                         u16 moveEffect,
+                         AIMoveSemantics *out);
+void AI_ApplyMoveSemantics(const AIMoveSemantics *semantics,
+                           const AIMoveContext *context,
+                           AISimState *state);
 
-/* Sole transient entrypoint at 0x023C0400. */
-u32 TrainerAIPlanner_Entry(const AIPlannerRequest *request,
-                           AIPlannerResult *result);
+/* Resident bounded decision pipeline. */
+BOOL AI_EvaluateExpertSingles(const AIExactSnapshot *snapshot,
+                              AIPlannerResult *result);
 ```
 
 Exact signatures must follow the source integration seams. The battle engine
@@ -1184,21 +1891,23 @@ has Thundershock, a neutral damaging move, a setup move and legal switches.
 1. The exact snapshot contains all four player moves, both reserve loadouts,
    exact stats, abilities and items. It does not contain the player's selected
    command.
-2. Player action generation ranks the exact legal attacks and both switch
-   destinations. The most plausible four become primary branches; the rest
-   retain compact tail identities.
-3. Trainer switch screening retains the safest pivot, strongest attacker and
-   best support/setup reserve, then admits at most two switch actions to the
-   final four trainer actions.
+2. Player action generation assigns a probability to every exact legal attack
+   and both switch destinations. All participate in immediate coverage; only
+   the most relevant branches are eligible for deep future simulation.
+3. A cheap complete response scan ensures that counters to both likely and
+   dangerous credible branches can enter the trainer shortlist. Trainer switch
+   screening admits the two reserves with the best entry-survival,
+   pressure/threat and remaining-HP positions.
 4. Thundershock receives a catastrophic outcome when the current Ground target
    stays and a favorable outcome only for switch destinations it can hit.
 5. If safe neutral coverage reaches the robust target, Thundershock is not
-   eligible for safe near-best sampling.
+   eligible for the robust policy or a calculated mixed strategy.
 6. If no robust action exists and the switch probability/payoff genuinely
    justifies Thundershock, selecting it creates a prediction commitment.
 7. The next decision resolves whether the player actually switched and whether
-   another feasible action would have covered the result. A failed specialized
-   read discourages an immediate identical repeat.
+   another feasible action would have covered the result. The outcome updates
+   the recent and persistent abstract cases, which alter later probabilities
+   and mixup breadth without imposing an identical-repeat penalty.
 
 # Appendix C. References and source evidence
 
@@ -1221,4 +1930,4 @@ has Thundershock, a neutral damaging move, a setup move and legal switches.
 
 > **Next engineering artifact:** Produce a Phase-0 source/budget audit that
 > confirms the clean baseline, replaces stale generated size evidence and
-> lists each Section-3 regression requirement before implementing v0.5.
+> lists each Section-3 regression requirement before implementing v0.6.

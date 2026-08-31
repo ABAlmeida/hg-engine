@@ -2537,6 +2537,7 @@ BOOL LONG_CALL CheckMoveCallsOtherMove(u16 move);
  *  @return updated nonSelectableMoves field
  */
 u32 LONG_CALL StruggleCheck(struct BattleSystem *bsys, struct BattleStruct *ctx, int battlerId, u32 nonSelectableMoves, u32 struggleCheckFlags);
+u32 TrainerAI_StruggleCheckReadOnly(struct BattleSystem *bsys, struct BattleStruct *ctx, int battlerId);
 
 void LONG_CALL Ground_ActorResourceSet(GROUND_WORK *ground, void *bw, u32 side, u32 terrain);
 void LONG_CALL BattleWorkGroundBGChg(void *bw);

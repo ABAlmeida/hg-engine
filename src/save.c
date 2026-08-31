@@ -49,6 +49,10 @@ void LONG_CALL Sav2_Misc_init_new_fields(struct SAVE_MISC_DATA *saveMiscData)
 #ifdef IMPLEMENT_CAPTURE_RULES
     CaptureRules_Init(&saveMiscData->captureRules);
 #endif
+#ifdef IMPLEMENT_EXPERT_TRAINER_AI
+    memset(&saveMiscData->trainerAIMemory, 0, sizeof(saveMiscData->trainerAIMemory));
+    saveMiscData->trainerAIMemory.version = 1;
+#endif
 }
 
 // convenience flag/var access functions

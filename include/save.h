@@ -85,11 +85,34 @@ typedef struct BerryPot {
 #define STORED_MONS_N_LUNARIZER    2
 #define STORED_MONS_REINS_OF_UNITY 3
 #define NUM_OF_STORED_MONS         4
+#define AI_PREDICTION_CASE_COUNT   32
 
 #define MAX_APRICORN_TREE 128
 #define NUM_APRICORN_TREE 31
 
 #define MAX_BERRY_POT 4
+
+typedef struct AIPredictionCase {
+    u8 situation;
+    u8 actionClass;
+    u8 observations;
+    u8 chosenCount;
+    u8 recency;
+    u8 confidence;
+} AIPredictionCase;
+
+typedef struct AIPredictionMemory {
+    u8 version;
+    u8 count;
+    u8 cursor;
+    s8 readBalance;
+    u8 calibration;
+    u8 surprise;
+    u8 reserved[2];
+    AIPredictionCase cases[AI_PREDICTION_CASE_COUNT];
+} AIPredictionMemory;
+
+_Static_assert(sizeof(AIPredictionMemory) <= 272, "trainer AI persistent store exceeds its save budget");
 
 struct SAVE_MISC_DATA {
     /* 0x000 */ APRICORN_TREE apricorn_trees[MAX_APRICORN_TREE];
@@ -122,6 +145,7 @@ struct SAVE_MISC_DATA {
     u8 levelCapPadding[3];
     // Persistent state for one-encounter-per-area and Contest retention rules.
     CaptureRulesSave captureRules;
+    AIPredictionMemory trainerAIMemory;
 
 #endif
 };

@@ -1,6 +1,13 @@
 #include "include/config.h"
 #include "include/debug.h"
 
+#ifdef IMPLEMENT_EXPERT_TRAINER_AI
+# Expert singles AI wrappers. The hook generator validates these source BLs.
+0012 FairTrainerAI_PickCommand 0225E10E bl
+0012 FairTrainerAI_PickMove 0225E43E bl
+0012 FairTrainerAI_PickReplacement 0225F8E8 bl
+#endif
+
 #ifdef FIX_FIELD_MODEL_VBLANK_QUEUE_OVERFLOW
 # The original scheduler creates one VBlank task per field-model resource.
 # Retarget only the verified field-overlay Thumb call; replacing the short ARM9

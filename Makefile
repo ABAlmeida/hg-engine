@@ -338,6 +338,21 @@ $(BUILD)/pokemon.o: $(LEARNSETS_HEADER)
 
 $(BUILD)/test_battle.o: $(BATTLETESTS_HEADER)
 
+TRAINER_AI_SEMANTICS_INPUT := data/trainer_ai_semantics.json
+TRAINER_AI_SEMANTICS_GENERATOR := tools/generate_trainer_ai_semantics.py
+TRAINER_AI_SEMANTICS_HEADER := include/constants/generated/trainer_ai_semantics_generated.h
+TRAINER_AI_BOUNDARY_STAMP := $(BUILD)/.trainer_ai_boundary
+TRAINER_AI_BUDGET_STAMP := $(BUILD)/.trainer_ai_budget
+
+$(TRAINER_AI_SEMANTICS_HEADER): $(TRAINER_AI_SEMANTICS_INPUT) $(TRAINER_AI_SEMANTICS_GENERATOR) include/constants/move_effects.h include/constants/moves.h include/constants/ability.h include/constants/pokemon.h
+	$(PYTHON) $(TRAINER_AI_SEMANTICS_GENERATOR) --input $(TRAINER_AI_SEMANTICS_INPUT) --effects include/constants/move_effects.h --moves include/constants/moves.h --abilities include/constants/ability.h --types include/constants/pokemon.h --output $@
+
+$(TRAINER_AI_BOUNDARY_STAMP): src/battle/trainer_ai.c tools/validate_trainer_ai_boundary.py
+	$(PYTHON) tools/validate_trainer_ai_boundary.py
+	@touch $@
+
+$(BUILD)/battle/trainer_ai.o: $(TRAINER_AI_SEMANTICS_HEADER) $(TRAINER_AI_BOUNDARY_STAMP)
+
 define ASM_OBJ_INC_DEFINE
 # these should have similar dependency scanning, but we do not currently use them in a way conducive to it
 $1: $2 | $(dir $1)
@@ -375,7 +390,11 @@ refresh_base_code: $(BASE_EXTRACTION_STAMP) $(NDSTOOL)
 all: $(BUILDROM)
 
 # Compile and link injected code without modifying base/ or packaging a ROM.
-code: $(OUTPUT) $(OVERLAY_OUTPUTS)
+code: $(OUTPUT) $(OVERLAY_OUTPUTS) $(TRAINER_AI_BUDGET_STAMP)
+
+$(TRAINER_AI_BUDGET_STAMP): $(BUILD)/output_battle.bin tools/check_trainer_ai_budget.py
+	$(PYTHON) tools/check_trainer_ai_budget.py $(BUILD)/output_battle.bin
+	@touch $@
 
 # This named entry point uses the safe incremental graph. It never skips stale
 # data; code-only changes naturally take the short path.
@@ -614,7 +633,7 @@ $(NARC_FILES): | $(BASE_EXTRACTION_STAMP)
 
 # Restore pristine executable inputs immediately before every actual patch
 # pass. A true no-op build skips this entire stage.
-$(PATCH_STAMP): $(OUTPUT) $(OVERLAY_OUTPUTS) $(TOOLS) $(DATA_INSTALL_STAMP) $(PATCH_INPUTS)
+$(PATCH_STAMP): $(OUTPUT) $(OVERLAY_OUTPUTS) $(TRAINER_AI_BUDGET_STAMP) $(TOOLS) $(DATA_INSTALL_STAMP) $(PATCH_INPUTS)
 	rm -rf $(BASE)/overlay
 	@mkdir -p $(BASE)/overlay
 	$(NDSTOOL) -x $(ROMNAME) -9 $(BASE)/arm9.bin -y9 $(BASE)/overarm9.bin -y $(BASE)/overlay
