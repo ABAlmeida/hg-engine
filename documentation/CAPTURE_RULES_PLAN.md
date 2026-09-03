@@ -1,6 +1,6 @@
 # Challenge Capture Rules Plan
 
-Last updated: 2026-08-22
+Last updated: 2026-09-01
 
 This document records the reviewed design for the challenge capture rules.
 The save-data foundation, ordinary encounter rules, Safari behavior, and
@@ -87,15 +87,14 @@ Safari behavior:
 1. If the encountered Pokémon is shiny and not a duplicate, allow Safari Ball
    use regardless of the saved Safari state and do not consume the standard
    Safari opportunity.
-2. On the first Safari encounter without that exemption, immediately set the
-   bit for `BATTLE_PARAM.map_section`.
-3. Apply the normal exact-species Pokédex duplicate check.
-4. If a non-exempt Pokémon is already caught, show the duplicate restriction
-   and block Safari Ball use. Consume the Safari opportunity if it was unused;
-   this includes a shiny duplicate.
-5. In every later non-exempt Safari encounter, block Safari Ball use without
+2. Apply the normal exact-species Pokédex duplicate check. If the species is
+   already caught, show the duplicate restriction and block Safari Ball use
+   without consuming the Safari opportunity; this includes a shiny duplicate.
+3. On the first eligible, non-duplicate Safari encounter, immediately set the
+   bit for `BATTLE_PARAM.map_section` and allow Safari Ball use.
+4. In every later non-exempt Safari encounter, block Safari Ball use without
    decrementing the player's remaining Safari Balls.
-6. Keep the remaining Safari battle actions and flow available, including
+5. Keep the remaining Safari battle actions and flow available, including
    bait, mud, watching, and running.
 
 This gives the Safari Zone one standard encounter opportunity for the whole
@@ -217,14 +216,15 @@ The automated battle-test suite must only be run when explicitly requested.
 - Consumed-area, duplicate, Totem, tutorial, and wild-double encounters do not
   display the capture-available announcement.
 - Every Safari subarea shares one saved opportunity.
-- The first Safari encounter without a shiny-clause exemption consumes that
-  opportunity even when it is a duplicate.
+- A duplicate Safari encounter is blocked without consuming the shared Safari
+  opportunity, including when the duplicate is shiny.
+- The first eligible, non-duplicate Safari encounter consumes the shared
+  Safari opportunity when its battle starts.
 - Later non-exempt Safari Ball attempts are blocked without consuming a Safari
   Ball.
 - Non-duplicate Safari shinies may be caught without consuming or resetting
   the standard Safari opportunity.
-- A shiny Safari duplicate follows the standard Safari opportunity flow and
-  remains blocked from capture.
+- A shiny Safari duplicate remains blocked by the duplicate rule.
 - Contest entries that end without retaining a Pokémon do not consume the
   saved Contest opportunity.
 - The first Contest that ends with a retained Pokémon permanently awards it

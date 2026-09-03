@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import re
 import subprocess
 import shutil
 import struct
@@ -634,6 +635,56 @@ def offset():
 OVERLAYS_TO_DECOMPRESS = [1, 2, 6, 7, 8, 10, 12, 14, 15, 18, 23, 31, 53, 61, 63, 64, 68, 94, 96, 112, 123]
 
 
+def config_define_enabled(name):
+    with open("include/config.h", encoding="utf-8") as config_file:
+        config = config_file.read()
+    pattern = rf"^[ \t]*#[ \t]*define[ \t]+{re.escape(name)}(?:[ \t]|$)"
+    return re.search(pattern, config, flags=re.MULTILINE) is not None
+
+
+def patch_cross_region_fly():
+    if not config_define_enabled("ALLOW_CROSS_REGION_FLY"):
+        return
+
+    overlay_id = 101
+    target_address = 0x021EA804  # ov101_021EA804: current-region Fly gate
+    table_entry_offset = overlay_id * 0x20
+    overlay_path = f"base/overlay/overlay_{overlay_id:04}.bin"
+
+    with open("base/overarm9.bin", "rb+") as overlay_table:
+        overlay_table.seek(table_entry_offset)
+        entry = list(struct.unpack("<8I", overlay_table.read(0x20)))
+        if entry[0] != overlay_id:
+            raise RuntimeError("Cross-region Fly patch found an unexpected overlay table entry")
+
+        load_address = entry[1]
+        compression_info = entry[7]
+        if (compression_info & 0x01000000) == 0:
+            raise RuntimeError("Cross-region Fly patch expected overlay 101 to be compressed")
+
+        with open(overlay_path, "rb") as overlay_file:
+            overlay = bytearray(ndspy.codeCompression.decompress(overlay_file.read()))
+
+        target_offset = target_address - load_address
+        original = bytes.fromhex(
+            "08 b5 3a 29 01 d0 1e 29 01 d1 01 20 08 bd "
+            "11 1c 1a 1c ff f7 e5 ff 08 bd"
+        )
+        patched = bytes.fromhex("01 20 70 47") + original[4:]
+        current = bytes(overlay[target_offset : target_offset + len(original)])
+        if current not in (original, patched):
+            raise RuntimeError("Cross-region Fly patch found unexpected overlay 101 instructions")
+
+        overlay[target_offset : target_offset + 4] = patched[:4]
+        compressed = ndspy.codeCompression.compress(bytes(overlay))
+        with open(overlay_path, "wb") as overlay_file:
+            overlay_file.write(compressed)
+
+        entry[7] = (compression_info & 0xFF000000) | len(compressed)
+        overlay_table.seek(table_entry_offset)
+        overlay_table.write(struct.pack("<8I", *entry))
+
+
 def decompress():
     if os.path.exists("build/arm9.bin"):
         os.remove("build/arm9.bin")
@@ -677,6 +728,7 @@ def decompress_file(path):
 
 if __name__ == '__main__':
     decompress()
+    patch_cross_region_fly()
     writeall()
     install()
     hook()

@@ -3709,6 +3709,10 @@ void LONG_CALL BattleBackgroundCallback(void *unkPtr, UNUSED int unk2, UNUSED in
 
 void LONG_CALL SetupAndStartWildBattle(TaskManager *taskManager, u16 species, u8 level, u32 *winFlag, BOOL canFlee, BOOL shiny);
 
+// Set only while ScrCmd_WildBattle synchronously constructs an explicitly
+// shiny scripted encounter. Random encounters leave this clear.
+extern u8 gPreserveScriptedWildShiny;
+
 void LONG_CALL InitBattleMsgData(struct BattleStruct *sp, BattleMessageData *msgdata);
 void LONG_CALL InitBattleMsg(struct BattleSystem *bw, struct BattleStruct *sp, BattleMessageData *msgdata, BattleMessage *msg);
 void LONG_CALL BattleController_EmitPrintMessage(struct BattleSystem *bw, struct BattleStruct *sp, BattleMessage *msg);

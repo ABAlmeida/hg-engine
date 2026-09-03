@@ -21,8 +21,9 @@ successful result to the normal wild-battle transition:
 - Poké Bait starts one ordinary encounter from the current terrain.
 - Shiny Bait starts the same encounter and rewrites the generated Pokémon's
   personality to a valid shiny value before it enters the enemy party.
-- Natural and scripted wild encounters are prevented from being shiny, making
-  Shiny Bait the only wild-encounter source of shiny Pokémon.
+- Random non-Shiny Bait encounters are prevented from being shiny. Shiny Bait
+  remains the only repeatable wild source, while encounters explicitly marked
+  shiny by a field script (such as the Lake of Rage Gyarados) remain shiny.
 - Successful use consumes one item.
 - Invalid terrain is rejected in the Bag with the standard item-use error and
   does not consume the item.

@@ -180,6 +180,19 @@ static BOOL MachineFieldAction_FindUser(
     return TRUE;
 }
 
+u32 LONG_CALL MachineFieldAction_GetInteractionPartySlot(
+    const SaveData *saveData,
+    u16 moveId)
+{
+    u16 partySlot;
+
+    if (!MachineFieldAction_FindUser(saveData, moveId, &partySlot)) {
+        return 0xFF;
+    }
+
+    return partySlot;
+}
+
 /**
  * Script command 141 asks for the first party slot containing a move. Field
  * scripts use the returned slot for the standard Pokemon name and animation,

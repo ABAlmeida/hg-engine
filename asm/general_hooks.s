@@ -2,6 +2,24 @@
 .align 2
 .thumb
 
+.global MachineFieldAction_GetWaterfallInteractionPartySlotHook
+MachineFieldAction_GetWaterfallInteractionPartySlotHook:
+// FieldInput_Process retains FieldSystem in r4 at its automatic Waterfall
+// descent lookup.
+ldr r0, [r4, #0xC]
+b MachineFieldAction_GetInteractionPartySlotHook_Common
+
+.global MachineFieldAction_GetSurfInteractionPartySlotHook
+MachineFieldAction_GetSurfInteractionPartySlotHook:
+// GetInteractedMetatileScript retains FieldSystem in r5 at its Surf lookup.
+ldr r0, [r5, #0xC]
+
+MachineFieldAction_GetInteractionPartySlotHook_Common:
+// Tail-call the shared machine fallback with fieldSystem->saveData; both
+// original callers expect either a party slot or 0xFF.
+ldr r3, =MachineFieldAction_GetInteractionPartySlot
+bx r3
+
 .global set_starter_hidden_ability_hook
 set_starter_hidden_ability_hook:
 mov r5, r2

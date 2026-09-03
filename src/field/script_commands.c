@@ -323,12 +323,17 @@ BOOL ScrCmd_WildBattle(SCRIPTCONTEXT *ctx)
     u16 species = ScriptGetVar(ctx);
     u16 level = ScriptGetVar(ctx);
     u8 shiny = ScriptReadByte(ctx);
+
+    // AddWildPartyPokemon normally removes non-Bait shininess. Preserve the
+    // script's explicit request while SetupAndStart* constructs the Pokémon.
+    gPreserveScriptedWildShiny = shiny;
     // Set this var to 1 in DSPRE just prior to starting a forced wild battle to turn it into a Totem battle.
     if (GetScriptVar(0x800B)) {
         SetupAndStartTotemBattle(ctx->taskman, species, level, winFlag, shiny);
     } else {
         SetupAndStartWildBattle(ctx->taskman, species, level, winFlag, TRUE, shiny);
     }
+    gPreserveScriptedWildShiny = FALSE;
     return TRUE;
 }
 

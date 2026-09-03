@@ -14,6 +14,9 @@ BOOL MachineFieldAction_IsUsable(
     const SaveData *saveData,
     u16 moveId,
     const void *fieldMoveCheckData);
+u32 LONG_CALL MachineFieldAction_GetInteractionPartySlot(
+    const SaveData *saveData,
+    u16 moveId);
 BOOL LONG_CALL MachineFieldAction_ScrCmdGetPartySlotWithMove(SCRIPTCONTEXT *ctx);
 
 #endif // POKEHEARTLESSGOLD_MACHINE_FIELD_ACTIONS_H

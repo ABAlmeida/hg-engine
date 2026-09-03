@@ -71,6 +71,15 @@ arm9 EncounterFinishLevelCapHook 020506F4
 # the corresponding machine is owned. This is the US HeartGold function entry;
 # its original prologue begins B5 F8 B0 82.
 arm9 MachineFieldAction_ScrCmdGetPartySlotWithMove 0204D3CC
+# Automatic southward Waterfall traversal has its own learned-move gate before
+# the overlay-1 movement dispatcher sets PLAYER_EVENT_USED_WATERFALL. At this
+# verified US HeartGold call, r4 is FieldSystem and r1 is MOVE_WATERFALL.
+0001 MachineFieldAction_GetWaterfallInteractionPartySlotHook 021E6BBE bl
+# The A-button Surf interaction has an earlier, independent learned-move gate
+# before std_field_surf starts. At this verified US overlay call, r5 is the
+# FieldSystem pointer and the original instruction calls
+# GetIdxOfFirstPartyMonWithMove(party, MOVE_SURF).
+0001 MachineFieldAction_GetSurfInteractionPartySlotHook 021E7544 bl
 #endif
 
 #mega

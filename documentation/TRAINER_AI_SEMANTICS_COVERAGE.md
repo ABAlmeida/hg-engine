@@ -87,6 +87,12 @@ overlay-130 effect against the 500-byte reserve.
       tie-break between actions with exactly equal primary scores.
 - [x] Treat known unequal Speed as deterministic.
 - [x] Remove mandatory post-entry action and recent-switch penalties.
+- [ ] Prevent a Ghost-type user from selecting Curse when the concrete target
+      already has `STATUS2_CURSE`. Prefer one generated `MOVE_EFFECT_CURSE`
+      class and a minimal repeat-invalid guard; measure the linked delta and
+      preserve the enforced 500-byte overlay-130 reserve. Full valuation of
+      the HP sacrifice, residual payoff, switching and non-Ghost stat changes
+      remains optional unless further playtesting justifies the extra code.
 - [ ] Remove actions dominated across matching concrete branches. The obsolete
       stay/switch/absolute-worst shortcut has been removed; branch-vector
       dominance remains follow-up work.

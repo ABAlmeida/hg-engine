@@ -15,12 +15,15 @@ after `SUMMARY` in its normal party menu. Eggs and Pokémon already at or above
 the cap do not show the action.
 
 The command advances exactly one level at a time. Each step sets experience to
-that level's threshold, recalculates stats and HP with the normal party-Pokémon
-logic, and then uses the native Rare Candy presentation for stat changes and
-level-up moves. Every move prompt is handled before the next level begins.
-When a level triggers an evolution, the normal evolution scene runs and the
-command resumes on the same party slot afterward, including when the evolution
-is cancelled. No item is required or consumed.
+that level's threshold and recalculates stats and HP with the normal
+party-Pokémon logic. Intermediate level announcements and stat screens are
+skipped; the level that reaches the current cap uses the full native Rare Candy
+presentation. Every intermediate move prompt is still handled before the next
+level begins. When a level triggers an evolution, the normal evolution scene
+runs and the command resumes on the same party slot afterward, including when
+the evolution is cancelled. The reopened party menu restores the native
+level-up message frame before processing further move prompts. No item is
+required or consumed.
 
 The visible `QUIT` button is omitted from the normal party context menu; the B
 button still closes it. This leaves room for `LEVEL TO CAP` alongside every

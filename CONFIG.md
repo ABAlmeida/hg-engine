@@ -80,6 +80,12 @@
  Party-menu actions use the selected non-Egg Pokémon. HM and TM teaching
  behavior is unchanged. See ``documentation/HM_FIELD_ACTIONS_PLAN.md``.
 
+ ``ALLOW_CROSS_REGION_FLY`` (``include/config.h`` only) removes the Town Map's
+ current-region restriction when selecting a Fly destination. It does not
+ unlock destinations: the corresponding Flypoint flag must still have been
+ earned by visiting the location. Commenting out the definition restores the
+ original Johto/Kanto restriction.
+
  ``UPDATE_VITAMIN_EV_CAPS`` (``include/config.h`` only) enables the centralized stat-training item rules: vitamins can reach 252 EVs per stat, the unsuffixed vitamins give 50 EVs, the S/L/Max tiers give 10/100/up to the legal maximum, and IV Max sets all six IVs to 31.
 
  ``DISABLE_ITEMS_IN_TRAINER_BATTLE`` (``include/config.h`` only) disables items being used while in trainer battles.

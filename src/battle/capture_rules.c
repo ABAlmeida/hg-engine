@@ -82,17 +82,16 @@ static void CaptureRules_EvaluateSafariEncounter(
         return;
     }
 
-    captureRules = CaptureRules_GetSave(saveData);
-    if (!CaptureRules_IsValidArea(mapSection)) {
-        CaptureRules_SetEncounterPermission(CAPTURE_PERMISSION_BLOCKED_AREA);
+    // Match ordinary encounters: a duplicate is never an eligible encounter,
+    // so it reports the specific restriction without consuming the area.
+    if (isDuplicate) {
+        CaptureRules_SetEncounterPermission(CAPTURE_PERMISSION_BLOCKED_DUPLICATE);
         return;
     }
 
-    // A duplicate still consumes Safari's opportunity when it is unused, but
-    // always reports the more specific duplicate restriction afterward.
-    if (isDuplicate) {
-        CaptureRules_ConsumeArea(captureRules, mapSection);
-        CaptureRules_SetEncounterPermission(CAPTURE_PERMISSION_BLOCKED_DUPLICATE);
+    captureRules = CaptureRules_GetSave(saveData);
+    if (!CaptureRules_IsValidArea(mapSection)) {
+        CaptureRules_SetEncounterPermission(CAPTURE_PERMISSION_BLOCKED_AREA);
         return;
     }
 

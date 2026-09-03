@@ -3,6 +3,7 @@
 #include "../include/bag.h"
 #include "../include/battle.h"
 #include "../include/config.h"
+#include "../include/level_cap.h"
 #include "../include/machine_field_actions.h"
 #include "../include/stat_training_items.h"
 #include "../include/task.h"
@@ -228,6 +229,19 @@ u8 LONG_CALL sub_0207B0B0(struct PartyMenu *wk, u8 *buf)
                 }
 #endif
             }
+
+#ifdef IMPLEMENT_MACHINE_FIELD_ACTIONS
+            // The native layout always draws list entry 3 in the former Quit
+            // button. Keep Item there even when the optional Level to Cap
+            // command is absent; field moves retain their blue move text.
+            if (count > 3 && (buf[2] == PARTY_MON_CONTEXT_MENU_ITEM
+                                 || buf[2] == PARTY_MON_CONTEXT_MENU_MAIL)) {
+                u8 displacedAction = buf[3];
+
+                buf[3] = buf[2];
+                buf[2] = displacedAction;
+            }
+#endif
         } else {
             buf[count] = PARTY_MON_CONTEXT_MENU_QUIT;
             ++count;
@@ -386,7 +400,7 @@ static void LevelToCap_RestorePartySelectionUI(struct PartyMenu *partyMenu)
 }
 
 /**
- *  @brief begin one native level-up presentation for the Level to Cap command
+ *  @brief advance one level during the Level to Cap command
  *
  *  @param partyMenu active party menu
  *  @return next PartyMenuState
@@ -395,6 +409,7 @@ static int LevelToCap_StartNextLevel(struct PartyMenu *partyMenu)
 {
     struct PartyPokemon *mon = Party_GetMonByIndex(partyMenu->args->party, partyMenu->partyMonIndex);
     PartyMenuStateFunc levelUpFunc = (PartyMenuStateFunc)(0x02081A74 | 1);
+    PartyMenuStateFunc learnMovesFunc = (PartyMenuStateFunc)(0x02081C50 | 1);
 
     if (!Pokemon_CanLevelToCap(mon)) {
         sLevelToCapActive = FALSE;
@@ -407,6 +422,17 @@ static int LevelToCap_StartNextLevel(struct PartyMenu *partyMenu)
     partyMenu->args->levelUpMoveSearchState = 0;
     partyMenu->args->itemId = ITEM_NONE;
     partyMenu->args->context = PARTY_MENU_CONTEXT_0;
+
+    // Intermediate levels do not need the native level/stat presentation, but
+    // must still pass through its move-learning and evolution loop one level
+    // at a time. The level that reaches the cap retains the full presentation.
+    if (GetMonData(mon, MON_DATA_LEVEL, NULL) + 1 < GetLevelCap()) {
+        Pokemon_LevelToCapOneLevel(mon);
+        partyMenu->itemUseCallback = learnMovesFunc;
+        partyMenu->levelUpLearnMovesLoopState = 3;
+        return PARTY_MENU_STATE_ITEM_USE_CB;
+    }
+
     return levelUpFunc(partyMenu);
 }
 
@@ -448,6 +474,16 @@ int LONG_CALL LevelToCap_TryResumePartyMenu(struct PartyMenu *partyMenu)
     }
 
     partyMenu->args->levelUpMoveSearchState = 0;
+    partyMenu->args->context = PARTY_MENU_CONTEXT_0;
+
+    // The ordinary Rare Candy path creates window 34 before entering the
+    // move-learning loop. Evolution reopens a fresh party menu, so restore
+    // that frame before a silent intermediate level can print a move prompt.
+    FillWindowPixelBuffer(&partyMenu->windows[PARTY_MENU_WINDOW_ID_34], 15);
+    DrawFrameAndWindow2(
+        &partyMenu->windows[PARTY_MENU_WINDOW_ID_34], TRUE, 0x2A, 15);
+    LevelToCap_RestorePartySelectionUI(partyMenu);
+
     return LevelToCap_StartNextLevel(partyMenu);
 }
 

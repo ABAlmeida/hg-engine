@@ -168,8 +168,8 @@
 // this will change existing mons too!  if you want to change the odds of wild mons only, you will have to add a certain amount of pid rerolls to the AddWildPartyPokemon routine
 #define SHINY_ODDS 8
 
-// Prevent randomly generated and scripted wild Pokemon from being shiny.
-// Shiny Bait remains the sole wild-encounter path that forces a shiny result.
+// Prevent random wild Pokemon from being shiny. Shiny Bait remains the only
+// repeatable source, while explicitly shiny scripted encounters are preserved.
 #define SHINY_BAIT_ONLY_WILD_SHINIES
 
 // FRIENDSHIP_EVOLUTION_THRESHOLD defines the amount of friendship needed to evolve mons with friendship-related evolutions
@@ -223,6 +223,10 @@
 // Owned HMs and Flash's TM can perform their field actions without being
 // taught to a compatible party Pokemon.
 #define IMPLEMENT_MACHINE_FIELD_ACTIONS
+
+// Allow Fly to select any previously unlocked destination, regardless of
+// whether the player is currently in Johto or Kanto.
+#define ALLOW_CROSS_REGION_FLY
 
 // Reusable Repels are incompatible with the Bait encounter system.
 // #define IMPLEMENT_REUSABLE_REPELS

@@ -118,15 +118,26 @@ This retains the existing map and common scripts. Interacting with a tree,
 rock, water tile, waterfall, whirlpool, or climbable wall continues through
 the original prompts, badge checks, object changes, movement, and transitions.
 
+Surf and automatic Waterfall descent each have an additional learned-move
+check in the field controller. Replace only those two call sites with a small
+adapter to the same party-user helper. The adapter receives the retained
+`FieldSystem` pointer from the verified overlay register, passes its save data
+to the shared helper, and preserves the field controller's `0xFF` not-found
+sentinel. Without these earlier hooks, owned but untaught HM03 is rejected
+before `CheckMoveInParty` can run, while owned but untaught HM07 never sets the
+movement event that permits southward descent.
+
 Do not alter `ScrCmd_MonHasMove`. That command tests a specific Pokémon and may
 be used by unrelated events; broadening it would make ordinary script
 questions about a Pokémon's actual moves inaccurate.
 
 The shared command was confirmed against the US HeartGold implementation:
 `PARTY_SIZE` is the not-found sentinel and the function begins at `0x0204D3CC`.
-The supported address and original prologue are documented beside the hook in
-`hooks`; the base field-move callback dispatcher is recorded in `rom.ld`.
-Disabling the feature omits the hook and retains the original behavior.
+The Waterfall and Surf field-controller calls are at `0x021E6BBE` and
+`0x021E7544` respectively in overlay 1. The supported addresses, original
+command prologue, and register contract are documented beside the hooks; the
+base field-move callback dispatcher is recorded in `rom.ld`. Disabling the
+feature omits all three hooks and retains the original behavior.
 
 ## 3. Support use from the Party menu
 
@@ -162,6 +173,12 @@ currently usable machine action takes priority over an unrelated learned
 utility action because the former is the purpose of opening the menu in that
 field context.
 
+The Item or Mail command remains in the native fourth-entry Quit position.
+When Level to Cap is unavailable but field actions are present, the first
+field action occupies the otherwise unused ordinary-command entry instead;
+it retains the native blue field-move text, and all remaining field actions
+continue in their normal overflow positions. Quit is not restored.
+
 This provides the existing menu route for Fly and Flash and keeps Cut, Surf,
 Strength, Rock Smash, Waterfall, Whirlpool, and Rock Climb available through
 both the Party menu and their normal overworld interactions.
@@ -179,7 +196,10 @@ They already enforce the important rules:
 - Strength requires the Plain Badge, a pushable rock, and preserves the Ice
   Path B2F exclusion.
 - Rock Smash requires the Zephyr Badge and a breakable rock.
-- Waterfall requires the Rising Badge, surfing state, and a waterfall tile.
+- Waterfall requires the Rising Badge, surfing state, and a waterfall tile
+  when activated upward. Automatic southward descent uses the engine's
+  separate movement-event path; its independent party-move lookup now shares
+  the same owned-HM fallback instead of requiring Waterfall to be taught.
 - Whirlpool requires the Glacier Badge, surfing state, and a whirlpool tile.
 - Rock Climb requires the Earth Badge, a climbable wall in the facing
   direction, and valid follower and costume state.

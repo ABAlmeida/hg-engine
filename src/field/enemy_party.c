@@ -422,6 +422,8 @@ void MakeTrainerPokemonParty(struct BATTLE_PARAM *bp, int num, int heapID)
 
 extern u32 space_for_setmondata;
 
+u8 gPreserveScriptedWildShiny;
+
 // Changes the shiny value without touching the personality bits that control
 // gender, ability slot, or encrypted substructure order.
 #define NON_SHINY_PERSONALITY_XOR 0x1000U
@@ -461,7 +463,7 @@ BOOL LONG_CALL AddWildPartyPokemon(int inTarget, EncounterInfo *encounterInfo, s
     }
 
 #ifdef SHINY_BAIT_ONLY_WILD_SHINIES
-    if (!forceShiny && MonIsShiny(encounterPartyPokemon)) {
+    if (!forceShiny && !gPreserveScriptedWildShiny && MonIsShiny(encounterPartyPokemon)) {
         u32 personality = GetMonData(encounterPartyPokemon, MON_DATA_PERSONALITY, NULL);
 
         personality ^= NON_SHINY_PERSONALITY_XOR;
