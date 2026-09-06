@@ -55,7 +55,7 @@
 
 // DEBUG_CHEATS adds testing supplies to the Bag and a level-100 Rayquaza to
 // Bill's PC when a new save is initialized.
-#define DEBUG_CHEATS
+// #define DEBUG_CHEATS
 
 // DEBUG_PRINT_HEAP_OVERFLOW_MESSAGES will cause any crash from a heap overflow to display error information
 // #define DEBUG_PRINT_HEAP_OVERFLOW_MESSAGES
@@ -68,9 +68,9 @@
 
 // The seeded Rayquaza is created before the player's final trainer identity
 // exists and would otherwise count as traded.
-#if defined(DEBUG_CHEATS) && !defined(DEBUG_ALWAYS_OBEY)
-#define DEBUG_ALWAYS_OBEY
-#endif
+// #if defined(DEBUG_CHEATS) && !defined(DEBUG_ALWAYS_OBEY)
+// #define DEBUG_ALWAYS_OBEY
+// #endif
 
 // DEBUG_SWITCH_IN_ABILITY_CHECK turns on a number of debug prints related to the switch-in logic
 // #define DEBUG_SWITCH_IN_ABILITY_CHECK

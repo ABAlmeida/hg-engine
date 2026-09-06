@@ -1,67 +1,126 @@
-# Shorten a scripted tutorial without running its battle
+# Expose and shorten a scripted tutorial without running its battle
 
 ## Goal
 
-Keep the Route 29 counterpart and Slakoth grass demonstration while skipping
-HGSS's simulated capture battle and its duplicate Poké Ball gift.
+Keep the complete Route 29 counterpart scene editable in source while
+retaining the Slakoth grass demonstration and skipping HGSS's simulated
+capture battle and duplicate Poké Ball gift.
 
-## Target and verified command
+## Target
 
 - Source: `armips/scr_seq/scr_seq_revised_opening.s`
-- Member: 225, command offset `0x4FB`
-- Verified command: opcode 251, `CatchingTutorial`, from
-  `.scratch/pret-pokeheartgold/files/fielddata/script/scr_seq/scr_seq_0225_R29.s`
+- Script archive member: 225 (`scr_seq_0225_R29`)
+- Script-table entry: entry 1 at `0x4`
+- Original script offset: `0x1B2`
+- Trigger: Route 29 event `_EV_scr_seq_R29_001 + 1`
 
-The patch asserts both `CatchingTutorial` and the following known movement
-command before replacing the six bytes with a `goto`. The destination copies
-the original cleanup: departure movements, object hiding, hide flags,
-`VAR_UNK_408B`, `FLAG_UNK_09A`, `releaseall`, and `end`.
+The patch validates the original table entry and opening commands, redirects
+entry 1 to `route_29_catching_tutorial`, and appends an editable copy of the
+scene and all of its movement blocks. Do not edit `build/a012/2_225` or the
+reference checkout under `.scratch/`; neither is the permanent source.
 
-The existing pre-animation `GenderMsgBox` uses local messages 0/1, now the
-Poké Bait explanation. Both messages end in `\r` so the animation cannot begin
-until the player acknowledges the final page. For the Lyra path, the original
-helper at `_0559`
-already runs the retained grass demonstration and prints local message 2. Keep
-that message as only `"...Just like that."`; printing another message after
-the branch would duplicate the response. The original helper put `CloseMsg`
-directly after that message, so it must also be redirected through a small
-`wait_button` / `closemsg` continuation. That continuation replays the
-displaced `scrcmd_602 0` before returning to offset `0x590`; otherwise the
-follower movement state would change. The Ethan path does not call `_0559`, so
-the shortened continuation uses local messages 21/22 for its gendered
-response. These IDs belong to member 225's message bank,
-`data/text/373.txt`.
+## Verified HGSS commands
 
-## Minimal pattern
+The control flow and command parameters come from
+`.scratch/pret-pokeheartgold/files/fielddata/script/scr_seq/scr_seq_0225_R29.s`.
+That HGSS source verifies the uses of `ScrCmd_609`, `LockAll`, `PlayCry`,
+`WaitCry`, `ApplyMovement`, `WaitMovement`, `CallStd`, `GenderMsgBox`,
+`CloseMsg`, `GetPlayerCoords`, `Release`, `Compare`, conditional branches,
+`Lock`, `BufferPlayersName`, follower commands 602-604, `Wait`, `HidePerson`,
+`SetFlag`, `SetVar`, `ReleaseAll`, and `End`.
+
+The original opcode 251 `CatchingTutorial` at offset `0x4FB` is deliberately
+absent from the expanded copy. The subsequent Poké Ball gift and obsolete
+post-battle messages are also absent.
+
+Movement steps use `step TYPE, REPEAT_COUNT` and end with `step_end`. Numeric
+types are verified against the HGSS movement macros in
+`.scratch/pret-pokeheartgold/asm/macros/movement.inc` and their constants in
+`.scratch/pret-pokeheartgold/include/constants/movements.h`. The expanded
+source gives those numbers descriptive `MOVE_*` aliases.
+
+## Verified identifiers
+
+- Map: Route 29 (`MAP_ROUTE_29` / map 33).
+- Event data:
+  `.scratch/pret-pokeheartgold/files/fielddata/eventdata/zone_event/030_R29.json`.
+- Counterpart: object 6, originally `obj_R29_var_2`, exposed as
+  `ROUTE_29_FRIEND_OBJECT_ID`.
+- Slakoth: object 7, originally
+  `obj_R29_tsure_poke_static_marill`, exposed as
+  `ROUTE_29_MARILL_OBJECT_ID`. The legacy object name remains because the
+  Heartless Gold sprite/species replacement does not renumber the map event.
+- Player: object 255 (`PLAYER_OBJECT_ID`).
+- Coordinate variables: `VAR_TEMP_x4000` and `VAR_TEMP_x4001`.
+- Messages: local 17/18 for the initial greeting, 0/1 for the Bait explanation,
+  and 21/22 for the gender-selected counterpart's closing response. Their
+  source is `data/text/373.txt`. Local message 2 belongs to the superseded
+  Lyra-only helper and is no longer called by the expanded scene.
+- Completion state: `FLAG_HIDE_ROUTE_29_FRIEND`,
+  `FLAG_HIDE_ROUTE_29_MARILL`, `VAR_UNK_408B`, and `FLAG_UNK_09A`, copied from
+  the original scene cleanup.
+- Trainers and items: not used. The original five-Ball reward is intentionally
+  removed.
+
+## Editable pattern
 
 ```asm
-.org VERIFIED_COMMAND_OFFSET
-goto shortened_cleanup
+.org ROUTE_29_TUTORIAL_TABLE_ENTRY
+.word route_29_catching_tutorial - (ROUTE_29_TUTORIAL_TABLE_ENTRY + 4)
 
-.org ORIGINAL_MEMBER_END
-shortened_cleanup:
-compare VAR_TEMP_x4002, 0
-goto_if_eq departure_cleanup
-gender_msgbox VERIFIED_FEMALE_MESSAGE, VERIFIED_MALE_MESSAGE
-wait_button
-closemsg
-departure_cleanup:
-// Copy the original cleanup exactly.
+.org ROUTE_29_TUTORIAL_APPEND_OFFSET
+route_29_catching_tutorial:
+lockall
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_counterpart_reacts
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_jumps_into_grass
+wait_movement
 releaseall
 end
+
+.align 4
+route_29_slakoth_jumps_into_grass:
+step MOVE_DELAY_8, 3
+step MOVE_JUMP_FAR_WEST, 1
+step_end
 ```
 
-`VAR_TEMP_x4002` is populated by the original `GetPlayerGender` command before
-the patched branch. The original script verifies the same value with
-`Compare VAR_TEMP_x4002, 0` and `CallIfEq _0559`. The continuation repeats
-that verified comparison solely to avoid printing a second response after the
-Lyra-only helper returns. `compare` and `goto_if_eq` use the same parameter
-ordering as the existing revised-opening branches in
-`armips/scr_seq/scr_seq_revised_opening.s`.
+Keep each movement label aligned, retain `step_end`, and update both actors'
+paths together when changing their final coordinates. The complete source has
+separate labels for arrival, seven possible approach rows, seven staging rows,
+a single shared player-staging path, the shared counterpart demonstration,
+and departure. It deliberately does not return the actors to their pre-demo
+positions.
 
-## Manual verification
+## Control-flow checklist
 
-Check both protagonist genders, confirm the grass animation still runs, and
-confirm the opening explanation and `"...Just like that."` each remain visible
-until input is received. Also confirm there is no tutorial battle, extra Ball
-gift, capture-rule mutation, or second trigger after re-entering Route 29.
+- All seven trigger rows converge at `route_29_approach_done` and
+  `route_29_stage_done`.
+- Lyra and Ethan share the same movement calls; only `gender_msgbox` selects
+  their presentation-specific dialogue.
+- Every group of simultaneous `apply_movement` commands reaches a matching
+  `wait_movement` before dependent dialogue or cleanup.
+- Follower movement commands 602-604 retain their original ordering.
+- The counterpart's gender-selected closing message remains visible until
+  input before `closemsg`.
+- After crossing the grass, Slakoth starts one tile west of the counterpart.
+  Its departure begins by entering the counterpart's vacated tile, repeats the
+  same turns, and omits the leader's final step so it finishes one tile behind.
+  This is deterministic scripted movement, not an arbitrary-overworld follow
+  command.
+- `lockall` reaches exactly one `releaseall` on every path.
+- Both objects are hidden and both one-time hide flags are set before `end`.
+- No path invokes `catching_tutorial`, gives Poké Balls, or starts a battle
+  task.
+
+## Build and manual verification
+
+Run `make quick-rom -j$(nproc)` from MSYS2 UCRT64. The expected ROM output is
+`test.nds`; a successful build does not establish that the choreography is
+correct.
+
+Manually check both protagonist genders and all accessible north/south trigger
+rows. Confirm that no actor collides, walks through blocked tiles, or finishes
+off-screen; the Slakoth demonstration and messages complete; following-Pokémon
+movement resumes; both NPCs depart and stay hidden after re-entry; and no
+tutorial battle, Ball gift, item use, Pokédex update, or capture-rule mutation
+occurs.

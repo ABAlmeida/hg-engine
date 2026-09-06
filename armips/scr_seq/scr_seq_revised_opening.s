@@ -8,15 +8,15 @@
 .include "build/generated/armips_items.s"
 .include "build/generated/armips_species.s"
 
-SCRIPT_OPCODE_CATCHING_TUTORIAL equ 251
 SCRIPT_OPCODE_GOTO              equ 22
 SCRIPT_OPCODE_GENDER_MSGBOX     equ 132
 SCRIPT_OPCODE_PLAY_CRY          equ 76
 SCRIPT_OPCODE_CLOSEMSG          equ 53
-SCRIPT_OPCODE_FOLLOWER_MOVEMENT equ 602
 SCRIPT_OPCODE_SETVAR            equ 41
 SCRIPT_OPCODE_SETFLAG           equ 30
 SCRIPT_OPCODE_APPLY_MOVEMENT    equ 94
+SCRIPT_OPCODE_LOCKALL           equ 96
+SCRIPT_OPCODE_SCRCMD_609        equ 609
 
 NEW_BARK_SETUP_TABLE_ENTRY equ 0x24
 NEW_BARK_COMMENT_HOOK_OFFSET equ 0xDCC
@@ -38,6 +38,27 @@ MR_POKEMON_OAK_OBJECT_ID equ 1
 ROUTE_29_MARILL_OBJECT_ID equ 7
 ROUTE_29_FRIEND_OBJECT_ID equ 6
 VIOLET_ASSISTANT_OBJECT_ID equ 4
+
+ROUTE_29_TUTORIAL_TABLE_ENTRY equ 0x4
+ROUTE_29_TUTORIAL_ORIGINAL_OFFSET equ 0x1B2
+ROUTE_29_TUTORIAL_APPEND_OFFSET equ 0xA14
+ROUTE_29_PLAYER_NORTH_Z equ 396
+ROUTE_29_PLAYER_SOUTH_Z equ 402
+
+MOVE_WALK_NORTH equ 12
+MOVE_WALK_SOUTH equ 13
+MOVE_WALK_WEST equ 14
+MOVE_WALK_EAST equ 15
+MOVE_RUN_NORTH equ 16
+MOVE_RUN_SOUTH equ 17
+MOVE_RUN_WEST equ 18
+MOVE_RUN_EAST equ 19
+MOVE_FACE_EAST equ 35
+MOVE_JUMP_ON_SPOT_FAST_WEST equ 50
+MOVE_JUMP_FAR_WEST equ 58
+MOVE_DELAY_8 equ 63
+MOVE_DELAY_16 equ 65
+MOVE_EMOTE_EXCLAMATION equ 75
 
 TRAINER_SILVER_CHIKORITA equ 495
 TRAINER_SILVER_CYNDAQUIL equ 496
@@ -297,49 +318,163 @@ apply_movement NEW_BARK_MARILL_OBJECT_ID, NEW_BARK_COMMENT_MOVEMENT
 goto NEW_BARK_COMMENT_RETURN_OFFSET
 .close
 
-// Route 29: retain the counterpart and Marill grass animation, but replace
-// the simulated capture battle and Ball gift with a short Bait explanation.
+// Route 29: expose the complete counterpart and Slakoth tutorial in editable
+// source. Script-table entry 1 normally targets 0x1B2. Redirect that entry to
+// the expanded copy below instead of patching isolated commands in place.
+// The new copy retains the original coordinate-dependent staging, gives both
+// counterparts the same grass demonstration, and explains Bait without
+// starting opcode 251's simulated capture battle or giving more Poké Balls.
 .open "build/a012/2_225", 0
-.if readu16("build/a012/2_225", 0x58A) == SCRIPT_OPCODE_CLOSEMSG
-    .if readu16("build/a012/2_225", 0x58C) != SCRIPT_OPCODE_FOLLOWER_MOVEMENT || readu16("build/a012/2_225", 0x58E) != 0
-        .error "Revised opening found unexpected Route 29 tutorial message cleanup"
-    .endif
-.elseif readu16("build/a012/2_225", 0x58A) == SCRIPT_OPCODE_GOTO
-    .if readu32("build/a012/2_225", 0x58C) != (catching_tutorial_lyra_message_done - 0x590)
-        .error "Revised opening found an unexpected existing Route 29 message branch"
-    .endif
-.else
-    .error "Revised opening found an unexpected Route 29 tutorial message command"
+.if readu32("build/a012/2_225", ROUTE_29_TUTORIAL_TABLE_ENTRY) != (ROUTE_29_TUTORIAL_ORIGINAL_OFFSET - (ROUTE_29_TUTORIAL_TABLE_ENTRY + 4)) && readu32("build/a012/2_225", ROUTE_29_TUTORIAL_TABLE_ENTRY) != (route_29_catching_tutorial - (ROUTE_29_TUTORIAL_TABLE_ENTRY + 4))
+    .error "Revised opening found an unexpected Route 29 tutorial table entry"
 .endif
-.if readu16("build/a012/2_225", 0x4FB) == SCRIPT_OPCODE_CATCHING_TUTORIAL
-    .if readu16("build/a012/2_225", 0x4FD) != SCRIPT_OPCODE_APPLY_MOVEMENT || readu16("build/a012/2_225", 0x4FF) != ROUTE_29_FRIEND_OBJECT_ID
-        .error "Revised opening found an unexpected Route 29 post-tutorial movement"
-    .endif
-.elseif readu16("build/a012/2_225", 0x4FB) == SCRIPT_OPCODE_GOTO
-    .if readu32("build/a012/2_225", 0x4FD) != (shortened_catching_tutorial - 0x501)
-        .error "Revised opening found an unexpected existing Route 29 branch"
-    .endif
-.else
-    .error "Revised opening found an unexpected Route 29 tutorial command"
+.if readu16("build/a012/2_225", ROUTE_29_TUTORIAL_ORIGINAL_OFFSET) != SCRIPT_OPCODE_SCRCMD_609 || readu16("build/a012/2_225", ROUTE_29_TUTORIAL_ORIGINAL_OFFSET + 2) != SCRIPT_OPCODE_LOCKALL
+    .error "Revised opening found an unexpected Route 29 tutorial script"
 .endif
-.org 0x58A
-// Lyra's original helper printed message 2 and immediately closed it. Branch
-// after the known NPCMsg, wait for player input, then replay the CloseMsg and
-// follower-movement command before returning to the untouched helper.
-goto catching_tutorial_lyra_message_done
-.org 0x4FB
-goto shortened_catching_tutorial
+.org ROUTE_29_TUTORIAL_TABLE_ENTRY
+.word route_29_catching_tutorial - (ROUTE_29_TUTORIAL_TABLE_ENTRY + 4)
 
-.org 0xA14
-shortened_catching_tutorial:
-compare VAR_TEMP_x4002, 0
-goto_if_eq shortened_catching_cleanup
+.org ROUTE_29_TUTORIAL_APPEND_OFFSET
+route_29_catching_tutorial:
+scrcmd_609
+lockall
+play_cry SPECIES_SLAKOTH, 0
+wait_cry
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_arrives
+wait_movement
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_notices_player
+wait_movement
+callstd std_play_friend_music
+gender_msgbox 17, 18
+closemsg
+get_player_coords VAR_TEMP_x4000, VAR_TEMP_x4001
+release ROUTE_29_MARILL_OBJECT_ID
+
+// Bring the counterpart and Slakoth beside the player from any of the seven
+// north/south trigger tiles used by the original Route 29 event.
+compare VAR_TEMP_x4001, ROUTE_29_PLAYER_NORTH_Z
+goto_if_ne route_29_approach_z397
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_approach_z396
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_approach_z396
+goto route_29_approach_done
+route_29_approach_z397:
+compare VAR_TEMP_x4001, 397
+goto_if_ne route_29_approach_z398
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_approach_z397
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_approach_z397
+goto route_29_approach_done
+route_29_approach_z398:
+compare VAR_TEMP_x4001, 398
+goto_if_ne route_29_approach_z399
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_approach_z398
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_approach_z398
+goto route_29_approach_done
+route_29_approach_z399:
+compare VAR_TEMP_x4001, 399
+goto_if_ne route_29_approach_z400
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_approach_z399
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_approach_z399
+goto route_29_approach_done
+route_29_approach_z400:
+compare VAR_TEMP_x4001, 400
+goto_if_ne route_29_approach_z401
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_approach_z400
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_approach_z400
+goto route_29_approach_done
+route_29_approach_z401:
+compare VAR_TEMP_x4001, 401
+goto_if_ne route_29_approach_z402
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_approach_z401
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_approach_z401
+goto route_29_approach_done
+route_29_approach_z402:
+compare VAR_TEMP_x4001, ROUTE_29_PLAYER_SOUTH_Z
+goto_if_ne route_29_approach_done
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_approach_z402
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_approach_z402
+route_29_approach_done:
+wait_movement
+lock ROUTE_29_MARILL_OBJECT_ID
+buffer_players_name 0
+gender_msgbox 0, 1
+closemsg
+get_player_coords VAR_TEMP_x4000, VAR_TEMP_x4001
+scrcmd_602 0
+wait_following_pokemon_movement
+scrcmd_604 55
+
+// Stage all three characters around the grass. Lyra and Ethan use the same
+// counterpart choreography; gender changes only their presentation/dialogue.
+compare VAR_TEMP_x4001, ROUTE_29_PLAYER_NORTH_Z
+goto_if_ne route_29_stage_z397
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_stage_z396
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_stage_z396
+apply_movement PLAYER_OBJECT_ID, route_29_player_stage_z396
+goto route_29_stage_done
+route_29_stage_z397:
+compare VAR_TEMP_x4001, 397
+goto_if_ne route_29_stage_z398
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_stage_z397
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_stage_z397
+apply_movement PLAYER_OBJECT_ID, route_29_player_stage_z397
+goto route_29_stage_done
+route_29_stage_z398:
+compare VAR_TEMP_x4001, 398
+goto_if_ne route_29_stage_z399
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_stage_z398
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_stage_z398
+apply_movement PLAYER_OBJECT_ID, route_29_player_stage_z398
+goto route_29_stage_done
+route_29_stage_z399:
+compare VAR_TEMP_x4001, 399
+goto_if_ne route_29_stage_z400
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_stage_z399
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_stage_z399
+apply_movement PLAYER_OBJECT_ID, route_29_player_stage_z399
+goto route_29_stage_done
+route_29_stage_z400:
+compare VAR_TEMP_x4001, 400
+goto_if_ne route_29_stage_z401
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_stage_z400
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_stage_z400
+apply_movement PLAYER_OBJECT_ID, route_29_player_stage_z400
+goto route_29_stage_done
+route_29_stage_z401:
+compare VAR_TEMP_x4001, 401
+goto_if_ne route_29_stage_z402
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_stage_z401
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_stage_z401
+apply_movement PLAYER_OBJECT_ID, route_29_player_stage_z401
+goto route_29_stage_done
+route_29_stage_z402:
+compare VAR_TEMP_x4001, ROUTE_29_PLAYER_SOUTH_Z
+goto_if_ne route_29_stage_done
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_friend_stage_z402
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_stage_z402
+apply_movement PLAYER_OBJECT_ID, route_29_player_stage_z402
+route_29_stage_done:
+wait_movement
+wait_following_pokemon_movement
+scrcmd_602 1
+scrcmd_604 48
+
+// The gender-selected counterpart performs the same demonstration.
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_counterpart_reacts
+wait_movement
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_counterpart_encourages_slakoth
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_jumps_into_grass
+wait_movement
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_counterpart_crosses_grass
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_crosses_grass
+wait_movement
 gender_msgbox 21, 22
 wait_button
 closemsg
-shortened_catching_cleanup:
-apply_movement ROUTE_29_FRIEND_OBJECT_ID, 0x928
-apply_movement ROUTE_29_MARILL_OBJECT_ID, 0x93C
+wait 10, VAR_SPECIAL_RESULT
+// The grass crossing leaves Slakoth one tile behind the counterpart. Slakoth
+// enters the vacated tile, traces the same route, and stops one step behind.
+apply_movement ROUTE_29_FRIEND_OBJECT_ID, route_29_counterpart_departs
+apply_movement ROUTE_29_MARILL_OBJECT_ID, route_29_slakoth_follows_counterpart
 wait_movement
 hide_person ROUTE_29_FRIEND_OBJECT_ID
 hide_person ROUTE_29_MARILL_OBJECT_ID
@@ -350,12 +485,327 @@ setflag FLAG_UNK_09A
 releaseall
 end
 
-.align 2
-catching_tutorial_lyra_message_done:
-wait_button
-closemsg
-scrcmd_602 0
-goto 0x590
+// Editable movement blocks -------------------------------------------------
+// Each step is encoded as `step TYPE, REPEAT_COUNT`. Keep `step_end` at the
+// end of every block. Slakoth retains the old MARILL object name only in the
+// map data; these labels use its story-facing name.
+.align 4
+route_29_slakoth_arrives:
+step MOVE_RUN_SOUTH, 1
+step MOVE_RUN_EAST, 2
+step MOVE_RUN_NORTH, 1
+step MOVE_JUMP_ON_SPOT_FAST_WEST, 2
+step_end
+
+.align 4
+route_29_friend_notices_player:
+step MOVE_FACE_EAST, 1
+step MOVE_EMOTE_EXCLAMATION, 1
+step_end
+
+.align 4
+route_29_friend_approach_z396:
+step MOVE_RUN_NORTH, 4
+step MOVE_RUN_EAST, 2
+step MOVE_RUN_SOUTH, 2
+step MOVE_RUN_WEST, 2
+step MOVE_RUN_NORTH, 2
+step MOVE_RUN_EAST, 4
+step_end
+
+.align 4
+route_29_friend_approach_z397:
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_NORTH, 3
+step MOVE_WALK_EAST, 2
+step_end
+
+.align 4
+route_29_friend_approach_z398:
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_NORTH, 2
+step MOVE_WALK_EAST, 2
+step_end
+
+.align 4
+route_29_friend_approach_z399:
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_NORTH, 1
+step MOVE_WALK_EAST, 2
+step_end
+
+.align 4
+route_29_friend_approach_z400:
+step MOVE_WALK_EAST, 4
+step_end
+
+.align 4
+route_29_friend_approach_z401:
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_SOUTH, 1
+step MOVE_WALK_EAST, 2
+step_end
+
+.align 4
+route_29_friend_approach_z402:
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_SOUTH, 2
+step MOVE_WALK_EAST, 2
+step_end
+
+.align 4
+route_29_slakoth_approach_z396:
+step MOVE_RUN_WEST, 1
+step MOVE_RUN_NORTH, 4
+step MOVE_RUN_EAST, 2
+step MOVE_RUN_SOUTH, 2
+step MOVE_RUN_WEST, 2
+step MOVE_RUN_NORTH, 2
+step MOVE_RUN_EAST, 3
+step_end
+
+.align 4
+route_29_slakoth_approach_z397:
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_NORTH, 3
+step MOVE_WALK_EAST, 1
+step_end
+
+.align 4
+route_29_slakoth_approach_z398:
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_NORTH, 2
+step MOVE_WALK_EAST, 1
+step_end
+
+.align 4
+route_29_slakoth_approach_z399:
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_NORTH, 1
+step MOVE_WALK_EAST, 1
+step_end
+
+.align 4
+route_29_slakoth_approach_z400:
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_EAST, 3
+step_end
+
+.align 4
+route_29_slakoth_approach_z401:
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_SOUTH, 1
+step MOVE_WALK_EAST, 1
+step_end
+
+.align 4
+route_29_slakoth_approach_z402:
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_EAST, 2
+step MOVE_WALK_SOUTH, 2
+step MOVE_WALK_EAST, 1
+step_end
+
+.align 4
+route_29_friend_stage_z396:
+step MOVE_WALK_SOUTH, 6
+step MOVE_WALK_WEST, 9
+step_end
+
+.align 4
+route_29_friend_stage_z397:
+step MOVE_WALK_SOUTH, 5
+step MOVE_WALK_WEST, 9
+step_end
+
+.align 4
+route_29_friend_stage_z398:
+step MOVE_WALK_SOUTH, 4
+step MOVE_WALK_WEST, 9
+step_end
+
+.align 4
+route_29_friend_stage_z399:
+step MOVE_WALK_SOUTH, 3
+step MOVE_WALK_WEST, 9
+step_end
+
+.align 4
+route_29_friend_stage_z400:
+step MOVE_WALK_SOUTH, 2
+step MOVE_WALK_WEST, 9
+step_end
+
+.align 4
+route_29_friend_stage_z401:
+step MOVE_WALK_SOUTH, 1
+step MOVE_WALK_WEST, 9
+step_end
+
+.align 4
+route_29_friend_stage_z402:
+step MOVE_WALK_WEST, 9
+step_end
+
+.align 4
+route_29_slakoth_stage_z396:
+step MOVE_WALK_EAST, 1
+step MOVE_WALK_SOUTH, 6
+step MOVE_WALK_WEST, 8
+step_end
+
+.align 4
+route_29_slakoth_stage_z397:
+step MOVE_WALK_EAST, 1
+step MOVE_WALK_SOUTH, 5
+step MOVE_WALK_WEST, 8
+step_end
+
+.align 4
+route_29_slakoth_stage_z398:
+step MOVE_WALK_EAST, 1
+step MOVE_WALK_SOUTH, 4
+step MOVE_WALK_WEST, 8
+step_end
+
+.align 4
+route_29_slakoth_stage_z399:
+step MOVE_WALK_EAST, 1
+step MOVE_WALK_SOUTH, 3
+step MOVE_WALK_WEST, 8
+step_end
+
+.align 4
+route_29_slakoth_stage_z400:
+step MOVE_WALK_EAST, 1
+step MOVE_WALK_SOUTH, 2
+step MOVE_WALK_WEST, 8
+step_end
+
+.align 4
+route_29_slakoth_stage_z401:
+step MOVE_WALK_EAST, 1
+step MOVE_WALK_SOUTH, 1
+step MOVE_WALK_WEST, 8
+step_end
+
+.align 4
+route_29_slakoth_stage_z402:
+step MOVE_WALK_EAST, 1
+step MOVE_WALK_WEST, 8
+step_end
+
+.align 4
+route_29_player_stage_z396:
+step MOVE_DELAY_8, 1
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_SOUTH, 6
+step MOVE_WALK_WEST, 5
+step_end
+
+.align 4
+route_29_player_stage_z397:
+step MOVE_DELAY_8, 1
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_SOUTH, 5
+step MOVE_WALK_WEST, 5
+step_end
+
+.align 4
+route_29_player_stage_z398:
+step MOVE_DELAY_8, 1
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_SOUTH, 4
+step MOVE_WALK_WEST, 5
+step_end
+
+.align 4
+route_29_player_stage_z399:
+step MOVE_DELAY_8, 1
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_SOUTH, 3
+step MOVE_WALK_WEST, 5
+step_end
+
+.align 4
+route_29_player_stage_z400:
+step MOVE_DELAY_8, 1
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_SOUTH, 2
+step MOVE_WALK_WEST, 5
+step_end
+
+.align 4
+route_29_player_stage_z401:
+step MOVE_DELAY_8, 1
+step MOVE_WALK_WEST, 1
+step MOVE_WALK_SOUTH, 1
+step MOVE_WALK_WEST, 5
+step_end
+
+.align 4
+route_29_player_stage_z402:
+step MOVE_DELAY_8, 1
+step MOVE_WALK_WEST, 6
+step_end
+
+.align 4
+route_29_counterpart_reacts:
+step MOVE_EMOTE_EXCLAMATION, 1
+step_end
+
+.align 4
+route_29_counterpart_encourages_slakoth:
+step MOVE_JUMP_ON_SPOT_FAST_WEST, 3
+step MOVE_DELAY_16, 1
+step MOVE_JUMP_ON_SPOT_FAST_WEST, 3
+step MOVE_DELAY_8, 3
+step MOVE_JUMP_ON_SPOT_FAST_WEST, 3
+step MOVE_DELAY_8, 3
+step_end
+
+.align 4
+route_29_slakoth_jumps_into_grass:
+step MOVE_DELAY_8, 3
+step MOVE_JUMP_FAR_WEST, 1
+step MOVE_DELAY_8, 3
+step MOVE_JUMP_ON_SPOT_FAST_WEST, 3
+step MOVE_DELAY_8, 3
+step MOVE_JUMP_ON_SPOT_FAST_WEST, 3
+step_end
+
+.align 4
+route_29_counterpart_crosses_grass:
+step MOVE_WALK_EAST, 3
+step_end
+
+.align 4
+route_29_slakoth_crosses_grass:
+step MOVE_WALK_EAST, 3
+step_end
+
+.align 4
+route_29_counterpart_departs:
+step MOVE_WALK_SOUTH, 2
+step MOVE_WALK_WEST, 4
+step MOVE_WALK_SOUTH, 4
+step MOVE_WALK_WEST, 3
+step_end
+
+.align 4
+route_29_slakoth_follows_counterpart:
+// Join the counterpart's starting tile, follow the same turns, and omit the
+// leader's final westward step to remain one tile behind.
+step MOVE_WALK_EAST, 1
+step MOVE_WALK_SOUTH, 2
+step MOVE_WALK_WEST, 4
+step MOVE_WALK_SOUTH, 4
+step MOVE_WALK_WEST, 2
+step_end
 .close
 
 // Mr. Pokémon: replace the obsolete Mystery Egg handoff with Shiny Bait,

@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-09-01
+Last updated: 2026-09-04
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -29,6 +29,12 @@ complete.
   encounter per displayed map section, use the Pokédex for exact-species
   duplicate checks, and treat Safari Zone and Bug-Catching Contest encounters
   through their documented special rules.
+- Do not allow the player to capture displaced Legendary Pokémon encountered
+  through the story. For the current plan, interacting with one returns it
+  directly to the Legendary Pokémon Sanctuary without requiring a battle or
+  defeat. Separately, a rare Sanctuary Ticket permits one formal
+  Contest-style session in which the player can catch multiple Legendary
+  Pokémon temporarily and keep one selected Legendary at the end.
 - Permanently remove fainted party Pokémon after eligible battles. On a wipe,
   recover the first usable boxed Pokémon and name it in the recovery message.
   Keep all 30 expanded PC boxes available for ordinary storage.
@@ -60,6 +66,10 @@ complete.
   Silver 1 occurs outside the lab, the counterpart teaches Bait without a
   simulated battle, and Mr. Pokemon gives Shiny Bait before progression
   continues toward Violet City. See `OPENING_SEQUENCE_PLAN.md`.
+- For the planned story expansion, retain Mum's setup and supplies, Elm's
+  starter and Healing Kit responsibilities, the tracked Egg requirements, and
+  the gender-selected Lyra/Ethan counterpart. Add Cynthia to the opening and
+  move the tracked Togepi Egg gift from Elm to her.
 - Replace the counterpart's recurring Marill companion with Slakoth. Before
   giving the Vs. Recorder in the Route 31-Violet gatehouse, Lyra or Ethan must
   be defeated in a gender-selected three-Pokemon battle. Losing follows the
@@ -94,6 +104,7 @@ complete.
 | Reusable healer | Complete; manually verified | Professor Elm gives new players a reusable Healing Kit after they receive their starter. It fully restores party HP, PP, and major status outside battle, is never consumed, cannot be used in battle, and can be registered to a field-use button. See `REUSABLE_HEALER_PLAN.md`. |
 | Intermittent field VBlank task failure | Fix implemented; build and manual verification pending | Field-model texture uploads are the confirmed bulk producer. Their replacement scheduler reserves four entries in the original 32-entry VBlank queue and retries excess uploads through existing main/VWait queues, preventing model bursts from starving field-lifecycle work. See `FIELD_VBLANK_TASK_FAILURE_INVESTIGATION.md`. |
 | Revised opening sequence | Implemented; new lab-exit gate pending build and manual verification | Skip the optional new-game information menu through its existing No Info Needed path, consolidate Mum's early unlocks, have Elm face the player while giving the Healing Kit and tracked Togepi Egg, require the Egg to hatch, its Togepi-line Pokémon to be shown to Elm and raised to level 5 before the assistant gives the starting supplies and Fishing Rod, move Silver 1 onto a valid New Bark path, shorten the counterpart's tutorial to explain Bait without a battle, have Mr. Pokémon explain and give Shiny Bait, preserve Oak's normal Pokédex departure, replace the later Egg gift with Shiny Bait, and remove the return-to-Elm requirement. See `OPENING_SEQUENCE_PLAN.md`. |
+| Story opening expansion | Planned | Retain Mum's early setup and supplies, Elm's starter and Healing Kit responsibilities, the gender-selected Lyra/Ethan counterpart, Slakoth, and the Togepi hatch/show/level-5 requirements. Add Cynthia to the player's house and journey to Elm, move the tracked Togepi Egg gift from Elm to Cynthia, add the Sanctuary crisis gathering, and establish the Cynthia/player, Steven/counterpart, and Lance/Silver mentorships. Exact scenes remain to be finalized in `STORY_PLAN.md` before implementation planning. |
 | Silver 2 post-Bugsy gate | Planned | Silver 2 is currently reachable before defeating Bugsy. Prevent the encounter from starting until Bugsy has been defeated and the Hive Badge progression state is complete, while leaving Silver 2 normally available afterward. Implementation must trace and reuse the verified existing Bugsy/badge state rather than introduce an unnecessary flag. |
 | First counterpart battle and Slakoth companion | Implemented; build and manual verification pending | Replace the counterpart's shared companion graphics and surviving scripted cries with Slakoth. The first New Bark encounter includes gendered dialogue about its unusually gutsy behavior. The Route 31-Violet gatehouse now requires a victory over Lyra or Ethan before the existing Vs. Recorder gift and completion state can proceed. |
 | Permanent death and wipe recovery | Complete; manually verified | Eligible fainted party Pokémon are deleted centrally after battle. Common field scripts report deaths and transactional reserve recovery after the overworld is visible; no-reserve wipes show the ending message and return to title. See `PERMANENT_DEATH_PLAN.md`. |
@@ -102,7 +113,10 @@ complete.
 | HM field actions | Implemented; build and manual verification pending | Owned machines enable Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Rock Climb, Fly, or Flash without teaching or compatibility requirements while preserving the original field checks and Pokémon presentation. See `HM_FIELD_ACTIONS_PLAN.md`. |
 | Evolution modernization | Partially complete; upstream mechanics present | hg-engine already uses the modern friendship threshold of 160, provides Linking Cord routes for the original trade evolutions and held-item trades, and replaces the magnetic-field, moss-rock, and ice-rock evolutions with stones. Player-facing completion still requires normal acquisition sources for the Linking Cord and required held items, plus an audit of unsupported special methods such as Karrablast/Shelmet's paired trade. |
 | Capture challenge rules | Implemented; manual verification pending | Ordinary encounters, Safari's shared saved opportunity, duplicate enforcement, the shiny clause, first-retained-Pokémon Contest handling, and the conditional capture-available introduction message are implemented. Focused Safari, revised Contest retention, and message checks remain. See `CAPTURE_RULES_PLAN.md`. |
-| Bug-Catching Contest availability | Pending after capture rules | Remove the weekday restriction so the Contest can be entered every day. Preserve other entry requirements and the existing daily participation limit unless changed separately. |
+| Legendary Sanctuary and returns | Planned | Story-displaced Legendary Pokémon are not catchable and currently return through direct interaction without a battle. Rare Sanctuary Tickets instead permit formal Contest-style sessions where multiple Legendaries may be caught temporarily and one retained at the end. Species pools, ticket sources, event limits, locations, order, persistent state, presentation, and conversion of the current Bug-Catching Contest remain to be planned. |
+| Bug-Catching Contest availability | Superseded by Sanctuary plan | Do not implement unrestricted daily Contest availability. The existing Contest remains the implementation baseline until it is redesigned as rare-ticket access to the Legendary Pokémon Sanctuary. |
+| Team Rocket story rebuild | Planned | Replace the current campaign with one centered on attacks against and attempted infiltration of the Legendary Pokémon Sanctuary. Slowpoke Well will be revised and will likely include Cynthia; later Rocket operations and their placement in the interleaved regional progression remain to be defined in `STORY_PLAN.md`. |
+| Legendary story rewrites | Planned | Rework the Ho-Oh, Lugia, and legendary-beast storylines so their story encounters do not end in capture. Suicune needs a more substantial rewrite. Connect the unnamed Rayquaza seeker to Red and the Mt. Silver finale. |
 | Generation 5-6 species engine/data foundation | Complete; supplied by hg-engine | The repository contains the expanded species IDs, personal data, evolutions, learnsets, experience data, battle and follower graphics, icons, cries, forms, and expanded Pokédex tables. This records the upstream foundation as complete for project planning; it is not a claim that every species and form has received focused in-game verification. |
 | Generation 5+ Pokémon content integration | In progress | The expanded roster is being placed and balanced through source-controlled encounters, trainers, and gifts. Early-game trainer content is currently documented through Azalea Gym in `POKEMON_TRAINERS.md`; later progression and other acquisition sources remain to be designed. |
 | Reusable configured Egg gifts | Complete; manually verified | Violet City's existing trade now offers Dark/Sandile, Steel/Tinkatink, and Ice/Swinub Eggs with 25 in every IV and Moxie, Mold Breaker, or Thick Fat respectively. Standard script 2075 accepts species, met-location, completion-flag, and packed IV/ability variables, refuses a full party without consuming the gift, and sets the flag only after successfully configuring the Egg. |
