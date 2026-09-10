@@ -1,6 +1,6 @@
 # Pokémon Encounters
 
-Last updated: 2026-08-25
+Last updated: 2026-09-08
 
 This document tracks the intended wild encounter content by area. Keep it
 synchronized with the source-controlled encounter tables whenever an area,
@@ -380,3 +380,35 @@ Wimpod at the standard method-specific 5-slot probabilities.
 | 2 | 5% | 15% | Pyukumuku |
 | 3 | 4% | 10% | Bruxish |
 | 4 | 1% | 5% | Binacle |
+
+## Legendary Pokémon Sanctuary
+
+- The former Bug-Catching Contest map has no ordinary land, water, fishing,
+  Rock Smash, radio, swarm, or Bait encounters.
+- Story-unlocked casual visits therefore contain no encounters.
+- Formal Sanctuary Permit sessions select one of four replacement pools from
+  `data/legendary_sanctuary_encounters.c` through
+  `VAR_SANCTUARY_POOL_STAGE`.
+- Every eligible species in the selected pool has equal probability; caught
+  Pokédex species and species caught earlier in that session are excluded.
+- Stage 0 contains the following level-40 roster. Each species has a base
+  probability of 1/12 (approximately 8.33%) when all twelve are eligible.
+  Exclusions reduce the denominator, keeping the remaining species equally
+  likely.
+
+| Stage | Species | Level | Base probability |
+|---:|---|---:|---:|
+| 0 | Articuno | 40 | 8.33% |
+| 0 | Zapdos | 40 | 8.33% |
+| 0 | Moltres | 40 | 8.33% |
+| 0 | Raikou | 40 | 8.33% |
+| 0 | Entei | 40 | 8.33% |
+| 0 | Suicune | 40 | 8.33% |
+| 0 | Regirock | 40 | 8.33% |
+| 0 | Regice | 40 | 8.33% |
+| 0 | Registeel | 40 | 8.33% |
+| 0 | Uxie | 40 | 8.33% |
+| 0 | Mesprit | 40 | 8.33% |
+| 0 | Azelf | 40 | 8.33% |
+
+- Stages 1–3 are currently empty replacement pools.

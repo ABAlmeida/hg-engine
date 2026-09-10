@@ -497,7 +497,7 @@ A somewhat different Poké Ball that\nbecomes more effective the heavier\nthe Po
 A somewhat different Poké Ball that is\nmore effective when catching Pokémon\nof the opposite gender to your own.
 A somewhat different Poké Ball that\nmakes a wild Pokémon more friendly\ntoward you immediately.
 A somewhat different Poké Ball that is\nmore effective when catching Pokémon\nthat can be evolved using a Moon Stone.
-A special Poké Ball that is used\nduring the Bug-Catching Contest.
+A special Poké Ball supplied for\nformal visits to the Legendary\nPokémon Sanctuary.
 A special Poké Ball used in the Pal\nPark.
 A nice photo album for storing all\nthe photos taken along your\nadventure.
 A music player that allows you to listen\nto nostalgic songs. It’s operated with\nthe flip of a single switch.

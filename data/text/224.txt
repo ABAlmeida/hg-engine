@@ -20,3 +20,4 @@
 {COLOR 255}Calcium Max{COLOR 0}
 {COLOR 255}Zinc Max{COLOR 0}
 {COLOR 255}IV Max{COLOR 0}
+{COLOR 255}Sanctuary Permit{COLOR 0}

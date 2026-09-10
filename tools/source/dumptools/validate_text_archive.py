@@ -30,6 +30,9 @@ def load_charmap(path):
 
     # Explicit whitespace safety
     valid_chars.update([' ', '\n', '\r', '\f'])
+    # msgenc treats trainer-name records as a dedicated F100 prefix rather
+    # than a normal charmap command.
+    valid_commands.add('TRNAME')
 
     return valid_chars, valid_commands
 

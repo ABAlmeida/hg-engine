@@ -107,6 +107,12 @@ u32 LONG_CALL ItemCheckUseFunc_Bait(const struct ItemCheckUseData *checkData)
 {
     void *eventData = SaveData_GetEventPtr(checkData->fieldSystem->savedata);
 
+    // The Sanctuary has no ordinary encounter table. Its active-session
+    // selector is deliberately inaccessible to both Bait variants.
+    if (checkData->mapId == MAP_D22R0102) {
+        return ITEM_USE_ERROR_NOT_NOW;
+    }
+
     if (SaveVarsFlags_CheckSafariSysFlag(eventData) || SaveVarsFlags_CheckBugContestFlag(eventData)) {
         return ITEM_USE_ERROR_NOT_NOW;
     }

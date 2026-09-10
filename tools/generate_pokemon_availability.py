@@ -408,6 +408,24 @@ def parse_headbutt_encounters() -> dict[str, set[str]]:
     return result
 
 
+def parse_sanctuary_encounters() -> dict[str, set[str]]:
+    config = read("include/config.h")
+    if not re.search(r"^#define\s+IMPLEMENT_LEGENDARY_SANCTUARY\s*$", config, re.MULTILINE):
+        return {}
+    if not re.search(r"^#define\s+SANCTUARY_CONTENT_READY\s+TRUE\s*$", config, re.MULTILINE):
+        return {}
+
+    text = read("data/legendary_sanctuary_encounters.c")
+    result: dict[str, set[str]] = defaultdict(set)
+    for stage_match in re.finditer(r"^\s*\[(\d+)\]\s*=\s*\{", text, re.MULTILINE):
+        stage = stage_match.group(1)
+        opening = text.find("{", stage_match.start())
+        block = text[opening : find_matching_brace(text, opening) + 1]
+        for species in species_in_text(block, {}):
+            result[species].add(f"Legendary Sanctuary (Permit, stage {stage})")
+    return result
+
+
 def merge_locations(*sources: dict[str, set[str]]) -> dict[str, set[str]]:
     merged: dict[str, set[str]] = defaultdict(set)
     for source in sources:
@@ -546,7 +564,7 @@ def render(records: dict[str, SpeciesRecord], locations: dict[str, set[str]], tr
         "- **Usable with limitations**: the Pokémon can be placed deliberately, but the listed ability, move, or evolution behavior is incomplete. Review and control the affected slot or content before adding it.",
         "- **Needs audit**: source data exists, but a form-specific detail such as learnset inheritance cannot be proven by this static audit.",
         "- **Do not add**: a required core asset or every configured ordinary ability is known to be unavailable.",
-        "- **Used** means present in at least one generated wild-encounter table or trainer party. **Catchable** lists ordinary, swarm, Safari Zone, and Headbutt tables whose method is enabled and obtainable in this project.",
+        "- **Used** means present in at least one generated wild-encounter table or trainer party. **Catchable** lists ordinary, swarm, Safari Zone, Headbutt, and Legendary Sanctuary tables whose method is enabled and obtainable in this project.",
         "",
         "> **Dex number and engine ID are different after Arceus.** HGSS reserves engine IDs 494–543 for Egg/Bad Egg and numbered placeholder records. Victini is National Dex 494 but engine ID 544; later canonical Pokémon retain that 50-ID offset. The reserved records are not Pokémon and are excluded from the tables below.",
         "",
@@ -560,7 +578,7 @@ def render(records: dict[str, SpeciesRecord], locations: dict[str, set[str]], tr
         "- Hidden abilities: `data/HiddenAbilityTable.c`",
         "- Learnsets: `data/learnsets/learnsets.json`",
         "- Explicit move implementation flags: `data/Moves.c`",
-        "- Ordinary, Safari Zone, and Headbutt encounters: `data/Encounters.c`, `data/SafariEncounters.c`, and `data/Headbutt.c`",
+        "- Ordinary, Safari Zone, Headbutt, and Legendary Sanctuary encounters: `data/Encounters.c`, `data/SafariEncounters.c`, `data/Headbutt.c`, and `data/legendary_sanctuary_encounters.c`",
         "- Trainer names, IDs, and parties: `data/Trainers.c`",
         "- Source-proven limitations and project-wide unavailable encounter methods: `data/pokemon_availability_overrides.json`",
         "",
@@ -750,6 +768,7 @@ def main() -> int:
         parse_ordinary_encounters(disabled_methods),
         parse_safari_encounters(disabled_methods),
         parse_headbutt_encounters(),
+        parse_sanctuary_encounters(),
     )
     trainers = parse_trainers()
     unknown_placements = (set(locations) | set(trainers)) - set(records)

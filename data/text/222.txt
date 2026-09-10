@@ -497,7 +497,7 @@ Heavy Ball
 Love Ball
 Friend Ball
 Moon Ball
-Sport Ball
+Sanctuary Ball
 Park Ball
 Photo Album
 GB Sounds
@@ -2705,3 +2705,4 @@ Carbos Max
 Calcium Max
 Zinc Max
 IV Max
+Sanctuary Permit

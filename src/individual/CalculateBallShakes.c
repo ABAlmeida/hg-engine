@@ -250,7 +250,11 @@ u32 __attribute__((section(".init"))) CalculateBallShakesInternal(void *bw, stru
 #if SPORT_BALL_GENERATION == 4
     case ITEM_SPORT_BALL:
         if (BattleTypeGet(bw) & BATTLE_TYPE_BUG_CONTEST) {
+#ifdef IMPLEMENT_LEGENDARY_SANCTUARY
+            ballCaptureRatio = (SANCTUARY_BALL_CATCH_RATE_PERCENT * 0x1000) / 100;
+#else
             ballCaptureRatio = 0x1800;
+#endif
         }
         break;
 #endif

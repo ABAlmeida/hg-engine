@@ -27,7 +27,9 @@ successful result to the normal wild-battle transition:
 - Successful use consumes one item.
 - Invalid terrain is rejected in the Bag with the standard item-use error and
   does not consume the item.
-- Bait cannot be used during Safari Zone or Bug-Catching Contest sessions.
+- Bait cannot be used during Safari Zone sessions. Both Bait variants are
+  always blocked on the Legendary Sanctuary map, whether a Permit session is
+  active or not.
 - Bait bypasses the roamer branch so it always uses the ordinary encounter
   table.
 
@@ -38,7 +40,7 @@ old-save migration is provided.
 ## Preserved encounters
 
 The passive-encounter patches do not disable roaming, Safari Zone,
-Bug-Catching Contest, fishing, Rock Smash, Headbutt, static, or scripted
+Legendary Sanctuary, fishing, Rock Smash, Headbutt, static, or scripted
 encounters.
 
 ## Item and acquisition changes

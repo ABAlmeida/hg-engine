@@ -2715,8 +2715,13 @@
 #define ITEM_CALCIUM_MAX   (MAX_BASE_ITEM_NUM + 20)
 #define ITEM_ZINC_MAX      (MAX_BASE_ITEM_NUM + 21)
 #define ITEM_IV_MAX        (MAX_BASE_ITEM_NUM + 22)
+#define ITEM_SANCTUARY_PERMIT (MAX_BASE_ITEM_NUM + 23)
 
-#define MAX_TOTAL_ITEM_NUM ITEM_IV_MAX
+// The original Sport Ball ID is retained so Contest battle code and save data
+// remain binary-compatible; only its Sanctuary-facing identity changes.
+#define ITEM_SANCTUARY_BALL ITEM_SPORT_BALL
+
+#define MAX_TOTAL_ITEM_NUM ITEM_SANCTUARY_PERMIT
 
 #define NUM_MEGA_STONES (48) // includes the pixie plate, doesn't include plza megas due to overflowing bag
 #define NUM_HMS         (ITEM_HM08 - ITEM_HM01 + 1) // intentionally do not include HM07_ORAS (Dive)
@@ -2888,6 +2893,9 @@ enum ItemGeneration {
 #ifdef ITEM_POCKET_EXPANSION
 
 // pixie plate + megas
+// Keep this serialized pocket capacity stable. New item IDs do not require a
+// new slot unless every existing slot can be occupied at once; increasing it
+// changes BAG_DATA and invalidates saves made by the preceding HG build.
 #define NUM_BAG_ITEMS        165 + 32 + NUM_MEGA_STONES
 #define NUM_BAG_MEDICINE     40
 #define NUM_BAG_BALLS        24 + 2

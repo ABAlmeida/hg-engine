@@ -3,6 +3,7 @@
 #include "../../include/battle.h"
 #include "../../include/config.h"
 #include "../../include/permanent_death.h"
+#include "../../include/legendary_sanctuary.h"
 #include "../../include/pokedex.h"
 #include "../../include/pokemon.h"
 #include "../../include/save.h"
@@ -171,6 +172,9 @@ void LONG_CALL CaptureRules_GenerateOrdinaryEncounter(
 
 BOOL LONG_CALL CaptureRules_ScrCmdBugContestAction(SCRIPTCONTEXT *ctx)
 {
+#ifdef IMPLEMENT_LEGENDARY_SANCTUARY
+    return Sanctuary_ScrCmdAction(ctx);
+#else
     u8 action = ScriptReadByte(ctx);
     u32 weekday = ScriptGetVar(ctx);
     FieldSystem *fieldSystem = ctx->fsys;
@@ -209,6 +213,7 @@ BOOL LONG_CALL CaptureRules_ScrCmdBugContestAction(SCRIPTCONTEXT *ctx)
     }
 
     return FALSE;
+#endif
 }
 
 #endif

@@ -174636,6 +174636,14 @@ const ITEMDATA __data[] =
     .partyUse = 1,
 },
 
+[ITEM_SANCTUARY_PERMIT] = {
+    ITEM_PRICE(0),
+    .flingPower = 30,
+    .naturalGiftType = TYPE_NORMAL,
+    .fieldPocket = POCKET_ITEMS,
+    .battlePocket = BATTLE_POCKET_NONE,
+},
+
 #undef STAT_TRAINING_VITAMIN
 
 };

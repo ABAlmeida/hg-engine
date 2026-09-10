@@ -3710,7 +3710,7 @@ const TrainerData sTrainerData[] = {
             },
             {
                 .type = TRMSG_AFTER,
-                .text = "My VENONAT won me the Bug-Catching\\nContest at the National Park.\\n",
+                .text = "My VENONAT and I trained near the\\nLegendary Sanctuary.\\n",
             },
             {
                 .type = TRMSG_PHONE_REMATCH_INTRO,

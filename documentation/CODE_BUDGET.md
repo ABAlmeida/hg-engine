@@ -41,18 +41,20 @@ feature total.
 | Poké Bait and Shiny Bait | `bait.o` | 377 | Tile/use validation: 168; item-use task: 52; menu use: 116; mode queries: 32; state: 1 plus alignment. A shared encounter task avoids duplicated normal/shiny implementations. |
 | Challenge capture rules | `capture_rules.o` | 53 | Overlay 129 now retains only initialization and the one-byte permission that must survive the field-to-battle transition. The relocated field component is 632 bytes and the battle component is 324 bytes. This reclaimed 876 directly attributable overlay-129 bytes. |
 | HM use without teaching | `machine_field_actions.o`, Party-menu integration, and shared field-interaction adapters | Previously 474; new measurement pending | The prior measurement covered the script lookup/use command, usability and ownership checks, move table, and accessors. Two register-specific entry adapters share one tail for the independent Surf interaction and automatic Waterfall-descent learned-move gates; supporting Waterfall adds 4 injected bytes over the Surf-only adapter. The menu-layout correction adds only a conditional swap so Item retains the former Quit position; it adds no BSS, heap, save, archive, or VRAM cost. Measure the updated objects and remaining overlay-129 headroom on the next explicitly requested build. |
-| Permanent death and wipe handling | `permanent_death.o` | 957 | All state, party retirement/recovery, notification scheduling, deferred callbacks, and direct ARM9 hook entries remain resident. The independently linked field extension cannot safely supply unresolved or early-lifetime ARM9 targets. The rejected split's 554-byte root measurement is retained only in the historical snapshot below. |
+| Permanent death and wipe handling | `permanent_death.o` | Previous measurement: 957; new measurement pending | All state, party retirement/recovery, notification scheduling, deferred callbacks, and direct ARM9 hook entries remain resident. The separate Sanctuary defeat adapter has been removed; centralized Sanctuary teardown now owns the ordering before the original Contest task heals survivors. The rejected split's 554-byte root measurement is retained only in the historical snapshot below. |
 | Reusable Healing Kit | `reusable_healer.o` | 316 | Healing: 104; field task: 132; menu/field entrypoints: 72; alignment: remainder. Small and centralized. |
 | Stat-training items | `stat_training_items.o` | 540 | Effect lookup: 116; validation: 172; application: 212; handled-item check: 32; alignment: remainder. Shared vitamin handling avoids per-item functions. |
 | Summary stat/IV/EV viewer, nature colours, and friendship | `summary.o` | 1,144 | The final object is 46 bytes larger than the 1,098-byte pre-friendship object and 74 bytes smaller than the failed first implementation. It shares the Pokémon pointer and nature result and calculates nature effects instead of storing the former 150-byte table. |
 | Goldenrod Berry Shop inventory | `mart.o` data table | Measurement pending; nominal payload grows by 126 bytes | The former five-entry, 10-byte herbal table becomes a 68-entry, 136-byte Berry table including its terminator. This uses the existing mart path and avoids a larger custom shop/price hook; confirm the linked delta and remaining headroom on the next explicitly requested build. |
 | General script commands | `script_new_cmds.o` | Measurement pending | Previously 136 bytes. Configured Egg IV/ability handling now shares this dispatcher; measure its new object size and remaining overlay-129 headroom on the next explicitly requested build. |
 | Field VBlank model-upload backpressure | `field_vblank.o` | Measurement pending | Retargets one verified field-overlay call to a guarded scheduler that waits at 28 of 32 occupied slots. It adds injected code but no BSS, heap, save, archive, or VRAM allocation. Measure the object and remaining overlay-129 headroom on the next explicitly requested build. |
+| Legendary Sanctuary lifecycle | `field/legendary_sanctuary.o`, `legendary_sanctuary_exit.o` | Previous field-only measurement: 1,404; new measurement pending | Session creation, equal-weight selection, and script actions remain in overlay 131. The small teardown/warp bridge is always resident because the ARM9 defeat and Ball-exhaustion paths can run before the field extension is available. It adds no BSS or save data. The 256-byte pool table is included in the previous gross field-object size. Storage failure releases the candidate during unconditional teardown. |
 ## Battle-extension feature costs
 
 | Feature | Measured cost | Notes and possible savings |
 | --- | ---: | --- |
 | Fair-information expert trainer AI | 8,172 linked bytes | The current requested build uses 77,668 bytes of overlay 130 against the 69,496-byte configuration-off baseline. `trainer_ai.o` contains 7,832 bytes of code and 288 bytes of BSS. This includes contextual reserve actions, team support, entry commitment, and the corrected long-call fallback to the original HGSS AI. It adds no heap, save, archive, graphics, or VRAM cost. |
+| Legendary Sanctuary temporary-Pokédex suppression | Removed; previous measurement 48 linked bytes | Intermediate Contest-style captures now use the normal immediate Pokédex registration path, so the battle hook and object are no longer present. |
 
 ## Injected features within shared objects
 
@@ -116,7 +118,7 @@ implementation rather than after the linker is full.
 | Laptop PC access | Injected field/item entry code plus existing PC overlay | Prefer the existing PC launcher and one narrow field task. Measure before adding custom UI or duplicate PC state. |
 | Coordinated doubles trainer AI | Deferred; likely battle extension plus verified overlay 10 integration | No current implementation or reserved-byte commitment. Re-estimate only after the singles-oriented expert layer is complete and measured. See `TRAINER_AI_DOUBLES_PLAN.md`. |
 | Forced-female protagonist | Script/in-place configuration | Should not require synthetic-overlay code if implemented through the existing intro flow. |
-| Bug-Catching Contest daily availability | Field scripts/data | Prefer changing the verified schedule checks without new C code. |
+| Legendary Sanctuary content completion | Existing field extension plus scripts/data | Core lifecycle code is implemented. Populate the four read-only stage pools and choose the story event that sets the unlock flag; measure field-extension growth and archive deltas on the next explicitly requested build. See `LEGENDARY_SANCTUARY_PLAN.md`. |
 | Battle Item acquisition removal | Content data/scripts | No synthetic-overlay code expected. Keep item IDs stable. |
 | Graphics and presentation | ROM, heap, and VRAM | Track compressed asset size and loaded runtime footprint separately from executable code. |
 
@@ -131,6 +133,7 @@ implementation rather than after the linker is full.
 | Summary friendship display | Heap/stack/save | No new save state or allocation. It reads the existing friendship field during Summary rendering. |
 | Fair-information expert trainer AI | Battle-extension BSS and stack | 280 bytes of BSS for six revealed-party records, cached per-battler decisions, and switch hysteresis. No heap allocation or save data. Loading a newly revealed species' learnset uses a bounded 136-byte stack buffer once per reveal; normal decisions use a fixed nine-action array covering four moves and up to five legal switches. |
 | Text and script features | ROM archive and load heap | Archive growth should be measured independently when it becomes material; it does not reduce synthetic-overlay headroom. |
+| Legendary Sanctuary session | Existing field heap plus small bounded extension | Reuses the original Contest work pointer and candidate Pokémon and adds only a magic/version marker plus the selected stage; it adds no persistent save fields. The Sanctuary Permit adds an item ID without increasing the serialized Bag pocket capacity, preserving compatibility with saves from the preceding Heartless Gold build. The real party and PC remain authoritative and are never duplicated. |
 
 ## Required update procedure
 
@@ -152,6 +155,7 @@ After a user-requested successful code or ROM build:
 | Shared-nature/formula friendship implementation, before feature relocation | 32,611 | 32,672 | 61 | Successful build artifact used as relocation baseline |
 | Unsafe first capture/permanent-death lifetime split | 31,295 | 32,672 | 1,377 | Built on 2026-08-07, but startup testing failed because ARM9 hook targets were placed in an extension that was not loaded yet. Historical measurement only. |
 | Safe capture-only lifetime split | 31,699 | 32,672 | 973 | Successful `quick-rom` build on 2026-08-07. Permanent-death code remains resident; capture field and battle logic remain relocated. |
+| Legendary Sanctuary core build | 29,987 | 32,672 | 2,685 | Successful `quick-rom` build on 2026-09-08. The Sanctuary core itself is placed in the field and battle extensions rather than this resident region. |
 
 ### Historical fair trainer-AI battle-extension comparison
 
@@ -177,3 +181,17 @@ Bug-Contest capture paths in the field extension and Safari initialization in
 the battle extension. Both extensions retain substantial headroom and are
 entered only from code whose owning overlay is loaded. Permanent-death code is
 not included in either extension.
+
+### Current extension snapshot
+
+| Region | Used | Configured capacity | Free | Sanctuary object included |
+| --- | ---: | ---: | ---: | ---: |
+| Battle extension (overlay 130) | 81,128 | 81,420 | 292 | 48 |
+| Field extension (overlay 131) | 21,806 | 98,304 | 76,498 | 1,404 |
+
+These are the outputs from the successful 2026-09-08 `quick-rom` build, before
+the temporary Pokédex-suppression object was removed. The
+battle linker deliberately reserves the final 500 bytes of its physical
+81,920-byte allocation; the 292-byte figure is therefore the usable headroom
+inside the configured linker region, not the physical remainder. This is tight
+enough that further battle-extension work should be measured immediately.

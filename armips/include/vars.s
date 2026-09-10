@@ -376,6 +376,7 @@ VAR_UNK_416B equ                       0x416B
 VAR_UNK_416C equ                       0x416C
 VAR_UNK_416D equ                       0x416D
 VAR_UNK_416E equ                       0x416E
+VAR_SANCTUARY_POOL_STAGE equ            VAR_UNK_416E
 VAR_GOT_ROUTE_12_SHINY_BAIT equ        0x416F
 
 NUM_VARS equ                           (0x170)

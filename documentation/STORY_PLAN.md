@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Story Plan
 
-Last updated: 2026-09-04
+Last updated: 2026-09-08
 
 ## Purpose and status
 
@@ -67,7 +67,7 @@ wider population dwindles.
   Pokémon populations.
 - Returning missing Legendary Pokémon to the Sanctuary is a recurring side
   storyline throughout the journey.
-- The Sanctuary also admits trainers through rare formal-entry tickets. A
+- The Sanctuary also admits trainers through rare formal-entry permits. A
   sanctioned visit can result in one Legendary Pokémon joining the trainer,
   without changing the player's separate role of returning displaced
   Legendaries encountered in the story.
@@ -280,7 +280,7 @@ meaningfully change one of these arcs.
   still open.
 - Replace the Bug-Catching Contest's story identity with the Legendary Pokémon
   Sanctuary while retaining a related formal event structure through rare
-  tickets.
+  permits.
 - Rework the Ho-Oh and Lugia storylines so their main-story encounters do not
   end with the player catching them.
 - Rework the legendary beasts along similar lines. Suicune's existing story
@@ -422,10 +422,10 @@ not drift apart.
 | Why does battling not grant experience? | Open | |
 | Who created or controls Poké Bait and Shiny Bait? | Open | Mr. Pokémon currently introduces Shiny Bait, but its origin is undecided. |
 | Why are wild Pokémon populations dwindling? | Decided | The balance of the Sanctuary's Legendary Pokémon maintains the balance of all Pokémon. Team Rocket's attacks have driven Legendaries away and destabilized ordinary populations. |
-| What is the Legendary Pokémon Sanctuary and how does it replace the Bug-Catching Contest? | Decided core; details open | The former Contest becomes a Sanctuary specifically for Legendary Pokémon. Rare tickets permit formal entry into a similar event where one Legendary may ultimately join the trainer. Its custodians, physical organization, and public history remain open. |
+| What is the Legendary Pokémon Sanctuary and how does it replace the Bug-Catching Contest? | Decided core; details open | The former Contest becomes a Sanctuary specifically for Legendary Pokémon. Rare Sanctuary Permits grant one formal visit where one Legendary may ultimately join the trainer. Its custodians, physical organization, and public history remain open. |
 | What does it mean that some Legendary Pokémon have “returned”? | Decided | They have returned to the Sanctuary, improving the collective balance that sustains ordinary Pokémon. |
 | Why is it safe for a trainer to keep one Legendary after a sanctioned Sanctuary visit? | Open | The answer must preserve the premise that the Sanctuary's Legendary balance sustains all Pokémon populations. |
-| Who issues rare Sanctuary tickets, and what earns one? | Open | Ticket scarcity is the primary restriction on obtaining a Sanctuary Legendary. |
+| Who issues rare Sanctuary Permits, and what earns one? | Open | Permit scarcity is the primary restriction on obtaining a Sanctuary Legendary. |
 | Who is the unnamed trainer searching for Rayquaza? | Draft | He is Red, but the opening must not identify him by name. The timing of the eventual reveal remains open. |
 | Why does Team Rocket want to infiltrate the Sanctuary? | Open | Its concrete objective must be strong enough to drive the full cross-region plot. |
 | Why is only the first eligible encounter in each area available for capture? | Decided | Limiting trainers to one opportunity prevents repeated hunting from further disrupting a local population. |
@@ -503,7 +503,7 @@ Resolve these before drafting the post-Violet chapters:
 | --- | --- | --- | --- |
 | 2026-09-04 | Preserve the gender-selected Lyra/Ethan counterpart. Steven mentors whichever counterpart appears. | Retain compatibility with either player character while adding the new mentorship story. | Opening and counterpart arc |
 | 2026-09-04 | Have Cynthia give the tracked Togepi Egg while Elm retains his other opening gifts and responsibilities. | Integrate Cynthia directly into the player's established opening progression. | Opening |
-| 2026-09-04 | Allow formal entry to the Legendary Pokémon Sanctuary through rare tickets. A sanctioned visit can result in one Legendary Pokémon joining the trainer. | Preserve a restricted way to obtain Legendaries while separating sanctioned Sanctuary access from the storyline about returning displaced Legendaries. | Sanctuary and Legendary availability |
+| 2026-09-04 | Allow formal entry to the Legendary Pokémon Sanctuary through rare Sanctuary Permits. A sanctioned visit can result in one Legendary Pokémon joining the trainer. | Preserve a restricted way to obtain Legendaries while separating sanctioned Sanctuary access from the storyline about returning displaced Legendaries. | Sanctuary and Legendary availability |
 | 2026-09-04 | Limit trainers to the first eligible encounter in each area to protect dwindling local populations from repeated hunting. Let non-duplicate shiny Pokémon bypass the used-area restriction because they require further study. | Give the area limit and shiny clause a direct conservation purpose within the population crisis. | Opening and all capture areas |
 | 2026-09-04 | Make the Sanctuary exclusively a refuge for Legendary Pokémon. Their collective balance sustains all Pokémon populations, and returning displaced Legendaries is a recurring side storyline. | Make restoration of the Legendary population the direct means of repairing the wider ecological crisis. | Opening, Legendary encounters, and Sanctuary storyline |
 | 2026-09-04 | Mention at the start that an unnamed trainer is searching for Rayquaza. Internally this trainer is Red, but the opening does not identify him by name. | Seed Red and Rayquaza as a long-running mystery that can connect the opening to the Mt. Silver finale. | Opening through finale |

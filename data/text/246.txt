@@ -1,0 +1,88 @@
+Time’s up! Your Sanctuary visit\nhas ended.\r
+You’ve used all your\nSanctuary Balls.\rYour visit has ended.
+The Legendary Pokémon Sanctuary\nis not open to you yet.
+You still have {STRVAR_1 51, 0, 0} minute(s) left.\nWould you like to finish now?
+A Sanctuary Permit grants one\ntimed formal visit.\rYou may catch several Pokémon,\nbut you can retain only one.\rWould you like to begin?
+You need a Sanctuary Permit\nto begin a formal visit.
+The Sanctuary is not admitting\nvisitors just yet.\rPlease return when its first\nLegendary Pokémon have arrived.
+The Sanctuary shelters\nLegendary Pokémon.\rFormal visits require a Permit.
+Your Sanctuary visit is beginning.
+Your party and PC were full.\rThe retained Pokémon was released.
+Your entire party may\naccompany you inside.
+Very well. Your Permit has not\nbeen used.
+Thank you for visiting\nthe Sanctuary.
+Your party will remain with you\nthroughout the visit.
+Here are your Sanctuary Balls.\rYou received your supply of\nSanctuary Balls.\r
+You have {STRVAR_1 51, 0, 0} minute(s).\rEach eligible Pokémon has an equal\nchance to appear.\rYou may catch several. Only the\none retained at the end is yours.\rSpecies already registered in your\nPokédex will not appear.
+If your party and PC are full,\nthe retained Pokémon is released.
+Very well. Your Permit has not\nbeen used.
+Thank you for visiting the\nLegendary Pokémon Sanctuary.\rUse that power wisely. The fate\nof the world may depend on it.
+Some Legendary Pokémon appear\nonly during a formal visit.
+Your retained Pokémon will be\ntransferred when the visit ends.
+Please make room in your Bag,\nthen speak to the attendant again.
+We hope you will visit the\nSanctuary in the future.
+You still have {STRVAR_1 51, 0, 0} minute(s) left.\nWould you like to finish now?
+The Sanctuary is quiet outside\na formal visit.
+Your Permit remains unused.
+Please continue your visit.
+Your visit will now end.
+If no storage space is available,\nthe retained Pokémon is released.
+There is no judging ceremony in\nthe Legendary Pokémon Sanctuary.
+Your final candidate will be the\nonly Pokémon retained.
+Temporary candidates are not added\nto your Pokédex.
+Every eligible species has the\nsame chance to appear.
+Species caught earlier in this visit\nwill not appear again this session.
+Species already caught and registered\nin your Pokédex are excluded.
+Sanctuary stages replace earlier pools\nrather than accumulating them.
+Your complete party may enter.
+No Pokémon are held by the attendant.
+Sanctuary Balls work only during\na formal Sanctuary visit.
+The Sanctuary Ball’s catch rate is\nconfigured for these encounters.
+There are no rankings or prizes.
+The Pokémon you retain is your\nonly reward for the visit.
+Would you like to nickname the\nPokémon you retained?
+Your retained Pokémon is ready\nto be transferred.
+The transfer could not be completed.\nThe retained Pokémon was released.
+Your party is full, so {STRVAR_1 1, 5, 0}\nwas sent to a Box in Bill’s PC.\r
+Your party remained with you\nthroughout the visit.
+Visitor: The Sanctuary feels different\nevery time I come here.
+Visitor: I wonder which Legendary\nPokémon have returned.
+Visitor: A Permit is rare, so I would\nuse one carefully.
+Visitor: I’m here to learn about\nthe Sanctuary.
+Visitor: The keepers protect every\nPokémon that lives here.
+Visitor: It is wise to prepare your\nwhole party before entering.
+Visitor: Equal odds make every\nencounter feel important.
+Visitor: A Pokémon already caught\nwill not appear here again.
+Visitor: I heard the available species\ncan change as the story unfolds.
+Visitor: A formal visit can pass\nmore quickly than you expect.
+Visitor: Sanctuary Balls are supplied\nonly for formal visits.
+Visitor: You can compare a new catch\nwith your current candidate.
+Visitor: Only the candidate you retain\nbecomes permanently yours.
+Visitor: Replaced candidates remain\nprotected by the Sanctuary.
+Visitor: Bait cannot be used here.
+Visitor: Shiny Bait cannot be used\nhere either.
+Visitor: The Sanctuary’s ordinary\nencounter table is empty.
+Visitor: A Permit activates the special\nencounter pool.
+Visitor: The current pool depends\non the Sanctuary’s story stage.
+Visitor: Later pools replace the\nearlier ones.
+Visitor: There is no contest judging\nhere any more.
+Visitor: There are no consolation\nprizes either.
+Visitor: The Sanctuary is about\nresponsibility, not competition.
+Visitor: The fate of the world may\nrest on these Pokémon.
+Visitor: Protect the Pokémon that\nchooses to leave with you.
+Visitor: I hope more Legendary\nPokémon return safely.
+Visitor: Team Rocket must never be\nallowed to threaten this place.
+Visitor: The Sanctuary’s balance\nsupports Pokémon everywhere.
+Visitor: A formal visit ends when time\nor Sanctuary Balls run out.
+Visitor: You may also choose to leave\nearly through the attendant.
+Visitor: Use that power wisely.
+{TRNAME}Don
+{TRNAME}Ed
+{TRNAME}Abby
+{TRNAME}William
+{TRNAME}Benny
+{TRNAME}Barry
+{TRNAME}Cindy
+{TRNAME}Josh
+{TRNAME}Samuel
+{TRNAME}Kipp

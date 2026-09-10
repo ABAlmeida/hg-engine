@@ -10,7 +10,8 @@
 typedef struct CaptureRulesSave {
     // One bit per displayed map section, shared by ordinary and Safari encounters.
     u32 consumedAreas[CAPTURE_AREA_WORD_COUNT];
-    // Set only after a Bug-Catching Contest Pokemon is actually retained.
+    // Legacy Bug-Catching Contest state retained only to preserve save layout.
+    // Legendary Sanctuary sessions do not read or write this byte.
     u8 bugContestPokemonKept;
     u8 padding[3];
 } CaptureRulesSave;

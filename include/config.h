@@ -93,8 +93,36 @@
 // duplicate, shiny-clause, Safari Zone, and Bug-Catching Contest rules.
 #define IMPLEMENT_CAPTURE_RULES
 
+// Replace the Bug-Catching Contest with the permit-driven Legendary Sanctuary.
+// The encounter roster and story unlock remain content-authored hooks. Keep
+// CONTENT_READY false whenever every selectable stage is intentionally empty.
+#define IMPLEMENT_LEGENDARY_SANCTUARY
+#define SANCTUARY_CONTENT_READY              TRUE
+#define SANCTUARY_BALL_COUNT                 99
+#define SANCTUARY_BALL_CATCH_RATE_PERCENT    1200
+#define SANCTUARY_ENCOUNTER_RATE             25
+#define SANCTUARY_TIME_LIMIT_MINUTES         5
+#define SANCTUARY_STAGE_COUNT                4
+#define SANCTUARY_MAX_POOL_SIZE              16
+
+#if SANCTUARY_BALL_COUNT < 1 || SANCTUARY_BALL_COUNT > 65535
+#error "SANCTUARY_BALL_COUNT must fit the session's u16 Ball counter"
+#endif
+
+#if SANCTUARY_TIME_LIMIT_MINUTES < 1 || SANCTUARY_TIME_LIMIT_MINUTES > 20
+#error "SANCTUARY_TIME_LIMIT_MINUTES must be between 1 and 20"
+#endif
+
+#if SANCTUARY_STAGE_COUNT != 4
+#error "The current Sanctuary content table defines exactly four replacement stages"
+#endif
+
 #if defined(IMPLEMENT_CAPTURE_RULES) && !defined(ALLOW_SAVE_CHANGES)
 #error "Heartless Gold capture rules require expanded save support"
+#endif
+
+#if defined(IMPLEMENT_LEGENDARY_SANCTUARY) && !defined(IMPLEMENT_CAPTURE_RULES)
+#error "The Legendary Sanctuary reuses the capture-rules Contest command hook"
 #endif
 
 // IMPLEMENT_CRITICAL_CAPTURE defines whether or not throwing a poké ball has a certain percent chance of a guaranteed capture called a critical throw

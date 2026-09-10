@@ -1,0 +1,108 @@
+{
+  "62": {
+    "22": {
+      "expected": "National Park",
+      "text": "Home of Legendary Pokémon\\nLegendary Sanctuary"
+    },
+    "23": {
+      "expected": "National Park",
+      "text": "What is this notice?\\rPlease battle only in the\\nSanctuary grass.\\r           Legendary Sanctuary\\n           Warden’s Office"
+    },
+    "24": {
+      "expected": "National Park",
+      "text": "What is this notice?\\rOnly Sanctuary Balls may be used\\nduring formal visits.\\r           Legendary Sanctuary\\n           Warden’s Office"
+    }
+  },
+  "63": {
+    "0": {
+      "expected": "National Park",
+      "text": "Home of Legendary Pokémon\\nLegendary Sanctuary"
+    },
+    "1": {
+      "expected": "National Park",
+      "text": "What is this notice?\\rPlease battle only in the\\nSanctuary grass.\\rLegendary Sanctuary\\nWarden’s Office"
+    },
+    "2": {
+      "expected": "National Park",
+      "text": "What is this notice?\\rOnly Sanctuary Balls may be used\\nduring formal visits.\\rLegendary Sanctuary\\nWarden’s Office"
+    }
+  },
+  "279": {
+    "207": {
+      "expected": "National Park",
+      "text": "Legendary Sanctuary"
+    }
+  },
+  "387": {
+    "29": {
+      "expected": "National Park",
+      "text": "North to the Legendary Sanctuary\\nWest to the Pokéathlon Dome"
+    }
+  },
+  "412": {
+    "22": {
+      "expected": "National Park",
+      "text": "Commercial: Welcome to the\\nLegendary Sanctuary!\\nFormal visits let you meet\\nrare and powerful Pokémon.\\nBring a Permit and test your\\nstrength! See you there!"
+    }
+  },
+  "582": {
+    "7": {
+      "expected": "National Park",
+      "text": "Whitney: It’s Attract!\\nIt makes full use of a\\rPokémon’s charm. Isn’t it just\\nperfect for a cutie like me?\\fThat’s right!\\rI heard the Pokéathlon Dome is\\nnow open right next\\fto the Legendary Sanctuary.\\rYou should go try it!\\rYou’re so good at battling\\nwith your Pokémon!"
+    }
+  },
+  "662": {
+    "83": {
+      "expected": "National Park",
+      "text": "So, where are you now?\\nOh, you’re at the\\rLegendary Sanctuary!\\fIt shelters incredibly rare\\nPokémon!"
+    },
+    "156": {
+      "expected": "National Park",
+      "text": "Did you know that Trainers can\\nvisit the Legendary Sanctuary?\\rYou need a Permit for a formal\\nvisit, but seeing those rare\\fPokémon would be amazing!"
+    }
+  },
+  "663": {
+    "83": {
+      "expected": "National Park",
+      "text": "So, where are you now?\\nOh, you’re at the\\rLegendary Sanctuary!\\fIt shelters incredibly rare\\nPokémon!"
+    },
+    "156": {
+      "expected": "National Park",
+      "text": "Did you know that Trainers can\\nvisit the Legendary Sanctuary?\\rYou need a Permit for a formal\\nvisit, but seeing those rare\\fPokémon would be amazing!"
+    }
+  },
+  "680": {
+    "15": {
+      "expected": "National Park",
+      "text": "Listen, listen!\\rHave you ever visited the\\nLegendary Sanctuary?\\rI hear you can meet very rare\\nPokémon during a formal visit.\\rI’d love to see one someday!\\rOK, I’ll call you later!"
+    }
+  },
+  "684": {
+    "15": {
+      "expected": "National Park",
+      "text": "The Legendary Sanctuary is open\\ntoday.\\fAre you going, {STRVAR_1 3, 0, 0}?\\rI’m trying to make up my mind."
+    },
+    "16": {
+      "expected": "National Park",
+      "text": "The Legendary Sanctuary is open\\ntoday.\\fAre you going, {STRVAR_1 3, 0, 0}?\\rI’m trying to make up my mind."
+    }
+  },
+  "693": {
+    "13": {
+      "expected": "National Park",
+      "text": "The Legendary Sanctuary is open\\ntoday.\\rAre you going, {STRVAR_1 3, 0, 0}?\\nI’m trying to make up my mind."
+    }
+  },
+  "710": {
+    "12": {
+      "expected": "National Park",
+      "text": "Did you know that the\\nLegendary Sanctuary is open?\\rI’m not sure I’m ready for the\\nPokémon inside, but it isn’t far\\ffrom Route 35...\\fI might go check it out."
+    }
+  },
+  "714": {
+    "10": {
+      "expected": "National Park",
+      "text": "I’ll go anywhere to meet rare\\nPokémon!\\rWell, I say that, but I’m always\\non Route 35.\\rThere’s a pond and lots of grass.\\rBest of all, it’s only 28 steps\\fto the Legendary Sanctuary.\\fThis is such a great spot!"
+    }
+  }
+}

@@ -497,7 +497,7 @@ None
 {COLOR 255}Love Balls{COLOR 0}
 {COLOR 255}Friend Balls{COLOR 0}
 {COLOR 255}Moon Balls{COLOR 0}
-{COLOR 255}Sport Balls{COLOR 0}
+{COLOR 255}Sanctuary Balls{COLOR 0}
 {COLOR 255}Park Balls{COLOR 0}
 {COLOR 255}Photo Albums{COLOR 0}
 {COLOR 255}GB Sounds{COLOR 0}

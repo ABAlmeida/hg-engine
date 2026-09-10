@@ -1,6 +1,6 @@
 # Pokémon Heartless Gold Project Plan
 
-Last updated: 2026-09-04
+Last updated: 2026-09-09
 
 This is the source-controlled status of the Heartless Gold implementation
 plan. `Complete` means the feature is represented in source and has received
@@ -28,11 +28,12 @@ complete.
 - Apply capture challenge rules immediately on a new save. Track one eligible
   encounter per displayed map section, use the Pokédex for exact-species
   duplicate checks, and treat Safari Zone and Bug-Catching Contest encounters
-  through their documented special rules.
+  through their documented special rules. The Bug-Catching Contest is being
+  replaced by the Legendary Pokémon Sanctuary described below.
 - Do not allow the player to capture displaced Legendary Pokémon encountered
   through the story. For the current plan, interacting with one returns it
   directly to the Legendary Pokémon Sanctuary without requiring a battle or
-  defeat. Separately, a rare Sanctuary Ticket permits one formal
+  defeat. Separately, a rare Sanctuary Permit permits one formal
   Contest-style session in which the player can catch multiple Legendary
   Pokémon temporarily and keep one selected Legendary at the end.
 - Permanently remove fainted party Pokémon after eligible battles. On a wipe,
@@ -113,8 +114,8 @@ complete.
 | HM field actions | Implemented; build and manual verification pending | Owned machines enable Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Rock Climb, Fly, or Flash without teaching or compatibility requirements while preserving the original field checks and Pokémon presentation. See `HM_FIELD_ACTIONS_PLAN.md`. |
 | Evolution modernization | Partially complete; upstream mechanics present | hg-engine already uses the modern friendship threshold of 160, provides Linking Cord routes for the original trade evolutions and held-item trades, and replaces the magnetic-field, moss-rock, and ice-rock evolutions with stones. Player-facing completion still requires normal acquisition sources for the Linking Cord and required held items, plus an audit of unsupported special methods such as Karrablast/Shelmet's paired trade. |
 | Capture challenge rules | Implemented; manual verification pending | Ordinary encounters, Safari's shared saved opportunity, duplicate enforcement, the shiny clause, first-retained-Pokémon Contest handling, and the conditional capture-available introduction message are implemented. Focused Safari, revised Contest retention, and message checks remain. See `CAPTURE_RULES_PLAN.md`. |
-| Legendary Sanctuary and returns | Planned | Story-displaced Legendary Pokémon are not catchable and currently return through direct interaction without a battle. Rare Sanctuary Tickets instead permit formal Contest-style sessions where multiple Legendaries may be caught temporarily and one retained at the end. Species pools, ticket sources, event limits, locations, order, persistent state, presentation, and conversion of the current Bug-Catching Contest remain to be planned. |
-| Bug-Catching Contest availability | Superseded by Sanctuary plan | Do not implement unrestricted daily Contest availability. The existing Contest remains the implementation baseline until it is redesigned as rare-ticket access to the Legendary Pokémon Sanctuary. |
+| Legendary Sanctuary and returns | Source fixes implemented; build and manual verification pending | The Bug-Catching Contest is replaced by a story-unlocked, Permit-driven Sanctuary. Refusal and inactive-exit results no longer authorize the unchanged gate caller to warp inside, the original Contest party restriction is bypassed in favor of its full-party copy path, and the optional session-species/Pokédex-suppression hooks around the vanilla candidate UI have been removed. Time, Ball, menu-retirement, gate-retirement, and defeat endings now use centralized teardown and return directly to Route 35 without loading the judging map or standard-script entry 7. Remaining-time buffers and the full-party defeat/permanent-death ordering are handled explicitly; storage failure releases the candidate instead of blocking exit. These paths still require focused runtime verification. A stackable Sanctuary Permit starts a five-minute session with 99 Sanctuary Balls, a 1200% Ball multiplier, and equal-weight stage pools. Stage 0 contains twelve level-40 Legendary Pokémon; stages 1–3 remain empty replacement pools. See `LEGENDARY_SANCTUARY_PLAN.md`. |
+| Bug-Catching Contest availability | Superseded | Weekday scheduling, judging, rankings, opponents, prizes, and daily-entry state are not part of the Sanctuary. |
 | Team Rocket story rebuild | Planned | Replace the current campaign with one centered on attacks against and attempted infiltration of the Legendary Pokémon Sanctuary. Slowpoke Well will be revised and will likely include Cynthia; later Rocket operations and their placement in the interleaved regional progression remain to be defined in `STORY_PLAN.md`. |
 | Legendary story rewrites | Planned | Rework the Ho-Oh, Lugia, and legendary-beast storylines so their story encounters do not end in capture. Suicune needs a more substantial rewrite. Connect the unnamed Rayquaza seeker to Red and the Mt. Silver finale. |
 | Generation 5-6 species engine/data foundation | Complete; supplied by hg-engine | The repository contains the expanded species IDs, personal data, evolutions, learnsets, experience data, battle and follower graphics, icons, cries, forms, and expanded Pokédex tables. This records the upstream foundation as complete for project planning; it is not a claim that every species and form has received focused in-game verification. |

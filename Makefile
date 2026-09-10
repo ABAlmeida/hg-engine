@@ -174,9 +174,9 @@ OBJS     := $(C_OBJS) $(ASM_OBJS)
 
 REQUIRED_DIRECTORIES += $(BASE) $(BUILD) $(BUILD_NARC)
 
-$(ARMIPS_CONFIG): include/config.h $(ARMIPS_CONFIG_GENERATOR) $(VENV_ACTIVATE)
+$(ARMIPS_CONFIG): include/config.h include/debug.h $(ARMIPS_CONFIG_GENERATOR) $(VENV_ACTIVATE)
 	@mkdir -p $(dir $@)
-	$(PYTHON) $(ARMIPS_CONFIG_GENERATOR) $< $@
+	$(PYTHON) $(ARMIPS_CONFIG_GENERATOR) $< $@ --debug-config include/debug.h
 
 $(ARMIPS_ITEM_CONSTANTS): include/constants/item.h $(ARMIPS_ITEM_CONSTANTS_GENERATOR) $(VENV_ACTIVATE)
 	@mkdir -p $(dir $@)
@@ -552,6 +552,9 @@ move_narc $(DATA_INSTALL_STAMP): $(NARC_FILES) $(BASE_EXTRACTION_STAMP)
 
 	@echo "scripts:"
 	cp $(SCR_SEQ_NARC) $(SCR_SEQ_TARGET)
+
+	@echo "map events:"
+	cp $(ZONE_EVENT_NARC) $(ZONE_EVENT_TARGET)
 
 	@echo "headbutt trees:"
 	cp $(HEADBUTT_NARC) $(HEADBUTT_TARGET)

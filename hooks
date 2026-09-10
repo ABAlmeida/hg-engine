@@ -65,6 +65,19 @@ arm9 EncounterFinishLevelCapHook 020506F4
 0001 CaptureRules_ScrCmdBugContestAction 02202930 1
 #endif
 
+#ifdef IMPLEMENT_LEGENDARY_SANCTUARY
+# Contest battle endings normally warp to the judging map. Replace that shared
+# task-owned transition so defeat and Ball exhaustion tear down the Sanctuary
+# session and warp directly to the Route 35 gate instead.
+arm9 Sanctuary_WarpToExit 0206DB58 1
+# Return a nonzero walking rate on the Sanctuary map only while a configured
+# stage has an eligible species. The underlying encounter table remains empty.
+0002 Sanctuary_GetWalkingEncounterRate 02248014 1
+# Replace the Contest weighted-slot call with the equal-weight stage selector.
+# 0x02247EE4 is the preceding `movs r1, #4`; the Thumb BL begins at EE6.
+0002 Sanctuary_GetEncounterSlot 02247EE6 bl
+#endif
+
 #ifdef IMPLEMENT_MACHINE_FIELD_ACTIONS
 # Replace only script command 141's party-slot lookup. The implementation
 # preserves real move users, then supplies a non-Egg presentation Pokemon when

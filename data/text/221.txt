@@ -20,3 +20,4 @@ Raises a Pokémon’s Speed EVs\nto its limit.
 Raises a Pokémon’s Sp. Atk EVs\nto their limit.
 Raises a Pokémon’s Sp. Def EVs\nto their limit.
 Maximizes all six of a Pokémon’s\nIVs.
+A rare permit for one formal visit\nto the Legendary Pokémon Sanctuary.

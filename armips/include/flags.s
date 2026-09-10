@@ -2210,6 +2210,8 @@ FLAG_UNK_B4C                                              equ 2892
 FLAG_UNK_B4D                                              equ 2893
 FLAG_UNK_B4E                                              equ 2894
 FLAG_UNK_B4F                                              equ 2895
+// Persistent story hook reserved for the Legendary Sanctuary introduction.
+FLAG_SANCTUARY_UNLOCKED                                   equ FLAG_UNK_B4F
 FLAG_UNK_B50                                              equ 2896
 FLAG_UNK_B51                                              equ 2897
 FLAG_UNK_B52                                              equ 2898

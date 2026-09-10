@@ -711,6 +711,26 @@ rebuild_scripts: $(BASE_EXTRACTION_STAMP) $(TRAINER_REWARD_SCRIPT)
 
 NARC_FILES += $(SCR_SEQ_NARC)
 
+ZONE_EVENT_DIR := $(BUILD)/a032
+ZONE_EVENT_NARC := $(BUILD_NARC)/zone_event.narc
+ZONE_EVENT_TARGET := $(FILESYS)/a/0/3/2
+ZONE_EVENT_PRISTINE := $(BUILD)/pristine/zone_event_2
+ZONE_EVENT_EXTRACTOR := tools/extract_rom_file.py
+ZONE_EVENT_PATCHES_DIR := armips/zone_event
+ZONE_EVENT_PATCHES := $(wildcard $(ZONE_EVENT_PATCHES_DIR)/*.s)
+ZONE_EVENT_DEPENDENCIES := $(ZONE_EVENT_PATCHES) armips/include/config.s armips/include/vars.s $(ARMIPS_CONFIG)
+
+$(ZONE_EVENT_PRISTINE): $(ROMNAME) $(ZONE_EVENT_EXTRACTOR) $(VENV_ACTIVATE)
+	$(PYTHON) $(ZONE_EVENT_EXTRACTOR) $(ROMNAME) a/0/3/2 $@
+
+$(ZONE_EVENT_NARC): $(ZONE_EVENT_DEPENDENCIES) $(ZONE_EVENT_PRISTINE)
+	rm -rf $(ZONE_EVENT_DIR)
+	$(NARCHIVE) extract $(ZONE_EVENT_PRISTINE) -o $(ZONE_EVENT_DIR) -nf
+	for file in $(ZONE_EVENT_PATCHES); do $(ARMIPS) $$file || exit 1; done
+	$(NARCHIVE) create $@ $(ZONE_EVENT_DIR) -nf
+
+NARC_FILES += $(ZONE_EVENT_NARC)
+
 HEADBUTT_NARC := $(BUILD_NARC)/headbutt.narc
 HEADBUTT_TARGET := $(FILESYS)/a/2/5/2
 HEADBUTT_DEPENDENCIES := data/Headbutt.c
@@ -812,13 +832,15 @@ clean_trgfx:
 
 
 MSGDATA_COMPILETIME_STAMP := $(MSGDATA_COMPILETIME_DEPENDENCIES_DIR)/.generated
+MSGDATA_PATCHES := $(wildcard data/text_patches/*.json)
 
 $(MSGDATA_COMPILETIME_STAMP): $(BUILD_NARC)/a011.narc $(BUILD_NARC)/a055.narc $(BUILD_NARC)/personal.narc $(BUILD_NARC)/trainer_text_map.narc scripts/msg_cat.py
 	$(PYTHON) scripts/msg_cat.py $(MSGDATA_COMPILETIME_DEPENDENCIES_DIR) $(notdir $(basename $(MSGDATA_COMPILETIME_DEPENDENCIES)))
 	@touch $@
 
-$(MSGDATA_NARC): $(MSGDATA_DEPENDENCIES) $(MSGDATA_COMPILETIME_STAMP)
+$(MSGDATA_NARC): $(MSGDATA_DEPENDENCIES) $(MSGDATA_COMPILETIME_STAMP) $(MSGDATA_PATCHES) tools/patch_text_messages.py
 	$(NARCHIVE) extract $(MSGDATA_TARGET) -o $(MSGDATA_DIR) -nf
 	for file in $(MSGDATA_DEPENDENCIES); do $(PYTHON) tools/source/dumptools/validate_text_archive.py $(CHARMAP) $$file || exit 1; done
 	for file in $(MSGDATA_DEPENDENCIES) $(MSGDATA_COMPILETIME_DEPENDENCIES); do $(MSGENC) -e -c $(CHARMAP) $$file $(MSGDATA_DIR)/7_$$(basename $$file .txt); done
+	$(PYTHON) tools/patch_text_messages.py --msgenc $(MSGENC) --charmap $(CHARMAP) --msgdata-dir $(MSGDATA_DIR) $(MSGDATA_PATCHES)
 	$(NARCHIVE) create $@ $(MSGDATA_DIR) -nf

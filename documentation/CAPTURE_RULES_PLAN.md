@@ -1,6 +1,6 @@
 # Challenge Capture Rules Plan
 
-Last updated: 2026-09-01
+Last updated: 2026-09-08
 
 This document records the reviewed design for the challenge capture rules.
 The save-data foundation, ordinary encounter rules, Safari behavior, and
@@ -102,7 +102,15 @@ save, not one per visit or one per Safari subarea. Non-duplicate shiny
 encounters are exempt and do not consume or reset that opportunity. A separate
 `safariEncounterUsed` save field is unnecessary.
 
-## Bug-Catching Contest
+## Legendary Sanctuary (supersedes Bug-Catching Contest)
+
+The old first-retained-Contest rule is superseded by the permit-session design
+in `LEGENDARY_SANCTUARY_PLAN.md`. Intermediate candidates remain outside the
+party, but each successful capture updates the Pokédex normally; only the final
+retained Pokémon is transferred to the party or PC. The
+legacy save byte remains present solely to preserve offsets.
+
+## Historical Bug-Catching Contest design
 
 Contest entry itself does not consume the saved opportunity. The player may
 enter repeatedly and use the normal catching, replacement, judging, and prize

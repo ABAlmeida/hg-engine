@@ -68,6 +68,7 @@ _Static_assert(offsetof(PCStorage, curBox) == 0x1E000, "PCStorage active-box off
 _Static_assert(offsetof(PCStorage, boxModifiedFlag) == 0x1E004, "PCStorage modified-box offset changed");
 
 BOOL PCStorage_PlaceMonInBoxFirstEmptySlot(PCStorage *storage, u32 boxno, struct BoxPokemon *boxMon);
+BOOL PCStorage_PlaceMonInFirstEmptySlotInAnyBox(PCStorage *storage, struct BoxPokemon *boxMon);
 void PCStorage_SetBoxModified(PCStorage *storage, u8 boxno);
 void PCStorage_DeleteBoxMonByIndexPair(PCStorage *storage, u32 boxno, u32 slotno);
 struct BoxPokemon *PCStorage_GetMonByIndexPair(PCStorage *storage, u32 boxno, u32 slotno);

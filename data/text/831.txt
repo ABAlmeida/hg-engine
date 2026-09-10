@@ -497,7 +497,7 @@ a {COLOR 255}Heavy Ball{COLOR 0}
 a {COLOR 255}Love Ball{COLOR 0}
 a {COLOR 255}Friend Ball{COLOR 0}
 a {COLOR 255}Moon Ball{COLOR 0}
-a {COLOR 255}Sport Ball{COLOR 0}
+a {COLOR 255}Sanctuary Ball{COLOR 0}
 a {COLOR 255}Park Ball{COLOR 0}
 a {COLOR 255}Photo Album{COLOR 0}
 the {COLOR 255}GB Sounds{COLOR 0}

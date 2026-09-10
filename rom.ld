@@ -54,6 +54,8 @@ ReadFromNarcMemberByIdPair = 0x02007560 | 1;
 
 /*Pokemon*/
 AllocMonZeroed = 0x0206DD2C | 1;
+FieldSystem_StartBugContestTimer = 0x02055418 | 1;
+LCRandom = 0x0201FD44 | 1;
 ZeroMonData = 0x0206DCE4 |1;
 PokeParaSet = 0x0206DE38 |1;
 PokeParaSetChr = 0x0206E108 |1;

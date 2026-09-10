@@ -288,8 +288,9 @@ void LONG_CALL PermanentDeath_PostBattleCommitHook(
 
     BattleSetup_CommitToSave(setup, fieldSystem);
 
-    // BugContest_Delete restores the persistent party only when the Contest
-    // ends, so its pass is deliberately deferred to that command wrapper.
+    // Contest-type battles finish through field-owned session cleanup.
+    // Vanilla restores its backed-up party there; Sanctuary keeps the real
+    // party but still centralizes all exits in Sanctuary session cleanup.
     if (setup->battleType & BATTLE_TYPE_BUG_CONTEST) {
         return;
     }
