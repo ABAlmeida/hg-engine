@@ -1,12 +1,16 @@
 ---
 name: budget-heartless-gold-code
-description: Review and plan Pokémon Heartless Gold hg-engine changes against injected-code, ROM archive, save-data, heap, stack, and VRAM limits. Use for implementation plans, code reviews, linker overflows, new hooks, C or assembly additions, large tables, scripts, text, graphics, overlays, or any question about saving bytes or runtime memory.
+description: Plan, implement, or review changes to hg-engine injected C or assembly, hooks, linker space, save layout, heap, stack, VRAM, or materially large archives and assets. Do not use for documentation, tracker-only work, or ordinary content-value edits.
 ---
 
 # Budget Heartless Gold Code
 
-Apply the repository's build and test restrictions. This skill adds memory
-budgeting; it does not authorize builds, tests, ROM inspection, or emulation.
+The repository `AGENTS.md` remains authoritative. This skill adds memory
+budgeting and grants no build, test, ROM-inspection, or emulator authorization.
+
+For changes to configuration surfaces, expanded save state, capture experience,
+or the central level cap, read
+[progression-and-config-invariants.md](references/progression-and-config-invariants.md).
 
 ## Classify the cost first
 

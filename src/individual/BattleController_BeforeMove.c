@@ -59,15 +59,7 @@ enum {
     CHECK_STATUS_DONE,
 };
 
-const u16 sProtectSuccessChance[] = {
-    1, // 100%
-    3, // ~33.3%
-    9, // ~11.1%
-    27, // ~3.7%
-    81, // ~1.2%
-    243, // ~0.4%
-    729, // ~0.1%
-};
+const u16 sProtectSuccessChance[PROTECT_SUCCESS_DENOMINATOR_COUNT] = PROTECT_SUCCESS_DENOMINATORS;
 
 // this file's functions
 void UNUSED BattleController_BeforeMove(struct BattleSystem *bsys, struct BattleStruct *ctx);

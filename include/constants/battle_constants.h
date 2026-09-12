@@ -275,6 +275,12 @@ typedef enum BattleBg {
 #define FIELD_CONDITION_GRAVITY_SHIFT    12
 #define FIELD_CONDITION_TRICK_ROOM_SHIFT 16
 
+// Consecutive Protect-family attempts succeed when BattleRand modulo the
+// corresponding denominator is zero. Keep the battle controller and
+// read-only trainer evaluator on the same fork-specific progression.
+#define PROTECT_SUCCESS_DENOMINATOR_COUNT 7
+#define PROTECT_SUCCESS_DENOMINATORS      { 1, 3, 9, 27, 81, 243, 729 }
+
 #define TERRAIN_TURNS_INFINITE 255
 
 #define MON_MALE       0x0

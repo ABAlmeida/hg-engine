@@ -142,11 +142,10 @@ For every branch, record:
 Do not infer an identifier from another map. Unknown archive, message, object,
 flag, or variable IDs remain unresolved until verified in the target data.
 
-Create or update focused how-to files under
-`.agents/skills/hgss-scripting-rules/examples/` for the reusable patterns
-established by the implementation. At minimum document fixed new-save names,
-story-sequence redirection, shortening a tutorial before a task starts, and
-moving a story Egg gift.
+Treat the current source-controlled scripts as the authoritative examples for
+the opening implementation. Keep opening-specific behavior and pending runtime
+checks in this plan; reserve the scripting skill for verified rules that apply
+across multiple features.
 
 ## 2. Add one guarded opening feature
 

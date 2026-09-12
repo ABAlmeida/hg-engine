@@ -48,6 +48,9 @@ def main():
         "attackSpeedUp": 15,
         "flee": 16,
         "flinch": 17,
+        "endure": 18,
+        "curse": 19,
+        "curePartyStatus": 20,
     }
     move_class_ids = {
         "tailwind": 1,

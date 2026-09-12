@@ -14,6 +14,9 @@
       "MOVE_EFFECT_HEAL_HALF_REMOVE_FLYING_TYPE"
     ],
     "protect": ["MOVE_EFFECT_PROTECT"],
+    "endure": ["MOVE_EFFECT_SURVIVE_WITH_1_HP"],
+    "curse": ["MOVE_EFFECT_CURSE"],
+    "curePartyStatus": ["MOVE_EFFECT_CURE_PARTY_STATUS"],
     "rest": ["MOVE_EFFECT_RECOVER_HEALTH_AND_SLEEP"],
     "trickRoom": ["MOVE_EFFECT_TRICK_ROOM"],
     "attackDefenseUp": ["MOVE_EFFECT_ATK_DEF_UP"],

@@ -806,6 +806,31 @@ numeric data plus the generated semantic recipe. This step also identifies
 whether critical, multi-hit, recoil/drain, charge/recharge, pivot, phasing or
 other non-ordinary handling is required.
 
+Treat mechanical applicability, probability and tactical payoff as separate
+questions. A legal move whose effect cannot change the concrete action-pair
+state receives the invalid sentinel. Otherwise, use the fork's actual numeric
+data and condition state to weight successful and failed outcomes; never invent
+a generic failure percentage for an evaluator gap. Accuracy, conditional
+success and action-denial probabilities compose without consuming production
+battle RNG. Unsupported semantics retain only their documented conservative
+action-local score.
+
+Consecutive Protect-family rules have one shared source definition used by the
+battle controller and evaluator. Protect/Detect and Endure use the actual
+`1, 3, 9, 27, 81, 243, 729` denominators. Fork-specific exceptions such as
+Quick Guard, Wide Guard, Mat Block and Crafty Shield do not inherit declining
+odds. Endure has distinct payoff: it is useful only against a damaging branch
+that would otherwise be lethal, and successful survival is valued separately
+from completely blocking a move.
+
+`MOVE_EFFECT_CURSE` branches on the user's actual types. Ghost Curse is invalid
+against an already cursed or substituted concrete target and weighs the 50%
+maximum-HP sacrifice against switch-discounted residual value. Non-Ghost Curse
+evaluates the resulting Attack, Defense and Speed changes together. A capped
+or tactically neutral component is omitted; it does not discard other changes
+that still apply. Combined-stage moves charge the incoming/setup-turn cost
+once.
+
 ### 8.1.2 Damage and KO calculation
 
 For ordinary damage, calculate effective offensive and defensive stats from

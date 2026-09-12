@@ -5,9 +5,8 @@ description: Keep Pokemon Heartless Gold trainer reward source data and the TM, 
 
 # Maintain Trainer Reward Trackers
 
-Apply the repository's build and test restrictions. This skill requires a
-source and documentation audit; it does not authorize a build, game test, or
-emulator launch.
+The repository `AGENTS.md` remains authoritative. This source/documentation
+workflow grants no build, test, ROM-inspection, or emulator authorization.
 
 ## Required workflow
 
@@ -19,20 +18,24 @@ Whenever trainer rewards change:
    Never infer an item from an incomplete nearby comment.
 3. Update the reward-table comment to include the trainer, location, and item
    name. Comments are audit aids; the numeric row remains authoritative.
-4. Reconcile all four trackers, even when three require no row changes:
-   - `documentation/TM_REWARD_AVAILABILITY.md`
-   - `documentation/VITAMIN_AVAILABILITY.md`
-   - `documentation/BERRY_REWARD_AVAILABILITY.md`
-   - `documentation/HELD_ITEM_REWARD_AVAILABILITY.md`
-5. Update each affected row, source, quantity, availability, summary count,
-   finite total, and `Last updated` date.
+4. Classify the item, then read and update only the applicable trackers:
+   - TM: `documentation/TM_REWARD_AVAILABILITY.md`
+   - vitamin: `documentation/VITAMIN_AVAILABILITY.md`
+   - Berry: `documentation/BERRY_REWARD_AVAILABILITY.md`
+   - other functional held item: `documentation/HELD_ITEM_REWARD_AVAILABILITY.md`
+   Update more than one only when the item genuinely belongs to more than one
+   category. Never edit the marked generated unusable-TM section by hand.
+5. In each affected tracker, update the assignment, source, quantity,
+   availability, verification, dependent summary counts or finite totals, and
+   `Last updated` date.
 6. Keep a new or changed reward at `Not verified` until the user reports that
    it was successfully received in a current build. Do not infer verification
    from source inspection or a successful build.
 7. Check related summaries in `documentation/PROJECT_PLAN.md` and feature plans
    when the change alters planned or completed progression.
-8. Update `documentation/POKEMON_TRAINERS.md` whenever a trainer's reward,
-   party, IVs, AI profile, or held items change alongside the reward work.
+8. Update the affected `documentation/POKEMON_TRAINERS.md` row when that
+   trainer is documented there. Party, IV, AI, and held-item changes remain
+   governed by the Pokémon-availability workflow.
 
 ## Classification rules
 
@@ -52,8 +55,8 @@ Whenever trainer rewards change:
 
 - Compare every documented assignment with the numeric CSV row and item
   constant.
-- Search for stale trainer names, item names, quantities, availability labels,
-  totals, and summary counts in all four trackers.
+- Search the affected trackers and trainer row for stale names, quantities,
+  availability labels, totals, and summary counts.
 - Run `git diff --check` and review the full resulting diff.
 - Preserve unrelated working-tree changes.
 - Report documentation-only verification accurately; do not claim runtime

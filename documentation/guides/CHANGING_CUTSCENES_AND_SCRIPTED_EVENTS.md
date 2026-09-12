@@ -48,8 +48,8 @@ Permanent changes must be represented by source-controlled files.
 - `data/text/<bank>.txt` contains source-controlled message-bank text.
 - `data/Trainers.c` contains trainer parties and trainer configuration. A field
   script chooses a trainer ID; it does not define that trainer's party.
-- `.agents/skills/hgss-scripting-rules/examples/` records verified reusable
-  scripting patterns.
+- `.agents/skills/hgss-scripting-rules/SKILL.md` defines the command,
+  identifier, and control-flow verification rules for field-script work.
 
 The files under `.scratch/pokeheartgold-reference/` are useful read-only
 reference material. They are not build inputs and must not become the only
@@ -376,9 +376,11 @@ story progress is stored.
 5. Redirect the smallest existing entry rather than rewriting unrelated map
    scripts.
 6. Add assertions for every fixed offset.
-7. Document the verified pattern under
-   `.agents/skills/hgss-scripting-rules/examples/`.
-8. Test every trigger boundary and interruption path.
+7. Record feature behavior and pending runtime checks in the feature's
+   canonical plan. Add general scripting guidance only for a verified,
+   cross-feature rule that is not already evident from source.
+8. Record every trigger boundary and interruption path that still requires
+   user-supplied runtime verification.
 
 ## Using DSPRE responsibly
 

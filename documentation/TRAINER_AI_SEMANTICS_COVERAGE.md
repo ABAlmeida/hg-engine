@@ -38,7 +38,7 @@ global fallback, randomize understood actions or remove other legal choices.
 
 | Class | Status | Representation | Notes |
 |---|---|---:|---|
-| Primary/secondary move effects | Generic | 27 packed `u16` effect/class entries (54 bytes) | One compact lookup selects shared status, recovery, field, combined-stage or flinch handling; numeric move data is not duplicated. |
+| Primary/secondary move effects | Generic | 30 packed `u16` effect/class entries (60 bytes) | One compact lookup selects shared status, recovery, field, combined-stage, protection or flinch handling; numeric move data is not duplicated. |
 | Move-only classes | Generic | 11 packed `u16` entries | Screens, hazards, Tailwind, Substitute and random-action moves whose effect ID alone is insufficient. |
 | Ability/type interactions | Generic | 12 packed `u16` entries | Immunities, absorption, active Flash Fire damage, Thick Fat and Dry Skin use minimum evaluator-facing behavior. Other absorption stat gains are deliberately omitted from the one-turn screen. |
 | Small priority/status/item rules | Generic | Direct shared handlers | The compact direct comparisons are smaller than separate tables at the current low cardinality; move/species-specific scoring is not introduced. |
@@ -50,7 +50,7 @@ table would consume resident headroom without changing decisions. The packed
 primary entry uses nine bits for the effect ID and seven for the shared class;
 the generator fails if either bound is exceeded.
 
-The listed generated arrays contain 106 logical payload bytes before linker
+The listed generated arrays contain 112 logical payload bytes before linker
 alignment. That is a source-level count, not a linked-size claim; the next
 explicitly authorized build must measure the actual `.rodata` and total
 overlay-130 effect against the 500-byte reserve.
@@ -64,7 +64,7 @@ overlay-130 effect against the 500-byte reserve.
 | OHKO moves | Conservative | Bounded expected damage; exact legality and hit formula still need work. |
 | Move order | Generic | Priority, supported priority abilities, exact staged Speed, Trick Room and true ties. |
 | Flinch secondaries | Generic | Hit/effect probability and exact move-order applicability. |
-| Basic self stages | Generic | Attack, Defense, Special Attack, Special Defense and Speed changes with cap checks and analytic payoff. |
+| Basic self stages | Generic | Attack, Defense, Special Attack, Special Defense and Speed changes with cap checks, exact current Speed-order transitions and analytic payoff. Combined effects retain useful uncapped components rather than failing when one component is capped or tactically neutral. |
 | Basic target stages | Generic | Immediate effect plus discounted future persistence when the target can switch. |
 | Poison/bad poison/burn/paralysis/sleep | Generic | Existing status, common type/ability immunity, accuracy and current tactical value. Sleep includes miss exposure and move order. |
 | Leech Seed | Generic | Immediate drain/healing, retained value and switch-forcing tempo. |
@@ -73,7 +73,10 @@ overlay-130 effect against the 500-byte reserve.
 | Entry hazards | Conservative | Layer/existing-state legality and low setup value; full remaining-team payoff needs work. |
 | Weather | Conservative | Low action-local value; team composition, duration and opposing weather benefit need work. |
 | Trick Room | Conservative | Current speed-order check and low immediate value; full team-duration evaluation needs work. |
-| Protect/Substitute | Conservative | Immediate threat/HP checks; consecutive-use and full branch semantics need work. |
+| Protect/Endure | Generic | The fork's shared `1, 3, 9, 27, 81, 243, 729` success denominators are applied to expected incoming damage and lethal asset risk. Endure is admitted only against expected lethal damage. Contact punishments, residual-turn value and complete side-guard semantics remain conservative. |
+| Curse | Generic | Ghost Curse rejects an already cursed or substituted target and weighs HP sacrifice against switch-discounted residual value. Non-Ghost Curse combines every useful uncapped Attack/Defense/Speed transition and charges the setup turn once. |
+| Party status cure | Generic | Heal Bell/Aromatherapy are invalid when no trainer party member has a curable major status; otherwise value scales with affected members. |
+| Substitute | Conservative | Immediate HP checks; full branch semantics need work. |
 | Unused moves | Unimplemented | Filtered through `FLAG_UNUSED_MOVE`. |
 | Unclassified legal effect | Conservative | `AI_CFG_UNKNOWN_ACTION_BASE_VALUE` applies only to that action. |
 
@@ -87,12 +90,10 @@ overlay-130 effect against the 500-byte reserve.
       tie-break between actions with exactly equal primary scores.
 - [x] Treat known unequal Speed as deterministic.
 - [x] Remove mandatory post-entry action and recent-switch penalties.
-- [ ] Prevent a Ghost-type user from selecting Curse when the concrete target
-      already has `STATUS2_CURSE`. Prefer one generated `MOVE_EFFECT_CURSE`
-      class and a minimal repeat-invalid guard; measure the linked delta and
-      preserve the enforced 500-byte overlay-130 reserve. Full valuation of
-      the HP sacrifice, residual payoff, switching and non-Ghost stat changes
-      remains optional unless further playtesting justifies the extra code.
+- [x] Prevent a Ghost-type user from selecting Curse when the concrete target
+      already has `STATUS2_CURSE` or a Substitute. The generated
+      `MOVE_EFFECT_CURSE` class also values the HP sacrifice, switch-discounted
+      residual payoff and every useful non-Ghost Attack/Defense/Speed change.
 - [ ] Remove actions dominated across matching concrete branches. The obsolete
       stay/switch/absolute-worst shortcut has been removed; branch-vector
       dominance remains follow-up work.
@@ -151,7 +152,7 @@ overlay-130 effect against the 500-byte reserve.
       reachable trainer sets justify resident code. This includes Encore,
       weather, Defense Curl, Minimize, Charge, confusion,
       critical-rate setup, Haze, phasing, Disable, Torment, Spite, Lock-On,
-      Safeguard, Endure, Belly Drum, Nightmare, Psycho Shift, Ingrain,
+      Safeguard, Belly Drum, Nightmare, Psycho Shift, Ingrain,
       Magnet Rise and Perish Song. Until then each receives the ordinary low
       action-local conservative score and cannot disturb other actions.
 - [ ] Inventory every implemented move reachable by expert trainers.

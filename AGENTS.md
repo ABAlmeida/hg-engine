@@ -1,207 +1,92 @@
-# Pokémon Heartless Gold Repository Guide
+# Pokémon Heartless Gold Repository Policy
 
-This repository is the source of truth for Pokémon Heartless Gold. Make every
-change reproducible from source; never rely on edits that exist only in a
-generated ROM or an emulator save.
+This file is the canonical policy for work in this repository. More specific
+skills add task workflows but do not override these rules.
 
-## Repository layout and upstream
+## Universal boundaries
 
-- Run project commands from this directory (`hg-engine`), not its parent.
-- The latest integrated hg-engine upstream is commit
-  `dacca858e9f917607a20090a76f26df8e53849ed`. Do not treat that upstream
-  commit as the current Heartless Gold `main` revision.
-- The configured `origin` is `https://github.com/ABAlmeida/hg-engine.git`.
-  hg-engine's canonical upstream is `https://github.com/BluRosie/hg-engine.git`,
-  but no local `upstream` remote is currently configured.
-- `tools/source/nitrogfx` is a required Git submodule. Initialize it with:
+- Work from this `hg-engine` directory, not its parent. Before editing, inspect
+  `git status --short --branch` and preserve unrelated user changes.
+- Keep every permanent change reproducible from source. Do not rely on edits
+  that exist only in a generated ROM, DSPRE workspace, emulator save, or save
+  state.
+- Never run Pokémon Heartless Gold automated tests, battle tests, test scripts,
+  test ROMs, manual gameplay, or emulator smoke tests. Never launch an emulator
+  or use `AUTO_TEST=Y`.
+- Run Make, compile or link code, package a ROM, or create `test.nds` only when
+  the user explicitly requests a build in the current conversation. A request
+  to implement, fix, review, verify, or test does not authorize a build.
+- Read-only inspection, static analysis, formatting checks, generator `--check`
+  modes, and `git diff --check` are allowed. Do not describe them as a
+  successful build or runtime test.
+- Never commit, upload, redistribute, print, hash, quote, or document ROM
+  contents, generated ROMs, saves, extracted `base/` files, or copyrighted
+  screenshots. Keep diagnostics and disposable artifacts under ignored
+  `.scratch/` paths.
 
-  ```sh
-  git submodule update --init --recursive
-  ```
+## Normal workflow
 
-## Supported build environment
+- Begin with targeted `rg` searches, diff summaries, and bounded excerpts.
+  Keep large logs out of conversation and inspect only relevant sections.
+- Trace the existing call flow and prefer established engine mechanisms,
+  centralized logic, named constants, source-controlled data, and deterministic
+  behavior. Avoid fragile hooks, magic addresses, duplicated state, and unsafe
+  lifetime assumptions.
+- After changing files, review the complete resulting diff and interaction
+  between changed files. Check correctness, edge cases, configuration guards,
+  readability, maintainability, comments, and relevant CPU, memory, allocation,
+  hot-path, binary-patch, structure-layout, and call-timing risks.
+- Fix in-scope review findings and report remaining risks or decisions. Do not
+  claim runtime correctness without a result supplied by the user.
+- Follow `.clang-format` for `src/**/*.c` and `include/**/*.h`. Keep generated
+  output out of Git and prefer readable source formats over opaque binary
+  replacements. If an opaque member is unavoidable, track only the smallest
+  required unit and record its archive, member index, editing tool, and
+  reproduction method; never track a generated full archive or ROM output.
 
-hg-engine targets the English US Pokémon HeartGold ROM (game code `IPKE`). On
-Windows, use WSL2 or the MSYS2 UCRT64 shell; the Makefile is a Unix make
-workflow and is not a native PowerShell build. Current MSYS2 installs the ARM
-toolchain as `mingw-w64-ucrt-x86_64-arm-none-eabi-toolchain`; do not use the
-obsolete `mingw-w64-x86_64-arm-none-eabi-gcc` package name. Verify that
-`which cmake` returns `/ucrt64/bin/cmake`; MSYS `/usr/bin/cmake` misclassifies
-the UCRT compiler when building armips.
+## Subagent delegation
 
-Required host tools are documented in `README.md`. The practical dependency
-set is:
+- Delegate only independent, bounded work when parallel execution or a
+  smaller model is likely to improve speed or quality. Do not delegate simple
+  edits, tightly coupled debugging, architecture, final integration, or work
+  that depends on unstated conversation context.
+- When supported, spawn subagents without conversation history. Give each one
+  a self-contained prompt with the repository root, exact scope, constraints,
+  authoritative sources, expected output, and stopping condition.
+- Use `hg_scan` for mechanical searches and comparisons, `hg_inspector` for
+  bounded code or documentation analysis, and `hg_worker` for one isolated
+  implementation with an exclusive set of files.
+- Spawn no more agents than there are independent workstreams. Subagents must
+  not delegate further. At most one write-capable subagent may run at a time,
+  and the main agent must not edit that subagent's owned files concurrently.
+- Subagents must never build, test, inspect ROM or generated-ROM content,
+  launch an emulator, or commit. The main agent retains any explicitly
+  authorized build, architectural decisions, and final review; repository-wide
+  prohibitions still apply. Verify material subagent findings against the
+  current working tree before relying on them.
 
-- GNU Make and a native C/C++ build toolchain
-- `arm-none-eabi` binutils/GCC
-- Python 3 with `venv`/`pip`
-- UCRT64 CMake (`/ucrt64/bin/cmake`), Git, autoconf, automake, UCRT64
-  pkg-config, and UCRT64 libpng development files
-- 7-Zip where required by the selected setup path
-- clang-format 18 (preferred) or clang-format for C/header changes
+## Conditional workflows
 
-The first build also needs network access to install Python requirements and
-fetch build tools that are not cached locally. The repository provides a
-Docker workflow as an alternative, but WSL2 is preferred for day-to-day
-development on Windows.
+Before planning or editing, read every applicable skill below and no unrelated
+skill. Their frontmatter descriptions define the full activation boundary.
 
-## ROM handling
+- Explicit builds, build instructions, toolchain setup, or build failures:
+  `.agents/skills/hg-engine-build-and-recovery/SKILL.md`
+- Injected C/assembly, hooks, linker space, save layout, heap, stack, VRAM, or
+  materially large archives/assets:
+  `.agents/skills/budget-heartless-gold-code/SKILL.md`
+- HGSS field/DSPRE scripts, field events, or field-script identifiers:
+  `.agents/skills/hgss-scripting-rules/SKILL.md`
+- Species data, ability limitations, move implementation flags, learnsets,
+  encounters, or trainer parties:
+  `.agents/skills/maintain-pokemon-availability/SKILL.md`
+- First-victory trainer reward additions, removals, reassignment, quantity,
+  naming, or verification:
+  `.agents/skills/maintain-trainer-reward-trackers/SKILL.md`
+- Applying `../Pokemon Trainers.txt` or `../Pokemon Encounters.txt` drafts:
+  `.agents/skills/import-heartless-gold-content-drafts/SKILL.md`
 
-- Supply your own legally obtained English US Pokémon HeartGold ROM.
-- Keep it locally at repository root as `rom.nds`; never commit, upload,
-  redistribute, print, hash, or copy it into documentation or logs.
-- Never commit generated `.nds`/`.srl` files, emulator saves, save states,
-  extracted `base/` files, `build/` files, or other copyrighted/generated
-  output.
-- Do not commit `test.nds`. Distribute source patches or other lawful,
-  source-derived artifacts instead of a modified full ROM.
-- Do not commit test saves unless their provenance and redistribution rights
-  are explicitly established.
-
-## Build commands
-
-Initialize the submodule once, place the legal base ROM as `rom.nds`, then run:
-
-```sh
-make -j$(nproc)
-```
-
-The generated ROM is `test.nds` at repository root.
-
-Use the narrowest build target that covers the change:
-
-```sh
-make code                  # compile and link injected code only
-make quick-rom -j$(nproc)  # safe incremental ROM build
-make full-rom -j$(nproc)   # full normal dependency graph
-make rebuild_scripts       # explicitly import DSPRE script-archive edits
-```
-
-`quick-rom` and `full-rom` currently share the same safe timestamp-driven
-dependency graph; the separate names communicate intent. `rebuild_scripts` is
-only for deliberately importing edits made directly to the installed script
-archive. Normal source-controlled script changes do not need it.
-
-For a clean baseline rebuild:
-
-```sh
-make clean
-make -j$(nproc)
-```
-
-For a toolchain-from-scratch rebuild:
-
-```sh
-make clean
-make clean_tools
-git submodule update --init --recursive
-make -j$(nproc)
-```
-
-Use `make clean_code` when only compiled C/assembly outputs need rebuilding.
-Do not use `make restore` unless the required local `romClean.nds` workflow has
-been deliberately set up; ROM backup copies remain local and ignored.
-
-## Testing commands
-
-Never run the automated battle-test suite unless the user explicitly requests
-it in the current conversation. Building a ROM, smoke-testing it in an
-emulator, and running battle tests are separate actions and require their own
-authorization.
-
-Build the automated battle-test ROM and run the headless suite:
-
-```sh
-make clean
-make AUTO_TEST=Y -j$(nproc)
-SDL_VIDEODRIVER=dummy scripts/run_tests.sh -c -j $(nproc)
-```
-
-Run tests with video using:
-
-```sh
-scripts/run_tests.sh -v
-```
-
-After a normal build, smoke-test `test.nds` in an accurate Nintendo DS
-emulator such as melonDS. At minimum verify that it reaches the title screen,
-starts a new game, enters the overworld, and can save and reload. Record the
-emulator name/version and result in `documentation/BASELINE_BUILD.md`.
-
-Feature changes need focused regression tests in addition to the baseline
-smoke test. Battle-engine changes should add scenarios under
-`data/battle_tests/` and follow that directory's `README.md`.
-
-## Repository conventions
-
-- Keep logical changes small and independently buildable.
-- For plans and reviews that affect injected code or runtime memory, apply the
-  repository-local budgeting skill at
-  `.agents/skills/budget-heartless-gold-code/SKILL.md`.
-- For DSPRE/HGSS script planning, edits, diagnosis, or review, apply the
-  repository-local scripting skill at
-  `.agents/skills/hgss-scripting-rules/SKILL.md`.
-- Whenever adding, removing, reassigning, or verifying trainer rewards, apply
-  the repository-local tracker skill at
-  `.agents/skills/maintain-trainer-reward-trackers/SKILL.md` and reconcile all
-  four reward-availability documents plus `documentation/POKEMON_TRAINERS.md`.
-- Keep `documentation/POKEMON_TRAINERS.md` and
-  `documentation/POKEMON_ENCOUNTERS.md` synchronized with trainer-party and
-  wild-encounter content changes respectively.
-- Whenever species data, ability limitations, move implementation flags,
-  learnsets, wild encounters, or trainer parties change, apply
-  `.agents/skills/maintain-pokemon-availability/SKILL.md` and regenerate
-  `documentation/POKEMON_AVAILABILITY.md` and the generated unusable-TM
-  section of `documentation/TM_REWARD_AVAILABILITY.md` with
-  `python tools/generate_pokemon_availability.py`.
-- Preserve `../Pokemon Trainers.txt` and `../Pokemon Encounters.txt` as the
-  user's editable authoring drafts. When asked to apply those drafts, transfer
-  their verified content into the game data and the corresponding Markdown
-  trackers; do not delete or replace the drafts.
-- Before editing, run `git status --short --branch`; preserve unrelated user
-  changes.
-- Follow `.clang-format` for `src/**/*.c` and `include/**/*.h`. Configure the
-  supplied hook with `git config core.hooksPath .githooks`.
-- Prefer readable source data, PNGs, palettes, JSON layouts/animations,
-  scripts, and tables over opaque binary replacements.
-- Never make the only copy of a permanent change in DSPRE or a generated ROM.
-- When a binary NARC member is unavoidable, commit only the smallest changed
-  member and document the original archive path, member index, purpose,
-  editing tool, and complete reproduction steps.
-- Keep generated files out of Git. If a new tool creates output, add a narrow
-  ignore rule rather than ignoring source formats globally.
-
-## Relevant hg-engine notes
-
-- `README.md`, `CONFIG.md`, and `CONTRIBUTING.md` are the primary setup and
-  contribution references.
-- `include/config.h` and `armips/include/config.s` are normally separate
-  configuration surfaces; keep equivalent settings consistent where both
-  exist. Bait encounters are the deliberate exception: the build generates
-  `build/armips_config.s` from `IMPLEMENT_BAIT_ENCOUNTERS` in
-  `include/config.h`.
-- Expanded save support must remain enabled through `ALLOW_SAVE_CHANGES`;
-  expanded PC boxes are enabled with `EXPAND_PC_BOXES`. Ordinary HeartGold
-  saves and PKHeX compatibility are not project requirements.
-- Capture experience is disabled. Keep `IMPLEMENT_CAPTURE_EXPERIENCE`
-  undefined while the project implements its no-battle-EXP progression model.
-- Heartless Gold stores its monotonic level cap in the expanded save data and
-  raises it from a central story-trainer victory table. Keep all cap consumers
-  routed through `GetLevelCap()`.
-- The upstream documentation describes the expanded Pokédex through Generation
-  6 as almost complete, but every Generation 5 species, asset, evolution,
-  learnset, form, cry, save, and Pokédex path still requires an explicit audit.
-- New species being compiled does not place them in encounters, trainers,
-  gifts, or other content.
-- Do not treat internal species IDs as National Pokédex numbers after Arceus.
-  IDs 494-543 are reserved Egg/Bad Egg and numbered placeholders; Victini is
-  National Dex 494 but engine species ID 544.
-- The existing wild-double-battle option is documented as unstable/broken and
-  should remain disabled.
-
-## Current baseline
-
-See `documentation/BASELINE_BUILD.md` for the preserved 2026-07-23 clean
-baseline. Later Heartless Gold feature builds and manual checks are tracked in
-`documentation/PROJECT_PLAN.md`; do not rewrite the historical baseline as
-though newer features were present in it.
+For upstream integration or remote history, read
+`documentation/guides/REPOSITORY_CONTEXT.md`. Human setup belongs in
+`README.md`; historical build evidence belongs in
+`documentation/BASELINE_BUILD.md`.
