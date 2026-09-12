@@ -258,7 +258,7 @@ void FairTrainerAI_Reset(struct BattleSystem *bsys)
 
 static u8 FairAI_SituationClass(const FairAIMonModel *trainer, const FairAIKnownMon *player)
 {
-    int trainerHp = trainer->maxHp == 0 ? 0 : trainer->hp * 100 / trainer->maxHp;
+    int trainerHp = trainer->hpPercent;
     int playerHp = player == NULL ? 0 : player->hpPercent;
 
     if (trainerHp <= 25) {
@@ -573,6 +573,7 @@ static void FairAI_FillActiveModel(struct BattleStruct *ctx, int battlerId, Fair
     model->ability = mon->ability;
     model->hp = mon->hp;
     model->maxHp = mon->maxhp;
+    model->hpPercent = mon->maxhp == 0 ? 0 : mon->hp * 100 / mon->maxhp;
     model->attack = mon->attack;
     model->defense = mon->defense;
     model->speed = mon->speed;
@@ -605,6 +606,7 @@ static void FairAI_FillReserveModel(struct PartyPokemon *mon, FairAIMonModel *mo
     model->ability = GetMonData(mon, MON_DATA_ABILITY, NULL);
     model->hp = GetMonData(mon, MON_DATA_HP, NULL);
     model->maxHp = GetMonData(mon, MON_DATA_MAXHP, NULL);
+    model->hpPercent = model->maxHp == 0 ? 0 : model->hp * 100 / model->maxHp;
     model->attack = GetMonData(mon, MON_DATA_ATTACK, NULL);
     model->defense = GetMonData(mon, MON_DATA_DEFENSE, NULL);
     model->speed = GetMonData(mon, MON_DATA_SPEED, NULL);
@@ -898,7 +900,7 @@ static int FairAI_StageUtility(struct BattleStruct *ctx, FairAIMonModel *trainer
             return FAIR_AI_INVALID;
         }
         if (stat == STAT_ATTACK || stat == STAT_SPECIAL_ATTACK) {
-            int hpPercent = trainer->maxHp == 0 ? 0 : trainer->hp * 100 / trainer->maxHp;
+            int hpPercent = trainer->hpPercent;
             int bestUtility = FAIR_AI_INVALID;
             int turnsBefore;
             int setupUses;
@@ -999,7 +1001,7 @@ static int FairAI_StageUtility(struct BattleStruct *ctx, FairAIMonModel *trainer
     return (before - after) * FAIR_AI_FUTURE_PERCENT / 100 - incoming;
 }
 
-static int FairAI_MergeSetupUtility(int total, int value, int incoming)
+static int __attribute__((noinline)) FairAI_MergeSetupUtility(int total, int value, int incoming)
 {
     if (value == FAIR_AI_INVALID) {
         return total;
@@ -1007,7 +1009,7 @@ static int FairAI_MergeSetupUtility(int total, int value, int incoming)
     return total == FAIR_AI_INVALID ? value : total + value + incoming;
 }
 
-static int FairAI_CombinedSelfUtility(struct BattleStruct *ctx, FairAIMonModel *trainer,
+static int __attribute__((noinline)) FairAI_CombinedSelfUtility(struct BattleStruct *ctx, FairAIMonModel *trainer,
     const FairAIKnownMon *target, int incoming, int stat1, int stat2)
 {
     int first = FairAI_StageUtility(ctx, trainer, target, -1, stat1, 1, TRUE, incoming);
@@ -1016,7 +1018,7 @@ static int FairAI_CombinedSelfUtility(struct BattleStruct *ctx, FairAIMonModel *
     return FairAI_MergeSetupUtility(first, second, incoming);
 }
 
-static int FairAI_ProtectSuccessDenominator(struct BattleStruct *ctx, int battlerId)
+static int __attribute__((noinline)) FairAI_ProtectSuccessDenominator(struct BattleStruct *ctx, int battlerId)
 {
     int count;
 
@@ -1034,7 +1036,7 @@ static int FairAI_CurseUtility(struct BattleSystem *bsys, struct BattleStruct *c
 
     if (trainer->type1 == TYPE_GHOST || trainer->type2 == TYPE_GHOST) {
         int persistence;
-        int hpPercent = trainer->maxHp == 0 ? 0 : trainer->hp * 100 / trainer->maxHp;
+        int hpPercent = trainer->hpPercent;
         int cost = hpPercent <= 50 ? hpPercent + AI_CFG_TEAM_ASSET_WEIGHT : 50;
 
         if ((target->condition2 & (STATUS2_CURSE | STATUS2_SUBSTITUTE)) != 0) {
@@ -1046,9 +1048,7 @@ static int FairAI_CurseUtility(struct BattleSystem *bsys, struct BattleStruct *c
             - cost - incoming;
     }
 
-    total = FairAI_StageUtility(ctx, trainer, target, -1, STAT_ATTACK, 1, TRUE, incoming);
-    total = FairAI_MergeSetupUtility(total,
-        FairAI_StageUtility(ctx, trainer, target, -1, STAT_DEFENSE, 1, TRUE, incoming), incoming);
+    total = FairAI_CombinedSelfUtility(ctx, trainer, target, incoming, STAT_ATTACK, STAT_DEFENSE);
     return FairAI_MergeSetupUtility(total,
         FairAI_StageUtility(ctx, trainer, target, -1, STAT_SPEED, -1, TRUE, incoming), incoming);
 }
@@ -1056,9 +1056,10 @@ static int FairAI_CurseUtility(struct BattleSystem *bsys, struct BattleStruct *c
 static int FairAI_CurePartyStatusUtility(struct BattleSystem *bsys, int battlerId, int incoming)
 {
     int count = 0;
+    int partyCount = BattleWorkPokeCountGet(bsys, battlerId);
     int slot;
 
-    for (slot = 0; slot < BattleWorkPokeCountGet(bsys, battlerId); slot++) {
+    for (slot = 0; slot < partyCount; slot++) {
         struct PartyPokemon *mon = BattleWorkPokemonParamGet(bsys, battlerId, slot);
         if (mon != NULL && GetMonData(mon, MON_DATA_HP, NULL) != 0
             && GetMonData(mon, MON_DATA_STATUS, NULL) != 0) {
@@ -1160,7 +1161,7 @@ static int FairAI_StatusUtility(struct BattleSystem *bsys, struct BattleStruct *
             int exposure = firstChance * (100 - accuracy) * incoming / 10000
                 + (100 - firstChance) * incoming / 100;
 
-            if (firstChance == 0 && incoming >= trainer->hp * 100 / (trainer->maxHp ? trainer->maxHp : 1)) {
+            if (firstChance == 0 && incoming >= trainer->hpPercent) {
                 return FAIR_AI_INVALID;
             }
             return followUp * accuracy / 100 - exposure;
@@ -1177,7 +1178,7 @@ static int FairAI_StatusUtility(struct BattleSystem *bsys, struct BattleStruct *
         }
         {
             int immediate = 12;
-            int missingHp = trainer->maxHp == 0 ? 0 : 100 - trainer->hp * 100 / trainer->maxHp;
+            int missingHp = trainer->maxHp == 0 ? 0 : 100 - trainer->hpPercent;
             int persistence = targetBattler >= 0 && CanSwitchMon(bsys, ctx, targetBattler)
                 ? AI_CFG_SWITCHABLE_TARGET_EFFECT_PERCENT : 100;
             int future = 24 * persistence / 100;
@@ -1189,7 +1190,7 @@ static int FairAI_StatusUtility(struct BattleSystem *bsys, struct BattleStruct *
             return (immediate + future + tempo) * accuracy / 100 - incoming;
         }
     case AI_EFFECT_CLASS_RECOVERHALF: {
-        int missing = trainer->maxHp == 0 ? 0 : 100 - trainer->hp * 100 / trainer->maxHp;
+        int missing = trainer->maxHp == 0 ? 0 : 100 - trainer->hpPercent;
         int healed = missing > 50 ? 50 : missing;
         return healed == 0 ? FAIR_AI_INVALID : healed - incoming;
     }
@@ -1209,7 +1210,7 @@ static int FairAI_StatusUtility(struct BattleSystem *bsys, struct BattleStruct *
     case AI_EFFECT_CLASS_CUREPARTYSTATUS:
         return FairAI_CurePartyStatusUtility(bsys, battlerId, incoming);
     case AI_EFFECT_CLASS_REST: {
-        int missing = trainer->maxHp == 0 ? 0 : 100 - trainer->hp * 100 / trainer->maxHp;
+        int missing = trainer->maxHp == 0 ? 0 : 100 - trainer->hpPercent;
         int value = missing + (trainer->condition ? 12 : 0) - incoming;
         return missing == 0 && trainer->condition == 0 ? FAIR_AI_INVALID : value;
     }
@@ -1250,7 +1251,7 @@ static int FairAI_StatusUtility(struct BattleSystem *bsys, struct BattleStruct *
     case AI_MOVE_CLASS_STICKYWEB:
         return (ctx->side_condition[targetSide] & SIDE_STATUS_STICKY_WEB) ? FAIR_AI_INVALID : 10 - incoming;
     case AI_MOVE_CLASS_SUBSTITUTE:
-        return trainer->hp * 100 / (trainer->maxHp ? trainer->maxHp : 1) <= 25 ? FAIR_AI_INVALID : -25;
+        return trainer->hpPercent <= 25 ? FAIR_AI_INVALID : -25;
     case AI_MOVE_CLASS_RANDOMACTION:
         return AI_CFG_RANDOM_ACTION_BASE_VALUE - incoming;
     default:
@@ -1480,17 +1481,14 @@ static int FairAI_BuildPlayerActions(struct BattleSystem *bsys, struct BattleStr
 
 static int FairAI_AssetValue(const FairAIMonModel *mon)
 {
-    int hpPercent = mon->maxHp == 0 ? 0 : mon->hp * 100 / mon->maxHp;
-
-    return hpPercent * AI_CFG_TEAM_ASSET_WEIGHT / 100 + mon->level / 2;
+    return mon->hpPercent * AI_CFG_TEAM_ASSET_WEIGHT / 100 + mon->level / 2;
 }
 
 static int FairAI_PositionUtility(struct BattleStruct *ctx, FairAIMonModel *trainer,
     const FairAIKnownMon *target)
 {
     int incoming = FairAI_ExpectedThreat(ctx, target, trainer);
-    int hpPercent = trainer->maxHp == 0 ? 0 : trainer->hp * 100 / trainer->maxHp;
-    return FairAI_BestDamage(ctx, trainer, target, -1) - incoming + hpPercent / 4;
+    return FairAI_BestDamage(ctx, trainer, target, -1) - incoming + trainer->hpPercent / 4;
 }
 
 static int FairAI_MoveUtilityAgainstMove(struct BattleSystem *bsys, struct BattleStruct *ctx,
@@ -1570,7 +1568,7 @@ static int FairAI_EvaluateSwitchAgainstMove(struct BattleSystem *bsys, struct Ba
     hitReserve = reserve;
     expectedDamage = FairAI_DamageToTrainerAtState(ctx, player, &reserve, playerMove, initialPlayerState);
     hitDamage = accuracy == 0 ? expectedDamage : expectedDamage * 100 / accuracy;
-    hpPercent = reserve.maxHp == 0 ? 0 : reserve.hp * 100 / reserve.maxHp;
+    hpPercent = reserve.hpPercent;
     moveType = GetAdjustedMoveTypeBasics(ctx, playerMove, player->ability,
         ctx->moveTbl[playerMove].type);
     abilityBehavior = FairAI_GetAbilityTypeBehavior(reserve.ability, moveType);
@@ -1602,7 +1600,7 @@ static int FairAI_EvaluatePair(struct BattleSystem *bsys, struct BattleStruct *c
         int incoming = FairAI_DamageToTrainerAtState(ctx, player, trainer, playerAction->value, playerState);
         int utility = FairAI_MoveUtilityAgainstMove(bsys, ctx, trainerBattler, trainer,
             player, playerBattler, trainerMove, playerAction->value, playerState);
-        int hpPercent = trainer->maxHp == 0 ? 0 : trainer->hp * 100 / trainer->maxHp;
+        int hpPercent = trainer->hpPercent;
         int outgoing = FairAI_Damage(ctx, trainer, player, trainerMove);
         int firstChance = FairAI_ActsFirstChance(ctx, trainer, trainerMove, player, playerAction->value);
         int accuracy = ctx->moveTbl[playerAction->value].accuracy == 0
@@ -1613,7 +1611,6 @@ static int FairAI_EvaluatePair(struct BattleSystem *bsys, struct BattleStruct *c
         BOOL playerFaints = outgoing >= player->hpPercent && !trainerFaints;
         if (trainerFaints) {
             int faintChance = accuracy;
-            u16 trainerMove = trainer->moves[trainerAction->index];
             u16 trainerEffect = ctx->moveTbl[trainerMove].effect;
 
             if (trainerEffect == MOVE_EFFECT_PROTECT || trainerEffect == MOVE_EFFECT_SURVIVE_WITH_1_HP) {
@@ -1759,7 +1756,7 @@ static void FairAI_Decide(struct BattleSystem *bsys, int battlerId)
         int partyCount = BattleWorkPokeCountGet(bsys, battlerId);
         int currentIncoming = FairAI_ExpectedThreat(ctx, target, &trainer);
         int currentBalance = FairAI_PositionUtility(ctx, &trainer, target);
-        int currentHp = trainer.maxHp == 0 ? 0 : trainer.hp * 100 / trainer.maxHp;
+        int currentHp = trainer.hpPercent;
         s16 switchScores[AI_CFG_MAX_FULL_SWITCH_CANDIDATES] = { FAIR_AI_INVALID, FAIR_AI_INVALID };
         u8 switchSlots[AI_CFG_MAX_FULL_SWITCH_CANDIDATES] = { FAIR_AI_PARTY_SIZE, FAIR_AI_PARTY_SIZE };
 
@@ -1777,7 +1774,7 @@ static void FairAI_Decide(struct BattleSystem *bsys, int battlerId)
             partyMon = BattleWorkPokemonParamGet(bsys, battlerId, i);
             FairAI_FillReserveModel(partyMon, &reserve);
             entryDamage = FairAI_PredictedDamageIntoSwitch(ctx, target, &trainer, &reserve);
-            hpPercent = reserve.maxHp == 0 ? 0 : reserve.hp * 100 / reserve.maxHp;
+            hpPercent = reserve.hpPercent;
             if (entryDamage >= hpPercent) {
                 continue;
             }
@@ -1819,7 +1816,7 @@ static void FairAI_Decide(struct BattleSystem *bsys, int battlerId)
 
     {
         incoming = FairAI_Threat(ctx, target, &trainer, -1);
-        trainerHpPercent = trainer.maxHp == 0 ? 0 : trainer.hp * 100 / trainer.maxHp;
+        trainerHpPercent = trainer.hpPercent;
         if (incoming >= trainerHpPercent) {
             riskWeight = AI_CFG_DESPERATE_RISK_WEIGHT;
         } else if (target != NULL && trainerHpPercent >= target->hpPercent + 20) {

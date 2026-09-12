@@ -73,6 +73,8 @@ def main():
                             f"{patch_path}: bank {bank_name} has no message {index}"
                         )
                     expected = replacement["expected"]
+                    if messages[index] == replacement["text"]:
+                        continue
                     if expected not in messages[index]:
                         raise ValueError(
                             f"{patch_path}: bank {bank_name}, message {index} no longer "

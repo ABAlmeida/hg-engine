@@ -186,12 +186,13 @@ not included in either extension.
 
 | Region | Used | Configured capacity | Free | Sanctuary object included |
 | --- | ---: | ---: | ---: | ---: |
-| Battle extension (overlay 130) | 81,128 | 81,420 | 292 | 48 |
+| Battle extension (overlay 130) | 81,396 | 81,420 | 24 | 48 |
 | Field extension (overlay 131) | 21,806 | 98,304 | 76,498 | 1,404 |
 
-These are the outputs from the successful 2026-09-08 `quick-rom` build, before
-the temporary Pokédex-suppression object was removed. The
-battle linker deliberately reserves the final 500 bytes of its physical
-81,920-byte allocation; the 292-byte figure is therefore the usable headroom
-inside the configured linker region, not the physical remainder. This is tight
-enough that further battle-extension work should be measured immediately.
+The battle measurement is from the successful 2026-09-12 `quick-rom` build;
+the field measurement remains from the successful 2026-09-08 build before the
+temporary Pokédex-suppression object was removed. The battle linker deliberately
+reserves the final 500 bytes of its physical 81,920-byte allocation; the
+24-byte figure is therefore the usable headroom inside the configured linker
+region, while the physical remainder is 524 bytes. This is tight enough that
+further battle-extension work must be measured immediately.

@@ -268,8 +268,8 @@ void __attribute__((section(".init"))) BattleController_BeforeMove(struct Battle
         int seq_no;
 
         if ((ctx->waza_out_check_on_off & SYSCTL_SKIP_OBEDIENCE_CHECK) == 0) {
-#ifdef DEBUG_BATTLE_SCENARIOS
-            ret = 0;
+#if defined(DEBUG_BATTLE_SCENARIOS) || defined(DEBUG_ALWAYS_OBEY)
+            ret = OBEY_CHECK_SUCCESS;
 #else
             ret = ServerBadgeCheck(bsys, ctx, &seq_no); // 8013610h
 #endif

@@ -401,6 +401,7 @@ Recorded evidence and the current authorized implementation measurement:
 | Discarded attempt artifact | 80,120 B | 1,800 B | Latest generated artifact inspected during the performance investigation |
 | Last authorized pre-amendment resident build | 81,364 B | 556 B | Historical `make quick-rom -j8` result; `trainer_ai.o` contained 10,804 B text, 30 B generated read-only tables and 4 B BSS. The current source is intentionally unbuilt and must not be assumed to have this size. |
 | User-run intermediate semantics/switch build | 81,936 B | -16 B | Link failed by 16 B. Its `trainer_ai.o` contained 11,288 B text, 116 B read-only data and 4 B BSS. This measurement triggered removal of duplicated party-asset scans, role arrays and unused tiny tables; the resulting source has not yet been built. |
+| Authorized post-compaction semantics build | 81,396 B | 524 B | Successful `quick-rom -j8` build on 2026-09-12. `trainer_ai.o` contains 10,760 B text, 120 B read-only data and 4 B BSS. Active and reserve models now calculate `hpPercent` once and reuse it across scoring, including Endure evaluation. |
 
 The discarded attempt also produced a 384-byte AI BSS object and a 676-byte
 transient overlay. These numbers describe an incomplete scaffold and are not
@@ -413,10 +414,9 @@ output_battle.bin <= 81,920 - 500 = 81,420 bytes
 ```
 
 The 500 bytes are linker headroom for resident fixes and integration—not
-battle heap. The estimated clean baseline permits approximately 11.8 KiB of
-resident replacement AI while retaining that reserve; the value remains an
-estimate until measured by an authorized build. Stop before the hard gate
-rather than consuming the reserve.
+battle heap. The current implementation retains 524 physical bytes, only 24
+bytes above the enforced reserve. Stop before the hard gate rather than
+consuming the reserve.
 
 The battle linker region is deliberately capped at `0x13E0C` (81,420 bytes),
 500 bytes below the physical `0x14000` region, so the reserve is enforced by
