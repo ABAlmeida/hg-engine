@@ -2706,3 +2706,4 @@ Calcium Max
 Zinc Max
 IV Max
 Sanctuary Permit
+Laptop

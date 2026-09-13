@@ -210,6 +210,7 @@ std_play_rival_outro_music      equ 2070
 std_fade_end_rival_outro_music  equ 2071
 std_permanent_death_notification equ 2074
 std_configured_egg_gift          equ 2075
+std_laptop_pc                    equ 2076
 
 // Creates a new script context to run the indicated script and wait
 .macro callstd,id

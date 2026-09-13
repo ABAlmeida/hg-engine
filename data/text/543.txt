@@ -110,3 +110,5 @@ Professor Elm: Before you go,\nI have one more favor to ask.\rIt’s time to ent
 Professor Elm: Take good care\nof that Egg.\rI’m sure we’ll learn something\nremarkable together!
 You can’t leave yet.\rHatch Professor Elm’s Egg, then\nshow him the Pokémon inside.
 Before leaving, raise the Pokémon\nfrom the Egg to Lv. 5.
+Professor Elm: I have another tool\nto help with your research.\rThis Laptop can connect to the PC\nwherever your journey takes you.
+Professor Elm: Keep it in your Bag.\rUse it whenever you need to access\nthe Pokémon Storage System.

@@ -101,8 +101,8 @@ Shiny Bait gift, and the revised dialogue still need focused manual verification
 - Do not implement the forced-female protagonist plan as part of this change.
 - Do not replace the normal Lyra/Ethan counterpart selection.
 - Do not choose a different story-Egg species yet.
-- Do not implement the separate Laptop plan, even though Mum's revised
-  conversation is its likely future gift point.
+- Keep the independently implemented Laptop behavior and acquisition owned by
+  `LAPTOP_PLAN.md`; it is not part of Mum's revised conversation.
 - Do not redesign Silver's first team, dialogue beyond what the new placement
   requires, or later rival encounters.
 - Do not add a new save field solely for this sequence.
@@ -204,7 +204,8 @@ Known repository evidence includes `FLAG_GOT_POKEGEAR`,
 `give_running_shoes`. Their exact original parameter values and surrounding
 control flow must still be copied from the verified HGSS scripts.
 
-Do not include the planned Laptop gift in this implementation.
+The independently implemented Laptop gift extends Elm's Healing Kit hook; it
+does not alter Mum's revised-opening script.
 
 ## 4. Preserve Elm's starter and Healing Kit flow
 
@@ -558,8 +559,8 @@ Use a new in-game save, not a save state, and manually verify:
 3. no duplicate Mum conversation after map changes and save/reload;
 4. the normal initial New Bark Lyra/Ethan and Slakoth scene after leaving home;
 5. all three starters and both nickname choices;
-6. exactly one Healing Kit and one Elm phone registration, plus Healing Kit
-   registration and registered-button use;
+6. exactly one Healing Kit, one Laptop, and one Elm phone registration, plus
+   Healing Kit registration and registered-button use;
 7. exactly 5 Potions, 100 Poké Balls, and 100 Poké Bait after the assistant;
 8. no duplicate gifts after revisiting the lab;
 9. all three Silver 1 trainer variants using a level-5, perfect-IV starter with

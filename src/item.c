@@ -5,6 +5,7 @@
 #include "../include/constants/file.h"
 #include "../include/constants/item.h"
 #include "../include/constants/moves.h"
+#include "../include/laptop.h"
 #include "../include/message.h"
 #include "../include/reusable_healer.h"
 #include "../include/script.h"
@@ -390,6 +391,7 @@ const struct ItemUseFuncDat sNewItemFieldUseFuncs[] = {
     { ItemMenuUseFunc_RotomCatalog, NULL, NULL },
     { ItemMenuUseFunc_Bait, NULL, ItemCheckUseFunc_Bait },
     { ItemMenuUseFunc_ReusableHealer, ItemFieldUseFunc_ReusableHealer, NULL },
+    { ItemMenuUseFunc_Laptop, ItemFieldUseFunc_Laptop, ItemCheckUseFunc_Laptop },
 };
 
 _Static_assert(

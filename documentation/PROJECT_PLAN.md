@@ -40,7 +40,7 @@ complete.
   recover the first usable boxed Pokémon and name it in the recovery message.
   Keep all 30 expanded PC boxes available for ordinary storage.
 - Provide portable access to the shared PC menu through a reusable Laptop Key
-  Item. Mum initially gives it during the existing Pokégear sequence.
+  Item. Professor Elm initially gives it immediately after the Healing Kit.
 - End a run with a dedicated defeat message and return to the title screen
   when a wiped player has no usable Pokémon in ordinary PC storage.
 - Treat hg-engine's existing Generation 5-6 species engine and data foundation
@@ -62,15 +62,16 @@ complete.
 - Remove normal acquisition sources for every item in the Battle Items pocket.
   Retain their IDs and item data for archive stability.
 - Consolidate the opening so Mum supplies the early travel features, Elm gives
-  the tracked Togepi Egg, the player must hatch it, show its Pokémon to Elm,
+  the Healing Kit, Laptop, and tracked Togepi Egg, the player must hatch it,
+  show its Pokémon to Elm,
   and raise it to level 5 before his assistant supplies the Fishing Rod,
   Silver 1 occurs outside the lab, the counterpart teaches Bait without a
   simulated battle, and Mr. Pokemon gives Shiny Bait before progression
   continues toward Violet City. See `OPENING_SEQUENCE_PLAN.md`.
 - For the planned story expansion, retain Mum's setup and supplies, Elm's
-  starter and Healing Kit responsibilities, the tracked Egg requirements, and
-  the gender-selected Lyra/Ethan counterpart. Add Cynthia to the opening and
-  move the tracked Togepi Egg gift from Elm to her.
+  starter, Healing Kit, and Laptop responsibilities, the tracked Egg
+  requirements, and the gender-selected Lyra/Ethan counterpart. Add Cynthia
+  to the opening and move the tracked Togepi Egg gift from Elm to her.
 - Replace the counterpart's recurring Marill companion with Slakoth. Before
   giving the Vs. Recorder in the Route 31-Violet gatehouse, Lyra or Ethan must
   be defeated in a gender-selected three-Pokemon battle. Losing follows the
@@ -110,7 +111,7 @@ complete.
 | Silver 2 post-Bugsy gate | Planned | Silver 2 is currently reachable before defeating Bugsy. Prevent the encounter from starting until Bugsy has been defeated and the Hive Badge progression state is complete, while leaving Silver 2 normally available afterward. Implementation must trace and reuse the verified existing Bugsy/badge state rather than introduce an unnecessary flag. |
 | First counterpart battle and Slakoth companion | Implemented; build and manual verification pending | Replace the counterpart's shared companion graphics and surviving scripted cries with Slakoth. The first New Bark encounter includes gendered dialogue about its unusually gutsy behavior. The Route 31-Violet gatehouse now requires a victory over Lyra or Ethan before the existing Vs. Recorder gift and completion state can proceed. |
 | Permanent death and wipe recovery | Complete; manually verified | Eligible fainted party Pokémon are deleted centrally after battle. Common field scripts report deaths and transactional reserve recovery after the overworld is visible; no-reserve wipes show the ending message and return to title. See `PERMANENT_DEATH_PLAN.md`. |
-| Laptop PC access | Planned; independent from permanent death | Add a reusable Laptop Key Item that opens the shared PC menu from safe field contexts. Mum initially gives it during the existing Pokégear sequence. See `LAPTOP_PLAN.md`. |
+| Laptop PC access | Implemented; build and manual verification pending | Professor Elm gives a reusable, non-registerable Laptop Key Item immediately after the Healing Kit. Bag use is restricted to ordinary field maps, closes through the normal deferred flow, and enters the existing shared PC menu while skipping only physical-terminal model commands. See `LAPTOP_PLAN.md`. |
 | Forced-female protagonist | Pending | Skip gender selection, write the female profile value, continue to name selection, and retain the standard Lyra graphics without replacing Ethan's unrelated NPC assets. Existing saves do not need migration. |
 | HM field actions | Implemented; build and manual verification pending | Owned machines enable Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Rock Climb, Fly, or Flash without teaching or compatibility requirements while preserving the original field checks and Pokémon presentation. See `HM_FIELD_ACTIONS_PLAN.md`. |
 | Evolution modernization | Partially complete; upstream mechanics present | hg-engine already uses the modern friendship threshold of 160, provides Linking Cord routes for the original trade evolutions and held-item trades, and replaces the magnetic-field, moss-rock, and ice-rock evolutions with stones. Player-facing completion still requires normal acquisition sources for the Linking Cord and required held items, plus an audit of unsupported special methods such as Karrablast/Shelmet's paired trade. |

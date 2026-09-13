@@ -35,6 +35,7 @@ def main() -> None:
     )
     bait_enabled = int(is_defined(config, "IMPLEMENT_BAIT_ENCOUNTERS"))
     reusable_healer_enabled = int(is_defined(config, "IMPLEMENT_REUSABLE_HEALER"))
+    laptop_enabled = int(is_defined(config, "IMPLEMENT_LAPTOP"))
     revised_opening_enabled = int(is_defined(config, "IMPLEMENT_REVISED_OPENING"))
     new_game_info_menu_skipped = int(is_defined(config, "SKIP_NEW_GAME_INFO_MENU"))
     trainer_line_of_sight_disabled = int(
@@ -49,6 +50,7 @@ def main() -> None:
         "// Generated from include/config.h. Do not edit.\n"
         f"IMPLEMENT_BAIT_ENCOUNTERS equ {bait_enabled}\n"
         f"IMPLEMENT_REUSABLE_HEALER equ {reusable_healer_enabled}\n"
+        f"IMPLEMENT_LAPTOP equ {laptop_enabled}\n"
         f"IMPLEMENT_REVISED_OPENING equ {revised_opening_enabled}\n"
         f"SKIP_NEW_GAME_INFO_MENU equ {new_game_info_menu_skipped}\n"
         f"DISABLE_TRAINER_LINE_OF_SIGHT equ {trainer_line_of_sight_disabled}\n"

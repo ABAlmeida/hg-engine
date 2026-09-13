@@ -605,7 +605,9 @@ typedef struct FieldSystem {
     /* 0x40 */ FIELD_PLAYER_AVATAR *playerAvatar;
     /* 0x44 */ u8 unk44[0x8];
     /* 0x4C */ void *fog_data;
-    /* 0x50 */ u8 unk50[0x5C];
+    /* 0x50 */ u8 unk50[0x20];
+    /* 0x70 */ int mapLoadType;
+    /* 0x74 */ u8 unk74[0x38];
     /* 0xAC */ u32 unkAC;
     /* 0xB0 */ u8 unkB0[0x4];
     /* 0xB4 */ u32 unkB4[2]; // unknown original fields; preserve their word alignment

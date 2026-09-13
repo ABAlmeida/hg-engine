@@ -16,6 +16,8 @@ ELM_EGG_RECEIVED_MESSAGE  equ 108
 ELM_EGG_CARE_MESSAGE      equ 109
 ELM_ASSISTANT_HATCH_MESSAGE equ 110
 ELM_ASSISTANT_LEVEL_MESSAGE equ 111
+ELM_LAPTOP_INTRO_MESSAGE   equ 112
+ELM_LAPTOP_USE_MESSAGE     equ 113
 ELM_ASSISTANT_PLAYER_RETREAT_MOVEMENT equ 0x21C
 ELM_REQUIRED_DEPARTURE_LEVEL equ 5
 PARTY_SLOT_NOT_FOUND equ 255
@@ -71,7 +73,7 @@ goto elm_give_healing_kit
 
 // Append the gift rather than overwriting another part of Elm's script. Replay
 // and finish the displaced movement first so Elm faces the player throughout
-// both gifts, then resume after the original WaitMovement command.
+// the gifts, then resume after the original WaitMovement command.
 .org ELMS_LAB_ORIGINAL_END
 elm_give_healing_kit:
 apply_movement ELM_OBJECT_ID, ELM_TURN_TO_PLAYER_MOVEMENT
@@ -79,6 +81,13 @@ wait_movement
 setvar VAR_SPECIAL_x8004, ITEM_HEALING_KIT
 setvar VAR_SPECIAL_x8005, 1
 callstd std_obtain_item_verbose
+.if IMPLEMENT_LAPTOP
+npc_msg ELM_LAPTOP_INTRO_MESSAGE
+setvar VAR_SPECIAL_x8004, ITEM_LAPTOP
+setvar VAR_SPECIAL_x8005, 1
+callstd std_obtain_item_verbose
+npc_msg ELM_LAPTOP_USE_MESSAGE
+.endif
 .if IMPLEMENT_REVISED_OPENING
 closemsg
 // The party contains only the new starter here, so the specialized story-Egg

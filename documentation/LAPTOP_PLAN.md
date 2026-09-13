@@ -11,11 +11,16 @@ The Laptop:
 - works in ordinary indoor and outdoor field locations;
 - returns to the overworld after the player logs off;
 - is never consumed, tossed, registered, or usable in battle; and
-- is initially given by Mum during the existing Pokégear sequence.
+- is initially given by Professor Elm immediately after the Healing Kit.
 
 The Laptop is independent from permanent-death processing. It reuses the
 shared PC menu, so later PC entries automatically remain consistent between
 physical terminals and portable access.
+
+Implementation status: implemented in source; build and focused in-game
+verification remain pending. The temporary icon reuses the Rotom Catalog
+art, item ID 2708 is assigned to `ITEM_LAPTOP`, and common script 2076 enters
+the same PC menu body while suppressing only physical-terminal animations.
 
 ## 1. Add the Key Item
 
@@ -69,23 +74,21 @@ The field-use task must:
 Avoid a global pending-Laptop flag. Keep the state in the existing field task
 or item-use environment for its complete lifetime.
 
-## 5. Add Mum's initial gift
+## 5. Add Elm's initial gift
 
-For the initial implementation, Mum gives the Laptop during the existing
-Pokégear sequence in the player's house.
+Professor Elm gives the Laptop during the existing one-time post-starter gift
+sequence in his lab, immediately after he gives the Healing Kit.
 
-Her script is member 845 (`T20R0201`). Insert the standard item receipt after
-the Pokégear is granted and before the remaining Pokégear explanation.
-`FLAG_GOT_POKEGEAR` already makes the sequence one-time, so no separate Laptop
-acquisition flag is needed.
+His script is member 843. Extend the source-controlled Healing Kit hook with a
+second standard item receipt before the revised opening's Egg and phone-number
+sequence. The starter-selection progression already makes this gift path
+one-time, so no separate Laptop acquisition flag is needed.
 
-The Pokégear is enabled by a story flag, whereas the Laptop is a normal Key
-Item and must be added to the Bag.
+The Laptop remains a normal Key Item and must be added to the Bag.
 
-Update message bank 545 so Mum introduces the Laptop naturally. Implement the
-gift and dialogue as guarded, source-controlled script patches with assertions
-against the supported US HeartGold base. This acquisition point is
-intentionally provisional and may be moved later.
+Update message bank 543 so Elm introduces the Laptop naturally. Keep the gift
+inside the existing guarded, source-controlled Healing Kit patch with its
+assertions against the supported US HeartGold base.
 
 ## 6. Performance and maintainability
 
@@ -97,38 +100,38 @@ Keep these responsibilities separate:
 - the item callback validates use and exits the Bag;
 - the shared launcher owns PC-menu startup and completion;
 - each PC menu entry owns its own functionality; and
-- Mum's script owns acquisition only.
+- Elm's post-starter gift script owns acquisition only.
 
 Do not duplicate PC scripts, overlay setup, permanent-death rules, or storage
 access inside the Laptop callback.
 
-## 7. Remaining pre-implementation mapping
+## 7. Resolved implementation mapping
 
-Before changing runtime code:
+The implementation uses:
 
-1. select an unused item ID and the temporary icon source;
-2. trace the physical PC script command and field task into the top-level PC
-   menu;
-3. identify the Bag field-use teardown and deferred-application pattern used
-   by comparable Key Items;
-4. document the unsafe-context checks required by the shared PC launcher;
-5. map the return path from every PC child overlay back to the field;
-6. verify the exact Pokégear gift insertion point in script member 845; and
-7. identify the corresponding lines in message bank 545.
+1. custom item ID 2708 and the Rotom Catalog art as the temporary icon;
+2. common script 2010's existing `_0A2E` PC menu body, reached from portable
+   common script 2076;
+3. the same deferred Bag-exit field task pattern as other custom Key Items;
+4. the field system's ordinary-overworld map-load type as the safe-use gate;
+5. a per-script scratch mode that suppresses terminal model commands while
+   preserving every shared child-overlay return path; and
+6. messages 112 and 113 in bank 543, inserted immediately after the Healing
+   Kit receipt in Elm's member-843 post-starter gift script.
 
 ## 8. Logical implementation steps
 
 1. Add the Laptop item data, text, icon, and field-use registration.
 2. Centralize the physical-PC menu launcher.
 3. Implement safe deferred Laptop launch and return-to-field behavior.
-4. Add Mum's guarded gift and dialogue changes.
+4. Add Elm's guarded gift and dialogue changes.
 5. Review the complete diff and update project status documentation.
 
 ## 9. Manual verification
 
 Verify:
 
-1. Mum gives exactly one Laptop during the Pokégear sequence;
+1. Elm gives exactly one Laptop immediately after the Healing Kit;
 2. the Laptop remains in the Key Items pocket and is not consumed;
 3. it cannot be tossed, registered, or used in battle;
 4. invalid field contexts produce the standard rejection without hanging;

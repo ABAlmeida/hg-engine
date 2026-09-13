@@ -2716,12 +2716,13 @@
 #define ITEM_ZINC_MAX      (MAX_BASE_ITEM_NUM + 21)
 #define ITEM_IV_MAX        (MAX_BASE_ITEM_NUM + 22)
 #define ITEM_SANCTUARY_PERMIT (MAX_BASE_ITEM_NUM + 23)
+#define ITEM_LAPTOP        (MAX_BASE_ITEM_NUM + 24)
 
 // The original Sport Ball ID is retained so Contest battle code and save data
 // remain binary-compatible; only its Sanctuary-facing identity changes.
 #define ITEM_SANCTUARY_BALL ITEM_SPORT_BALL
 
-#define MAX_TOTAL_ITEM_NUM ITEM_SANCTUARY_PERMIT
+#define MAX_TOTAL_ITEM_NUM ITEM_LAPTOP
 
 #define NUM_MEGA_STONES (48) // includes the pixie plate, doesn't include plza megas due to overflowing bag
 #define NUM_HMS         (ITEM_HM08 - ITEM_HM01 + 1) // intentionally do not include HM07_ORAS (Dive)

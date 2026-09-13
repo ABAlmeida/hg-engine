@@ -90,6 +90,7 @@ scrdef scr_seq_0003_072_repels
 scrdef scr_seq_0003_073_autobattle_testing
 scrdef scr_seq_0003_074_permanent_death_notification
 scrdef scr_seq_0003_075_configured_egg_gift
+scrdef scr_seq_0003_076_laptop_pc
 scrdef_end
 
 scr_seq_0003_002:
@@ -759,6 +760,7 @@ _09F5:
 scr_seq_0003_010:
     scrcmd_609
     lockall
+    setvar VAR_SPECIAL_x8007, 0
     play_se SEQ_SE_DP_PC_ON
     call _0A18
     buffer_players_name 0
@@ -766,16 +768,32 @@ scr_seq_0003_010:
     touchscreen_menu_hide
     goto _0A2E
 
+scr_seq_0003_076_laptop_pc:
+    scrcmd_609
+    lockall
+    setvar VAR_SPECIAL_x8007, 1
+    play_se SEQ_SE_DP_PC_ON
+    buffer_players_name 0
+    npc_msg 33
+    touchscreen_menu_hide
+    goto _0A2E
+
 _0A18:
+    compare VAR_SPECIAL_x8007, 1
+    goto_if_eq _0A18_return
     scrcmd_500 90
     scrcmd_501 90
     scrcmd_308 90
+_0A18_return:
     return
 
 _0A23:
+    compare VAR_SPECIAL_x8007, 1
+    goto_if_eq _0A23_return
     scrcmd_502 90
     scrcmd_308 90
     scrcmd_309 90
+_0A23_return:
     return
 
 _0A2E:
@@ -1004,6 +1022,7 @@ _0DF0:
     closemsg
     play_se SEQ_SE_DP_PC_LOGOFF
     call _0A23
+    setvar VAR_SPECIAL_x8007, 0
     touchscreen_menu_show
     releaseall
     end
@@ -1017,7 +1036,10 @@ _0E02:
 _0E16:
     fade_screen 6, 1, 0, RGB_BLACK
     wait_fade
+    compare VAR_SPECIAL_x8007, 1
+    goto_if_eq _0E16_return
     scrcmd_309 90
+_0E16_return:
     return
 
 scr_seq_0003_014:

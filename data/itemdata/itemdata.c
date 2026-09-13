@@ -174644,6 +174644,16 @@ const ITEMDATA __data[] =
     .battlePocket = BATTLE_POCKET_NONE,
 },
 
+[ITEM_LAPTOP] = {
+    ITEM_PRICE(0),
+    .naturalGiftType = TYPE_NORMAL,
+    .prevent_toss = TRUE,
+    .selectable = FALSE,
+    .fieldPocket = POCKET_KEY_ITEMS,
+    .battlePocket = BATTLE_POCKET_NONE,
+    .fieldUseFunc = ITEM_FIELD_USE_FUNC_LAPTOP,
+},
+
 #undef STAT_TRAINING_VITAMIN
 
 };

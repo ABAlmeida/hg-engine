@@ -240,6 +240,9 @@
 // Professor Elm gives a reusable Key Item that fully heals the party.
 #define IMPLEMENT_REUSABLE_HEALER
 
+// Elm gives a non-registerable Laptop Key Item that opens the shared PC menu.
+#define IMPLEMENT_LAPTOP
+
 // Consolidate the early-game gifts and story events into the shorter
 // Heartless Gold opening documented in OPENING_SEQUENCE_PLAN.md.
 #define IMPLEMENT_REVISED_OPENING
@@ -310,6 +313,18 @@
 
 #if defined(IMPLEMENT_REUSABLE_HEALER) && !defined(ITEM_POCKET_EXPANSION)
 #error "The reusable healer requires expanded item pockets"
+#endif
+
+#if defined(IMPLEMENT_LAPTOP) && !defined(ALLOW_SAVE_CHANGES)
+#error "The Laptop requires expanded save support for custom item storage"
+#endif
+
+#if defined(IMPLEMENT_LAPTOP) && !defined(ITEM_POCKET_EXPANSION)
+#error "The Laptop requires expanded item pockets"
+#endif
+
+#if defined(IMPLEMENT_LAPTOP) && !defined(IMPLEMENT_REUSABLE_HEALER)
+#error "The Laptop gift requires Elm's reusable Healing Kit sequence"
 #endif
 
 #if defined(IMPLEMENT_REVISED_OPENING) && !defined(IMPLEMENT_REUSABLE_HEALER)
