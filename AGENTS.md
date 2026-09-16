@@ -59,11 +59,19 @@ skills add task workflows but do not override these rules.
 - Spawn no more agents than there are independent workstreams. Subagents must
   not delegate further. At most one write-capable subagent may run at a time,
   and the main agent must not edit that subagent's owned files concurrently.
-- Subagents must never build, test, inspect ROM or generated-ROM content,
-  launch an emulator, or commit. The main agent retains any explicitly
-  authorized build, architectural decisions, and final review; repository-wide
-  prohibitions still apply. Verify material subagent findings against the
-  current working tree before relying on them.
+- Subagents must never test, inspect ROM or generated-ROM content, launch an
+  emulator, or commit. The main agent retains architectural decisions and final
+  review; repository-wide prohibitions still apply. Verify material subagent
+  findings against the current working tree before relying on them.
+- For a build explicitly authorized by the user in the current conversation,
+  delegate the mechanical build command to the lowest-cost available
+  command-capable general-purpose subagent when supported. Give it the exact
+  command and build constraints, prohibit source edits and ROM inspection, and
+  have it capture complete stdout and stderr under an ignored `.scratch/` path.
+  It must report the command, exit code, duration, concise relevant diagnostics,
+  and log path to the main agent. Do not edit files or run another build while
+  that subagent is building. The main agent remains responsible for interpreting
+  the result, diagnosing failures, and reporting the outcome to the user.
 
 ## Conditional workflows
 

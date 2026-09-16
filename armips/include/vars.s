@@ -175,6 +175,7 @@ VAR_UNK_40A2 equ                       0x40A2
 VAR_UNK_40A3 equ                       0x40A3
 VAR_UNK_40A4 equ                       0x40A4
 VAR_UNK_40A5 equ                       0x40A5
+VAR_SCENE_LIGHTHOUSE_JASMINE equ       VAR_UNK_40A5
 VAR_UNK_40A6 equ                       0x40A6
 VAR_UNK_40A7 equ                       0x40A7
 VAR_UNK_40A8 equ                       0x40A8

@@ -1,0 +1,13 @@
+{
+  "604": {
+    "_append": {
+      "expected_count": 9,
+      "messages": [
+        "Professor Elm: {STRVAR_1 3, 0, 0}!\\nWait just a moment!",
+        "Professor Elm: Unfortunately, you\\nwon’t be able to progress any farther\\fin Johto for the time being.\\rBut the S.S. Aqua can take you to\\nKanto.\\rYou can continue your quest there\\nto become the very best Trainer!",
+        "Professor Elm: Take this S.S. Ticket.\\nYou’ll need it to board the ship.",
+        "Professor Elm: The ship departs from\\nOlivine Port.\\rGood luck in Kanto,\\n{STRVAR_1 3, 0, 0}!"
+      ]
+    }
+  }
+}

@@ -51,7 +51,10 @@ def main():
         with patch_path.open(encoding="utf-8") as patch_file:
             patch_sets.append((patch_path, json.load(patch_file)))
 
-    with tempfile.TemporaryDirectory(dir=args.msgdata_dir) as temp_dir_name:
+    # Keep scratch files outside the extracted archive directory. If msgenc or
+    # this script fails, narcpy must never see a temporary directory as a NARC
+    # member during a later build.
+    with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
         for patch_path, banks in patch_sets:
             for bank_name, replacements in banks.items():
@@ -67,6 +70,8 @@ def main():
                 messages = read_decoded_messages(decoded_path)
 
                 for index_text, replacement in replacements.items():
+                    if index_text == "_append":
+                        continue
                     index = int(index_text)
                     if index >= len(messages):
                         raise IndexError(
@@ -81,6 +86,29 @@ def main():
                             f"contains the expected source text"
                         )
                     messages[index] = replacement["text"]
+
+                append = replacements.get("_append")
+                if append is not None:
+                    expected_count = int(append["expected_count"])
+                    appended_messages = append["messages"]
+                    appended_count = len(appended_messages)
+                    if len(messages) == expected_count:
+                        messages.extend(appended_messages)
+                    elif (
+                        len(messages) == expected_count + appended_count
+                        and messages[-appended_count:] == appended_messages
+                    ):
+                        # quick-rom installs the generated archive back into
+                        # base/root. A subsequent build therefore starts from
+                        # an archive where append patches may already exist.
+                        pass
+                    else:
+                        raise ValueError(
+                            f"{patch_path}: bank {bank_name} expected "
+                            f"{expected_count} messages before append or "
+                            f"{expected_count + appended_count} after append, "
+                            f"found {len(messages)}"
+                        )
 
                 decoded_path.write_text(
                     "\r\n".join(messages) + "\r\n",

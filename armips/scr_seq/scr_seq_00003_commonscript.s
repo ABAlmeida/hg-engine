@@ -91,6 +91,7 @@ scrdef scr_seq_0003_073_autobattle_testing
 scrdef scr_seq_0003_074_permanent_death_notification
 scrdef scr_seq_0003_075_configured_egg_gift
 scrdef scr_seq_0003_076_laptop_pc
+scrdef scr_seq_0003_077_lighthouse_construction_worker
 scrdef_end
 
 scr_seq_0003_002:
@@ -1828,6 +1829,19 @@ scr_seq_0003_075_configured_egg_gift:
 
 _configured_egg_gift_party_full:
     setvar VAR_SPECIAL_RESULT, 0
+    endstd
+    end
+
+// Olivine's Lighthouse doorway uses this standard script so its city object
+// does not require a replacement of the large local Olivine script bank.
+scr_seq_0003_077_lighthouse_construction_worker:
+    play_se SEQ_SE_DP_SELECT
+    lockall
+    faceplayer
+    npc_msg 124
+    wait_button
+    closemsg
+    releaseall
     endstd
     end
 

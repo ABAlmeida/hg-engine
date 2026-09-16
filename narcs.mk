@@ -718,7 +718,8 @@ ZONE_EVENT_PRISTINE := $(BUILD)/pristine/zone_event_2
 ZONE_EVENT_EXTRACTOR := tools/extract_rom_file.py
 ZONE_EVENT_PATCHES_DIR := armips/zone_event
 ZONE_EVENT_PATCHES := $(wildcard $(ZONE_EVENT_PATCHES_DIR)/*.s)
-ZONE_EVENT_DEPENDENCIES := $(ZONE_EVENT_PATCHES) armips/include/config.s armips/include/vars.s $(ARMIPS_CONFIG)
+ZONE_EVENT_POSTPROCESSOR := tools/patch_olivine_elm_events.py
+ZONE_EVENT_DEPENDENCIES := $(ZONE_EVENT_PATCHES) $(ZONE_EVENT_POSTPROCESSOR) armips/include/config.s armips/include/vars.s $(ARMIPS_CONFIG)
 
 $(ZONE_EVENT_PRISTINE): $(ROMNAME) $(ZONE_EVENT_EXTRACTOR) $(VENV_ACTIVATE)
 	$(PYTHON) $(ZONE_EVENT_EXTRACTOR) $(ROMNAME) a/0/3/2 $@
@@ -727,6 +728,7 @@ $(ZONE_EVENT_NARC): $(ZONE_EVENT_DEPENDENCIES) $(ZONE_EVENT_PRISTINE)
 	rm -rf $(ZONE_EVENT_DIR)
 	$(NARCHIVE) extract $(ZONE_EVENT_PRISTINE) -o $(ZONE_EVENT_DIR) -nf
 	for file in $(ZONE_EVENT_PATCHES); do $(ARMIPS) $$file || exit 1; done
+	$(PYTHON) $(ZONE_EVENT_POSTPROCESSOR) $(ZONE_EVENT_DIR)/zone_event_2_074
 	$(NARCHIVE) create $@ $(ZONE_EVENT_DIR) -nf
 
 NARC_FILES += $(ZONE_EVENT_NARC)

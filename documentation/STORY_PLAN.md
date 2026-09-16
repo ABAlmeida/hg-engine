@@ -367,19 +367,71 @@ route opens, or where the main plot's turning points fall.
 | Part V | Victory Road to Champion | League climax | Draft order; story open |
 | Finale | Mt. Silver to Red | Final ascent and ending | Draft order; story open |
 
+### Field-move and eastern Johto progression
+
+The field-move schedule should reinforce the interleaved regional structure
+rather than preserve the original badge order. The intended usable-action
+milestones are:
+
+| Field move | New milestone | Progression function |
+| --- | --- | --- |
+| Surf | Ecruteak | Retain the western sea-route unlock before Cianwood and Olivine. |
+| Whirlpool | Olivine Gym | Open Whirl Islands during the maritime portion of Part I. Lugia remains separately gated by the Silver Feather. |
+| Strength | Route 42 and Mahogany stretch | Make Strength available when the player returns from Saffron and eastern Johto reopens, supporting Mt. Mortar and the later Ice Path traversal. |
+| Fly | Blackthorn Gym | Make fast travel a major late-Johto reward and provide the travel capability for returning to Kanto in Part IV. |
+| Waterfall | Seafoam/Cinnabar Gym | Make Waterfall the final traversal key before the Victory Road approach. |
+
+The Ecruteak-to-Route 42 gatehouse remains closed throughout Part I and the
+first Kanto circuit. It opens after Saffron, when the Magnet Train returns the
+player to Johto for Part III. This prevents the exterior Surf route from
+bypassing the intended story order and makes the Route 42 and Mahogany stretch
+the player's first access to Mt. Mortar.
+
+Until the Magnet Train return state is implemented, the Mineral Badge is the
+temporary gatehouse unlock. This provisional check must be replaced by the
+Magnet Train return story flag; it does not change the final narrative timing
+described above.
+
+The Olivine Lighthouse entrance remains under construction until the player
+earns the Storm Badge in Cianwood. The Cianwood pharmacist makes the
+SecretPotion available immediately, without requiring the player to meet
+Jasmine first, so it can be carried on the player's first Lighthouse ascent.
+Jasmine's initial conversation still establishes that Ampharos is sick; only
+a subsequent interaction offers the SecretPotion healing choice.
+
+Mt. Mortar deliberately opens in two stages. Its ordinary and
+Strength-accessible routes become available during Part III, while its
+Waterfall section, Kiyo, and the deepest rewards remain unavailable until the
+Seafoam/Cinnabar milestone in Part IV. Its encounters, trainers, and rewards
+must be rebalanced for those later access points.
+
+Moving Whirlpool to Olivine makes Whirl Islands explorable earlier, but it
+does not move Lugia's story encounter. Remove the current Silver Feather gift
+from Pewter and award it at a later Lugia story milestone that is still to be
+chosen. The existing access is controlled by acquisition state and Lugia
+visibility as well as the item itself, so implementation must move those state
+changes with the Silver Feather rather than merely give the item elsewhere.
+
+The S.S. Aqua opens through a one-time scene immediately after the player
+leaves Olivine Gym with the Mineral Badge. Professor Elm waits outside the
+Gym, explains that Johto cannot be progressed farther for the time being and
+directs the player toward Kanto, gives the S.S. Ticket, and walks away. The
+ticket-received flag is also the port-admission story flag, preventing Elm's
+original postgame ticket handout from repeating. Professor Oak's National Dex
+scene remains on its independent postgame state and does not run during this
+early voyage.
+
 ### Structural questions created by this order
 
-- What story event makes the S.S. Aqua available after Olivine Gym, and why
-  must the player leave Johto before challenging Mahogany and Blackthorn?
 - What drives the first Kanto circuit from Pewter through Saffron rather than
   making it a collection of unrelated Gym visits?
 - What changes at Saffron that makes returning to Johto by Magnet Train the
   necessary next step?
 - What happens during the Mahogany and Blackthorn stretch that resolves the
   reason for the player's return?
-- How does the player travel from Blackthorn to Seafoam for the second Kanto
-  circuit? This transition is not yet represented by a milestone in the
-  progression spine.
+- How does the player use the newly unlocked Fly after Blackthorn to begin the
+  Seafoam circuit? The exact previously visited Kanto destination and route
+  onward to Seafoam remain open.
 - Why do Seafoam and Viridian need to follow the completed Johto circuit?
 - Does the Pokémon League require all sixteen badges, or does the story create
   a different reason that Victory Road only opens after Viridian?
@@ -438,10 +490,10 @@ not drift apart.
 | Why do the three champions or former champions entrust vital work to novice trainers? | Open | The protégés need unique access, suitability, or responsibilities so the adults cannot simply solve the crisis themselves. |
 | What happens after Clair intercepts Silver, and why does Silver retain the stolen Pokémon? | Open | Lance's mentorship must impose responsibility or consequence rather than reward theft. |
 | What is Clair's continuing role after the opening? | Open | Her early introduction should pay off before or during the eventual Blackthorn chapter. |
-| How do Ho-Oh, Lugia, and the legendary beasts relate to the main conflict? | Open | |
+| How do Ho-Oh, Lugia, and the legendary beasts relate to the main conflict? | Open; Lugia access gate decided | Whirlpool opens Whirl Islands at Olivine, but the relocated Silver Feather continues to gate Lugia's later story milestone. |
 | What carries the story from Johto into the first Kanto circuit aboard the S.S. Aqua? | Open | |
 | What requires the Magnet Train return to Johto after Saffron? | Open | |
-| What carries the story from Blackthorn into the second Kanto circuit at Seafoam? | Open | |
+| What carries the story from Blackthorn into the second Kanto circuit at Seafoam? | Draft | Fly becomes available at Blackthorn and enables the return to a previously visited Kanto destination; the exact route onward to Seafoam remains open. |
 | What makes the final Mt. Silver encounter a thematic ending? | Open | |
 
 ## Scene card template
@@ -510,6 +562,10 @@ Resolve these before drafting the post-Violet chapters:
 | 2026-09-04 | Use the population collapse, Team Rocket's attacks on the Legendary Pokémon Sanctuary, and the Cynthia/player, Steven/counterpart, and Lance/Silver mentorships as the current draft premise. | Connect the scarcity and Bait mechanics to a character-driven story that can span Johto and Kanto while preserving Lyra/Ethan selection. | Opening and entire journey |
 | 2026-09-04 | Use the current draft progression of six Johto Gyms, six Kanto Gyms, the final two Johto Gyms, the final two Kanto Gyms, the League, Mt. Silver, and Red. Use the S.S. Aqua for the first Kanto crossing and the Magnet Train for the return to Johto. | Establish the rough progression spine before writing the plot that connects its milestones. | Entire journey |
 | 2026-09-04 | Create a dedicated story plan while retaining the revised opening's established continuity. | Separate narrative development from technical feature and script plans. | All |
+| 2026-09-13 | Close the Ecruteak-to-Route 42 gatehouse through Part I and the first Kanto circuit, then open it after the Saffron return. Open ordinary and Strength-accessible Mt. Mortar routes in Part III and its Waterfall routes after Seafoam/Cinnabar in Part IV. | Prevent Surf from bypassing the interleaved story order while turning Mt. Mortar into an intentional two-stage late-game area. | Ecruteak, first Kanto circuit, Mahogany, Mt. Mortar, and Seafoam/Cinnabar |
+| 2026-09-13 | Use the revised field-move milestones of Surf at Ecruteak, Whirlpool at Olivine, Strength during the Route 42/Mahogany stretch, Fly at Blackthorn, and Waterfall at Seafoam/Cinnabar. | Align exploration abilities with the new regional transitions and reserve Waterfall as the final Victory Road traversal key. | Parts I through V |
+| 2026-09-13 | Remove the Silver Feather gift from Pewter and relocate it, together with its Lugia access state, to a later Lugia story milestone. | Allow Whirl Islands exploration after Olivine without making Lugia available during the first Kanto circuit. | Olivine, Whirl Islands, Pewter, and later Lugia storyline |
+| 2026-09-14 | Close the Olivine Lighthouse behind a construction worker until the Storm Badge, and make the SecretPotion available immediately in Cianwood. | Put the Lighthouse after Cianwood Gym without forcing an extra Cianwood–Olivine round trip before the player can heal Amphy. | Cianwood and Olivine Lighthouse |
 
 ## Related plans
 

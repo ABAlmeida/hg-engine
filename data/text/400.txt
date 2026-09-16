@@ -1,0 +1,2 @@
+Route 42 is open again.\nPlease take care on the road.
+Sorry, Route 42 is closed\nfor the time being.

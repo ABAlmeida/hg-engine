@@ -254,6 +254,9 @@ FLAG_UNK_0EF                                               equ 239
 FLAG_UNK_0F0                                               equ 240
 FLAG_UNK_0F1                                               equ 241
 FLAG_UNK_0F2                                               equ 242
+// Reused as the one-time Olivine Gym exit scene completion flag. The same
+// vanilla flag already prevents Professor Elm from issuing a second ticket.
+FLAG_GOT_SS_TICKET_FROM_ELM                                equ FLAG_UNK_0F2
 FLAG_GOT_MYSTIC_WATER_FROM_CHERRYGROVE_CITY_MAN            equ 243
 FLAG_UNK_0F4                                               equ 244
 FLAG_UNK_0F5                                               equ 245
