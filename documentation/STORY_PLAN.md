@@ -306,8 +306,8 @@ meaningfully change one of these arcs.
 
 - Place the rebuilt Rocket operations, including the Mahogany and Radio Tower
   material, within the interleaved Johto-Kanto progression.
-- Define the early S.S. Aqua crossing and the route from its Vermilion arrival
-  to the planned Pewter Gym milestone.
+- Define the early S.S. Aqua crossing, the immediate Vermilion Gym milestone,
+  and the onward route through Diglett's Cave to Pewter.
 - Define how the Power Plant, Copycat Pass, and Magnet Train material supports
   the required return to Johto after Saffron.
 - Choose the route from Blackthorn to the second Kanto circuit at Seafoam.
@@ -338,9 +338,9 @@ route opens, or where the main plot's turning points fall.
 | 6 | Cianwood Gym | Johto | Draft |
 | 7 | Olivine Gym | Johto | Draft |
 | 8 | S.S. Aqua | Johto to Kanto | Draft |
-| 9 | Pewter Gym | Kanto | Draft |
-| 10 | Cerulean Gym | Kanto | Draft |
-| 11 | Vermilion Gym | Kanto | Draft |
+| 9 | Vermilion Gym | Kanto | Draft |
+| 10 | Pewter Gym | Kanto | Draft |
+| 11 | Cerulean Gym | Kanto | Draft |
 | 12 | Celadon Gym | Kanto | Draft |
 | 13 | Fuchsia Gym | Kanto | Draft |
 | 14 | Saffron Gym | Kanto | Draft |
@@ -419,11 +419,57 @@ directs the player toward Kanto, gives the S.S. Ticket, and walks away. The
 ticket-received flag is also the port-admission story flag, preventing Elm's
 original postgame ticket handout from repeating. Professor Oak's National Dex
 scene remains on its independent postgame state and does not run during this
-early voyage.
+early voyage. The Route 11/12 Snorlax roadblock is removed entirely. A worker
+blocks the Route 11 entrance to Diglett's Cave until Lt. Surge is defeated
+(Thunder Badge), then disappears. This makes Vermilion Gym the first Kanto
+milestone and opens the intended route onward to Pewter without requiring
+the Radio Card, Kanto expansion, or Power Plant restoration. The Route 11/12
+gatehouse guard turns eastbound players back until Fuchsia Gym is defeated
+(Soul Badge). The Route 6/Saffron gatehouse guard now blocks passage in both
+directions until Fuchsia Gym is defeated (Soul Badge), returning players
+toward whichever entrance they used. This replaces the earlier Marsh Badge
+requirement and the original northbound Cascade Badge requirement. The Route 2 southeast
+gatehouse blocks southbound travel from Route 2 East to southern Route 2,
+and the forest's north gatehouse blocks southbound travel from Route 2 East
+into Viridian Forest. Both guards turn players back until Blackthorn Gym is
+defeated (Rising Badge), the temporary unlock condition. These gates direct
+players leaving Diglett's Cave toward Pewter. A worker in front of Mt. Moon's
+Route 3 entrance disappears after Pewter Gym is defeated (Boulder Badge).
+The Route 5/Saffron gatehouse blocks passage in both directions until Fuchsia
+Gym is defeated (Soul Badge): the guard turns players back toward whichever
+entrance they used. A worker in front of Rock Tunnel's northern Route 10
+entrance disappears after Cerulean Gym is defeated (Cascade Badge). Reverse
+travel through the other gated gatehouses remains available. All guard
+triggers are disabled after their badge unlock.
+Lavender's southern NPC becomes a temporary guard and turns southbound
+players back across the full Route 12 boundary until the Soul Badge, then
+disappears. The Route 16 gatehouse blocks both directions until Celadon Gym
+is defeated (Rainbow Badge). Once unlocked, cyclists bypass coordinate-script
+dispatch so crossing does not reset their bike speed. Walking west into
+Cycling Road still requires mounting a bike; its bike-state lock is released
+on arrival at Route 16 East.
+The Fuchsia/Route 15 gatehouse guard turns eastbound players back toward
+Fuchsia until the Soul Badge; westbound returns remain available.
+Copycat's doll quest also requires the Marsh Badge. Before that badge she
+transforms into the player and says she wants to help but is not strong
+enough yet, suggesting the Marsh Badge would help. She changes back and
+apologizes for suggesting the player is weak. This interaction does not start
+the quest or exchange a doll for the Magnet Train Pass. After the badge, the
+original quest retains its Power Plant requirement and reward flow. Players
+who already have the Pass retain their completed-quest dialogue.
+
+S.S. Aqua operates every day from both ports. Its first completed voyage
+locks further boarding at both ports until the Rising Badge; disembarking
+remains available. The original first-voyage completion state also applies
+to existing saves. The Magnet Train separately records completion at the
+end of its Saffron-to-Goldenrod arrival scene. After that first return to
+Johto, both stations refuse boarding until the Rising Badge. The Pass and
+Power Plant requirements remain in place. After the badge, both services
+are available normally, with the ship continuing to operate daily.
 
 ### Structural questions created by this order
 
-- What drives the first Kanto circuit from Pewter through Saffron rather than
+- What drives the first Kanto circuit from Vermilion through Saffron rather than
   making it a collection of unrelated Gym visits?
 - What changes at Saffron that makes returning to Johto by Magnet Train the
   necessary next step?
@@ -566,6 +612,12 @@ Resolve these before drafting the post-Violet chapters:
 | 2026-09-13 | Use the revised field-move milestones of Surf at Ecruteak, Whirlpool at Olivine, Strength during the Route 42/Mahogany stretch, Fly at Blackthorn, and Waterfall at Seafoam/Cinnabar. | Align exploration abilities with the new regional transitions and reserve Waterfall as the final Victory Road traversal key. | Parts I through V |
 | 2026-09-13 | Remove the Silver Feather gift from Pewter and relocate it, together with its Lugia access state, to a later Lugia story milestone. | Allow Whirl Islands exploration after Olivine without making Lugia available during the first Kanto circuit. | Olivine, Whirl Islands, Pewter, and later Lugia storyline |
 | 2026-09-14 | Close the Olivine Lighthouse behind a construction worker until the Storm Badge, and make the SecretPotion available immediately in Cianwood. | Put the Lighthouse after Cianwood Gym without forcing an extra Cianwood–Olivine round trip before the player can heal Amphy. | Cianwood and Olivine Lighthouse |
+| 2026-09-16 | Remove the Route 11/12 Snorlax objects from their map event data. | Keep Diglett's Cave available as the direct Vermilion-to-Pewter route for new and existing saves without moving either Pokégear radio card earlier. | Early Kanto |
+| 2026-09-16 | Make Vermilion the first Kanto Gym, followed by Pewter, Cerulean, Celadon, Fuchsia, and Saffron. | Let the player challenge the arrival city's Gym before using Diglett's Cave, while preserving the remainder of the first Kanto circuit. The Power Plant does not gate Pewter. | First Kanto circuit |
+| 2026-10-14 | Gate Diglett's Cave behind Lt. Surge, Route 11 to Route 12 behind Fuchsia Gym, and Route 6 to Saffron behind Cerulean Gym. | A disappearing cave blocker and two guard turnbacks enforce the agreed Kanto progression using existing badge state. | First Kanto circuit |
+| 2026-10-14 | Block southbound passage through the Route 2 southeast and Viridian Forest north gatehouses until Blackthorn Gym, provisionally; block Mt. Moon's Route 3 entrance until Pewter Gym. | Direct arrivals from Diglett's Cave toward Pewter and require Brock before proceeding into Mt. Moon. | Pewter progression |
+| 2026-10-14 | Block the Route 5/Saffron gatehouse in both directions until Fuchsia Gym; block Rock Tunnel's northern Route 10 entrance until Cerulean Gym. | Keep players on their gatehouse entrance's side until the Soul Badge and require the Cascade Badge before entering Rock Tunnel from the north. | First Kanto circuit |
+| 2026-10-14 | Gate Lavender to Route 12 behind Fuchsia Gym, change Route 6/Saffron to a two-way Saffron Gym gate, and gate Route 16 behind Celadon Gym. | Enforce the revised Kanto order; avoid coordinate-script interruptions for cyclists after the Route 16 unlock while retaining Cycling Road's bike requirement. | First Kanto circuit |
 
 ## Related plans
 

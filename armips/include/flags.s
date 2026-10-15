@@ -261,6 +261,9 @@ FLAG_GOT_MYSTIC_WATER_FROM_CHERRYGROVE_CITY_MAN            equ 243
 FLAG_UNK_0F4                                               equ 244
 FLAG_UNK_0F5                                               equ 245
 FLAG_UNK_0F6                                               equ 246
+// Unreferenced in the original field scripts; persistent completion of the
+// first Saffron-to-Goldenrod train journey. Independent of the ship state.
+FLAG_RETURNED_TO_JOHTO_BY_MAGNET_TRAIN                     equ FLAG_UNK_0F6
 FLAG_GOT_PP_MAX_FROM_VERMILLION_CITY_MAN                   equ 247
 FLAG_GOT_RARE_CANDY_FROM_FAN_CLUB_CHAIRMAN                 equ 248
 FLAG_SNORLAX_MEET                                          equ 249

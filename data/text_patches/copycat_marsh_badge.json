@@ -1,0 +1,21 @@
+{
+  "541": {
+    "_append": {
+      "expected_count": 18,
+      "previous_messages": [
+        [
+          "{STRVAR_1 3, 0, 0}: I’d love to help you,\\nbut I’m not quite strong enough\\fyet. Maybe if I had the Marsh\\nBadge, I’d be able to!",
+          "Copycat: Sorry! I shouldn’t\\nsuggest you’re weak."
+        ],
+        [
+          "{STRVAR_1 3, 0, 0}: I’d love to help you,\\rbut I’m not quite strong\\nenough yet.\\rMaybe if I had the Marsh Badge,\\nI’d be able to!",
+          "Copycat: Sorry! I shouldn’t\\nsuggest you’re weak."
+        ]
+      ],
+      "messages": [
+        "{STRVAR_1 3, 0, 0}: I want to help you,\\rbut I’m not quite strong\\nenough yet.\\rMaybe if I had the Marsh Badge,\\nI’d be able to!",
+        "Copycat: Sorry! I shouldn’t\\nsuggest you’re weak."
+      ]
+    }
+  }
+}

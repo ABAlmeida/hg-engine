@@ -1,0 +1,34 @@
+{
+  "255": {
+    "_append": {
+      "expected_count": 16,
+      "messages": [
+        "You’ll need the Rising Badge\\nfrom Blackthorn Gym before\\rwe can let you sail again."
+      ]
+    }
+  },
+  "535": {
+    "_append": {
+      "expected_count": 19,
+      "messages": [
+        "You’ll need the Rising Badge\\nfrom Blackthorn Gym before\\rwe can let you ride again."
+      ]
+    }
+  },
+  "587": {
+    "_append": {
+      "expected_count": 10,
+      "messages": [
+        "You’ll need the Rising Badge\\nfrom Blackthorn Gym before\\rwe can let you ride again."
+      ]
+    }
+  },
+  "257": {
+    "_append": {
+      "expected_count": 4,
+      "messages": [
+        "You’ll need the Rising Badge\\nfrom Blackthorn Gym before\\rwe can let you sail again."
+      ]
+    }
+  }
+}

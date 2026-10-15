@@ -22,6 +22,7 @@ NUM_OF_MONS equ SPECIES_MAX_MON_NUM
 .include "armips/asm/legendary_sanctuary.s" // keeps the full party in Sanctuary battles
 .include "armips/asm/medicine_item_replacements.s" // updates compiled medicine acquisition tables
 .include "armips/asm/trainer_line_of_sight.s" // requires talking to field trainers to start their scripts
+.include "armips/asm/trainer_card.s" // displays Kanto badges before becoming Champion
 
 .include "armips/asm/no_partner_double_battles.s" // allows no partner double battles
 

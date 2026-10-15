@@ -1,0 +1,96 @@
+{
+  "346": {
+    "_append": {
+      "expected_count": 4,
+      "messages": [
+        "Diglett’s Cave is off-limits\\nfor now.\\rCome back after you’ve beaten\\nLt. Surge at the Vermilion Gym!"
+      ]
+    }
+  },
+  "347": {
+    "0": {
+      "expected": "Hello, passerby!",
+      "text": "Hold it! You’ll need the Soul Badge\\nfrom Fuchsia Gym before I can\\flet you through."
+    },
+    "1": {
+      "expected": "Hello, passerby!",
+      "text": "You have the Soul Badge!\\nYou’re free to pass through."
+    }
+  },
+  "323": {
+    "_append": {
+      "expected_count": 4,
+      "messages": [
+        "Hold it! You’ll need the Rising\\nBadge from Blackthorn Gym before\\fI can let you through."
+      ]
+    }
+  },
+  "325": {
+    "_append": {
+      "expected_count": 1,
+      "messages": [
+        "Hold it! You’ll need the Rising\\nBadge from Blackthorn Gym before\\fI can let you into Viridian Forest."
+      ]
+    }
+  },
+  "326": {
+    "_append": {
+      "expected_count": 6,
+      "messages": [
+        "Mt. Moon is off-limits for now.\\rCome back after you’ve beaten\\nBrock at the Pewter Gym!"
+      ]
+    }
+  },
+  "332": {
+    "_append": {
+      "expected_count": 1,
+      "messages": [
+        "Hold it! You’ll need the Soul Badge\\nfrom Fuchsia Gym before I can\\flet you through.\\rPlease leave the way you came in."
+      ]
+    }
+  },
+  "341": {
+    "_append": {
+      "expected_count": 10,
+      "messages": [
+        "Rock Tunnel is off-limits for now.\\rCome back after you’ve beaten\\nMisty at the Cerulean Gym!"
+      ]
+    }
+  },
+  "335": {
+    "_append": {
+      "expected_count": 2,
+      "previous_messages": [
+        ["Hold it! You’ll need the Cascade\\nBadge from Cerulean Gym before\\fI can let you into Saffron City."],
+        ["Hold it! You’ll need the Marsh\\nBadge from Saffron Gym before\\fI can let you through.\\rPlease leave the way you came in."]
+      ],
+      "messages": [
+        "Hold it! You’ll need the Soul\\nBadge from Fuchsia Gym before\\rI can let you through.\\nPlease leave the way you came in."
+      ]
+    }
+  },
+  "356": {
+    "_append": {
+      "expected_count": 2,
+      "messages": [
+        "Hold it! You’ll need the Rainbow\\nBadge from Celadon Gym before\\fI can let you through.\\rPlease leave the way you came in."
+      ]
+    }
+  },
+  "353": {
+    "_append": {
+      "expected_count": 1,
+      "messages": [
+        "Hold it! You’ll need the Soul Badge\\nfrom Fuchsia Gym before I can\\flet you onto Route 15."
+      ]
+    }
+  },
+  "475": {
+    "_append": {
+      "expected_count": 8,
+      "messages": [
+        "Hold it! You’ll need the Soul Badge\\nfrom Fuchsia Gym before I can\\flet you onto Route 12."
+      ]
+    }
+  }
+}

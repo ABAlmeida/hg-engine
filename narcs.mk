@@ -682,7 +682,8 @@ SCR_SEQ_PRISTINE := $(BUILD)/pristine/2
 SCR_SEQ_EXTRACTOR := tools/extract_rom_file.py
 SCR_SEQ_DEPENDENCIES_DIR := armips/scr_seq
 SCR_SEQ_PATCHES := $(wildcard $(SCR_SEQ_DEPENDENCIES_DIR)/*.s)
-SCR_SEQ_DEPENDENCIES := $(SCR_SEQ_PATCHES) armips/include/config.s $(ARMIPS_CONFIG) $(ARMIPS_ITEM_CONSTANTS) $(ARMIPS_SPECIES_CONSTANTS) $(ARMIPS_ABILITY_CONSTANTS) $(TRAINER_REWARD_SCRIPT)
+SCR_SEQ_KANTO_POSTPROCESSOR := tools/append_kanto_gate_scripts.py
+SCR_SEQ_DEPENDENCIES := $(SCR_SEQ_PATCHES) $(SCR_SEQ_KANTO_POSTPROCESSOR) armips/include/config.s armips/include/flags.s armips/include/vars.s armips/include/scriptmacros.s $(ARMIPS_CONFIG) $(ARMIPS_ITEM_CONSTANTS) $(ARMIPS_SPECIES_CONSTANTS) $(ARMIPS_ABILITY_CONSTANTS) $(TRAINER_REWARD_SCRIPT)
 
 $(SCR_SEQ_PRISTINE): $(ROMNAME) $(SCR_SEQ_EXTRACTOR) $(VENV_ACTIVATE)
 	$(PYTHON) $(SCR_SEQ_EXTRACTOR) $(ROMNAME) a/0/1/2 $@
@@ -695,6 +696,7 @@ $(SCR_SEQ_NARC): $(SCR_SEQ_DEPENDENCIES) $(SCR_SEQ_PRISTINE)
 	rm -rf $(SCR_SEQ_DIR)
 	$(NARCHIVE) extract $(SCR_SEQ_PRISTINE) -o $(SCR_SEQ_DIR) -nf
 	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file || exit 1; done
+	$(PYTHON) $(SCR_SEQ_KANTO_POSTPROCESSOR) $(SCR_SEQ_DIR) $(BUILD)/route_2_gate_scripts $(BUILD)/mt_moon_gate_scripts $(BUILD)/rock_tunnel_gate_scripts $(BUILD)/lavender_gate_scripts
 	$(NARCHIVE) create $@ $(SCR_SEQ_DIR) -nf
 
 # DSPRE edits made directly to the installed archive are outside Make's source
@@ -707,6 +709,7 @@ rebuild_scripts: $(BASE_EXTRACTION_STAMP) $(TRAINER_REWARD_SCRIPT)
 	rm -rf $(SCR_SEQ_DIR)
 	$(NARCHIVE) extract $(SCR_SEQ_TARGET) -o $(SCR_SEQ_DIR) -nf
 	for file in $(SCR_SEQ_PATCHES); do $(ARMIPS) $$file || exit 1; done
+	$(PYTHON) $(SCR_SEQ_KANTO_POSTPROCESSOR) $(SCR_SEQ_DIR) $(BUILD)/route_2_gate_scripts $(BUILD)/mt_moon_gate_scripts $(BUILD)/rock_tunnel_gate_scripts $(BUILD)/lavender_gate_scripts
 	$(NARCHIVE) create $(SCR_SEQ_NARC) $(SCR_SEQ_DIR) -nf
 
 NARC_FILES += $(SCR_SEQ_NARC)
@@ -719,7 +722,9 @@ ZONE_EVENT_EXTRACTOR := tools/extract_rom_file.py
 ZONE_EVENT_PATCHES_DIR := armips/zone_event
 ZONE_EVENT_PATCHES := $(wildcard $(ZONE_EVENT_PATCHES_DIR)/*.s)
 ZONE_EVENT_POSTPROCESSOR := tools/patch_olivine_elm_events.py
-ZONE_EVENT_DEPENDENCIES := $(ZONE_EVENT_PATCHES) $(ZONE_EVENT_POSTPROCESSOR) armips/include/config.s armips/include/vars.s $(ARMIPS_CONFIG)
+ZONE_EVENT_SNORLAX_POSTPROCESSOR := tools/patch_removed_snorlax_events.py
+ZONE_EVENT_KANTO_POSTPROCESSOR := tools/patch_kanto_progression_events.py
+ZONE_EVENT_DEPENDENCIES := $(ZONE_EVENT_PATCHES) $(ZONE_EVENT_POSTPROCESSOR) $(ZONE_EVENT_SNORLAX_POSTPROCESSOR) $(ZONE_EVENT_KANTO_POSTPROCESSOR) armips/include/config.s armips/include/vars.s $(ARMIPS_CONFIG)
 
 $(ZONE_EVENT_PRISTINE): $(ROMNAME) $(ZONE_EVENT_EXTRACTOR) $(VENV_ACTIVATE)
 	$(PYTHON) $(ZONE_EVENT_EXTRACTOR) $(ROMNAME) a/0/3/2 $@
@@ -729,6 +734,8 @@ $(ZONE_EVENT_NARC): $(ZONE_EVENT_DEPENDENCIES) $(ZONE_EVENT_PRISTINE)
 	$(NARCHIVE) extract $(ZONE_EVENT_PRISTINE) -o $(ZONE_EVENT_DIR) -nf
 	for file in $(ZONE_EVENT_PATCHES); do $(ARMIPS) $$file || exit 1; done
 	$(PYTHON) $(ZONE_EVENT_POSTPROCESSOR) $(ZONE_EVENT_DIR)/zone_event_2_074
+	$(PYTHON) $(ZONE_EVENT_SNORLAX_POSTPROCESSOR) $(ZONE_EVENT_DIR)/zone_event_2_016 $(ZONE_EVENT_DIR)/zone_event_2_017
+	$(PYTHON) $(ZONE_EVENT_KANTO_POSTPROCESSOR) $(ZONE_EVENT_DIR)/zone_event_2_016 $(ZONE_EVENT_DIR)/zone_event_2_380 $(ZONE_EVENT_DIR)/zone_event_2_346 $(ZONE_EVENT_DIR)/zone_event_2_373 $(ZONE_EVENT_DIR)/zone_event_2_375 $(ZONE_EVENT_DIR)/zone_event_2_008 $(ZONE_EVENT_DIR)/zone_event_2_348 $(ZONE_EVENT_DIR)/zone_event_2_015 $(ZONE_EVENT_DIR)/zone_event_2_050 $(ZONE_EVENT_DIR)/zone_event_2_376 $(ZONE_EVENT_DIR)/zone_event_2_349
 	$(NARCHIVE) create $@ $(ZONE_EVENT_DIR) -nf
 
 NARC_FILES += $(ZONE_EVENT_NARC)

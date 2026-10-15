@@ -102,6 +102,13 @@ def main():
                         # base/root. A subsequent build therefore starts from
                         # an archive where append patches may already exist.
                         pass
+                    elif (
+                        len(messages) == expected_count + appended_count
+                        and messages[-appended_count:] in append.get("previous_messages", [])
+                    ):
+                        # Upgrade an earlier source-controlled append without
+                        # requiring a pristine message archive on rebuild.
+                        messages[-appended_count:] = appended_messages
                     else:
                         raise ValueError(
                             f"{patch_path}: bank {bank_name} expected "
